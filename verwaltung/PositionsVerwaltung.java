@@ -1,0 +1,162 @@
+package verwaltung;
+
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import horcherschnittstellen.IElementGroessenHorcher;
+import horcherschnittstellen.IWFNVeraenderungsHorcher;
+import wfnmodell.WFNStatusInfo;
+import wfnmodell.elemente.EWFNElement;
+import wfnmodell.schnittstellen.IWFNElement;
+import wfnmodell.schnittstellen.IWFNElementKante;
+import wfnmodell.schnittstellen.IWFNElementOK;
+
+/**
+ * Klasse, die Methoden bereitstellt, um herauszufinden, was sich an einer bestimmten Position des
+ * Workflownetzes befindet.
+ *
+ */
+class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenHorcher {
+	
+	/**
+	 * Die aktuelle {@link ZoomFaktorVerwaltung}.
+	 */
+	private ZoomFaktorVerwaltung zoom;
+	
+	/**
+	 * Die aktuelle Elementgroesse.
+	 */
+	private int elementGroesse;
+	
+	/**
+	 * Liste aller Stellen und Transitionen des WFN.
+	 */
+	private ArrayList<IWFNElementOK> alleElementeOK;
+	
+	/**
+	 * Liste aller Kanten des WFN.
+	 */
+	private ArrayList<IWFNElementKante> alleKanten;
+	
+	/**
+	 * Die zuletzt untersuchte Position im WFN.
+	 */
+	private Point wasDaIstVorherigeKoordinate;
+	
+	/**
+	 * Das Ergebnis der letzten Untersuchung. Was sich also an der Position {@link #wasDaIstVorherigeKoordinate} befindet.
+	 */
+	private IWFNElement wasDaIstVorherigesErgebnis;
+	
+	PositionsVerwaltung(ZoomFaktorVerwaltung zoom) {
+		this.zoom = zoom;
+		alleElementeOK = new ArrayList<>(1);
+		alleKanten = new ArrayList<>(1);
+		elementGroesse = EWFNElement.URGROESSE;
+	}
+
+	@Override
+	public void modellAenderungEingetreten(WFNStatusInfo statusInfo) {
+		alleElementeOK = statusInfo.getAlleElementeOK();
+		alleKanten = statusInfo.getAlleKanten();
+	}
+
+	/**
+	 * Ermittelt aus der übergebenen Position, ob und wenn ja, welches Element sich dort befindet.
+	 * @param koordinate die zu überprüfende Position
+	 * @return das Element, welches sich an der überprüften Position befindet, oder null, wenn dort kein Element ist
+	 */
+	IWFNElement getWasDaIst(Point koordinate) {
+		IWFNElement ergebnis = null;
+		koordinate = zoom.ohne(koordinate);
+		if ((wasDaIstVorherigeKoordinate == null)
+				|| (! koordinate.equals(wasDaIstVorherigeKoordinate))) {
+			Iterator<IWFNElementOK> itOK = alleElementeOK.iterator();
+			while ((ergebnis == null)
+					&& (itOK.hasNext())){ 
+				IWFNElementOK elem = itOK.next();
+				if ((elem.getPosition().x >= koordinate.x - elementGroesse) 
+						&& (elem.getPosition().x <= koordinate.x + elementGroesse)
+						&& (elem.getPosition().y >= koordinate.y - elementGroesse) 
+						&& (elem.getPosition().y <= koordinate.y + elementGroesse))
+						ergebnis = elem;
+			}
+			if (ergebnis == null) {
+				Iterator<IWFNElementKante> itKante = alleKanten.iterator();
+				while ((ergebnis == null)
+						&& (itKante.hasNext())){ 
+					IWFNElementKante kante = itKante.next();
+					if (istPunktNaheKante(koordinate, kante, EWFNElement.URGROESSE / 2))
+						ergebnis = kante;
+				}
+			}
+			wasDaIstVorherigeKoordinate = koordinate;
+			wasDaIstVorherigesErgebnis = ergebnis;
+		} else
+			ergebnis = wasDaIstVorherigesErgebnis;
+		return ergebnis;
+	}
+	
+
+	/**
+	 * Ermittelt aus den übergebenen Eckpunkten, ob sich in dem Rechteck zwischen diesen Elemente
+	 * befinden, und wenn ja, welche.
+	 * @param startMausPosition der eine Eckpunkt des zu überprüfenden Rechtecks
+	 * @param jetztMausPosition der andere Eckpunkt des zu überprüfenden Rechtecks
+	 * @return Liste der Elemente, welche sich innerhalb des Rechtecks befinden
+	 */
+	ArrayList<IWFNElement> getWasDaIst(Point startMausPosition, Point jetztMausPosition) {
+		if (startMausPosition.x > jetztMausPosition.x) {
+			int temp = startMausPosition.x;
+			startMausPosition.x = jetztMausPosition.x;
+			jetztMausPosition.x = temp;
+		}
+		if (startMausPosition.y > jetztMausPosition.y) {
+			int temp = startMausPosition.y;
+			startMausPosition.y = jetztMausPosition.y;
+			jetztMausPosition.y = temp;
+		}
+		ArrayList<IWFNElement> ergebnis = new ArrayList<>();
+		for (IWFNElementOK elem : alleElementeOK)
+			if ((elem.getPosition().x >= startMausPosition.x) 
+					&& (elem.getPosition().x <= jetztMausPosition.x)
+					&& (elem.getPosition().y >= startMausPosition.y) 
+					&& (elem.getPosition().y <= jetztMausPosition.y))
+				ergebnis.add(elem);
+		for (IWFNElementKante kante : alleKanten) {
+			Point mp = kante.getMittelpunkt();
+			if ((mp.x >= startMausPosition.x) 
+					&& (mp.x <= jetztMausPosition.x)
+					&& (mp.y >= startMausPosition.y) 
+					&& (mp.y <= jetztMausPosition.y))
+				ergebnis.add(kante);
+		}	
+		return ergebnis;
+	}
+	
+	
+	/**
+	 * Methode zum Erkennen, ob ein Punkt nahe an einer Kante liegt. 
+	 * @param p der Punkt
+	 * @param kante die Kante
+	 * @param maxabstand maximaler Abstand, den p zur Kante haben darf
+	 * @return true, falls der Abstand von p zur Kante kante kleinergleich maxabstand ist
+	 */
+	private static boolean istPunktNaheKante(Point p, IWFNElementKante kante, int maxabstand) {
+		Point v, z;
+		v = kante.getVon().getPosition();
+		z = kante.getZu().getPosition();
+		if ((p.distance(v) + p.distance(z)) 
+				<= (v.distance(z) * ( 1.005))) {
+			return true;
+		} else 
+			return false;
+	}
+
+	@Override
+	public void elementGroesseGeaendert(int neueGroesse) {
+		elementGroesse = neueGroesse;
+	}
+	
+}
