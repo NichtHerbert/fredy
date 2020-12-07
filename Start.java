@@ -10,7 +10,7 @@ import wfnmodell.WFNModell;
  * Die Klasse mit der main-Methode, von der aus der Workflownetz-Editor gestartet wird. 
  *
  */
-public class StartKlasse {
+public class Start {
 
 	/**
 	 * Erzeugt Modell, Toolbar, EditorPanel (in einem Scrollpane) 
