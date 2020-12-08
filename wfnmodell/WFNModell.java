@@ -29,9 +29,9 @@ public class WFNModell implements 	IWFNModellVeraendern,
 									IWFNExport {
 	
 	/**
-	 * Die aktuelle {@link IdentifierVerwaltung}.
+	 * Die aktuelle {@link Identifier}.
 	 */
-	private IdentifierVerwaltung idVerwaltung;
+	private Identifier idVerwaltung;
 	/**
 	 * Liste aller Transitionen und Stellen des aktuellen Datenmodells.
 	 */
@@ -71,7 +71,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	 * Art zurückgesetzt werden.
 	 */
 	private void newInit() {
-		idVerwaltung = new IdentifierVerwaltung();
+		idVerwaltung = new Identifier();
 		elementListeOK = new ArrayList<IWFNElementOK>();
 		zusammenhangsVerwaltung = new ZusammenhangsVerwaltung();
 		startEndStellenVerwaltung = new StartEndStellenVerwaltung(zusammenhangsVerwaltung);
@@ -147,7 +147,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 				for (IWFNElementOK nachbar : elementOK.getKantenZu()) {
 					kantenVerwaltung.loescheKante(elementOK, nachbar);
 				}
-				idVerwaltung.idWiederFrei(elementOK.getID());
+				idVerwaltung.passBack(elementOK.getID());
 				if (elementOK.getTyp() == EWFNElement.STELLE) 
 					startEndStellenVerwaltung.remove((WFNElementStelle) elementOK);
 			    elementListeOK.remove(elementOK);
@@ -163,8 +163,8 @@ public class WFNModell implements 	IWFNModellVeraendern,
 
 	@Override
 	public void neueStelle(String pnmlID, String name, Point position, boolean marke) {
-		idVerwaltung.pnmlIDUeberwachung(pnmlID);
-		final int neueID = idVerwaltung.getNextFreeIdentifier();
+		idVerwaltung.pnmlIDMonitoring(pnmlID);
+		final int neueID = idVerwaltung.get();
 		WFNElementStelle stelle = new WFNElementStelle(pnmlID, neueID, position);
 		if (!name.equals("")) stelle.setName(name);
 		if (marke) stelle.setMarke(marke);
@@ -180,8 +180,8 @@ public class WFNModell implements 	IWFNModellVeraendern,
 
 	@Override
 	public void neueTransition(String pnmlID, String name, Point position) {
-		idVerwaltung.pnmlIDUeberwachung(pnmlID);
-		final int neueID = idVerwaltung.getNextFreeIdentifier();
+		idVerwaltung.pnmlIDMonitoring(pnmlID);
+		final int neueID = idVerwaltung.get();
 		WFNElementTransition transition = new WFNElementTransition(pnmlID, neueID, position);
 		if ( !name.equals("")) transition.setName(name);
 		elementListeOK.add(transition);
@@ -278,7 +278,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 		ArrayList<TempPNMLElement> ergebnis = new ArrayList<>(alleElemente.size());
 		for (IWFNElement elem : alleElemente) {
 			String pnmlID = elem.getPNMLID();
-			if (pnmlID.equals("")) pnmlID = idVerwaltung.idZuPNMLID(elem.getID());
+			if (pnmlID.equals("")) pnmlID = idVerwaltung.convertIDintoPnmlID(elem.getID());
 			String marke = "";
 			EWFNElement typ = elem.getTyp();
 			TempPNMLElement temp;
@@ -294,9 +294,9 @@ public class WFNModell implements 	IWFNModellVeraendern,
     		case KANTE:		String vonPNMLID = (((IWFNElementKante) elem).getVon()).getPNMLID();
     						String zuPNMLID = (((IWFNElementKante) elem).getZu()).getPNMLID();
     						if (vonPNMLID.equals("")) vonPNMLID = 
-    							idVerwaltung.idZuPNMLID((((IWFNElementKante) elem).getVon()).getID());
+    							idVerwaltung.convertIDintoPnmlID((((IWFNElementKante) elem).getVon()).getID());
     						if (zuPNMLID.equals("")) zuPNMLID = 
-        						idVerwaltung.idZuPNMLID((((IWFNElementKante) elem).getZu()).getID());
+        						idVerwaltung.convertIDintoPnmlID((((IWFNElementKante) elem).getZu()).getID());
     							ergebnis.add(new TempPNMLElement(typ,pnmlID,vonPNMLID,zuPNMLID));
     						break;
 			}

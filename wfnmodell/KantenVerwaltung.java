@@ -13,9 +13,9 @@ import wfnmodell.schnittstellen.IWFNElementOK;
  */
 class KantenVerwaltung {
 	/**
-	 * Die aktuelle {@link IdentifierVerwaltung}.
+	 * Die aktuelle {@link Identifier}.
 	 */
-	private IdentifierVerwaltung idVerwaltung;
+	private Identifier idVerwaltung;
 	
 	/**
 	 * Die aktuelle {@link StartEndStellenVerwaltung}.
@@ -32,7 +32,7 @@ class KantenVerwaltung {
 	 */
 	private ArrayList<WFNElementKante> kantenListe;
 
-	KantenVerwaltung(IdentifierVerwaltung idVerwaltung, StartEndStellenVerwaltung startEndStellenVerwaltung,
+	KantenVerwaltung(Identifier idVerwaltung, StartEndStellenVerwaltung startEndStellenVerwaltung,
 			ZusammenhangsVerwaltung zusammenhangsVerwaltung) {
 		this.idVerwaltung = idVerwaltung;
 		this.startEndStellenVerwaltung = startEndStellenVerwaltung;
@@ -52,8 +52,8 @@ class KantenVerwaltung {
 	void neueKante(String pnmlID, IWFNElementOK von, IWFNElementOK zu) {
 		if ((von.getTyp() != zu.getTyp()) 
 				&& ( !istDaSchonEineKante(von,zu))) {
-			idVerwaltung.pnmlIDUeberwachung(pnmlID);
-			int id = idVerwaltung.getNextFreeIdentifier();
+			idVerwaltung.pnmlIDMonitoring(pnmlID);
+			int id = idVerwaltung.get();
 			WFNElementKante neueKante = new WFNElementKante(pnmlID,id,von,zu);
 			kantenListe.add(neueKante);
 			von.addKanteZu(zu);
@@ -129,7 +129,7 @@ class KantenVerwaltung {
 			kantenListe.remove(kante);
 			von.removeKanteZu(zu);
 			zu.removeKanteVon(von);
-			idVerwaltung.idWiederFrei(kante.getID());
+			idVerwaltung.passBack(kante.getID());
 			zusammenhangsVerwaltung.infoGeloeschteKante(von, zu);
 			startEndStellenVerwaltung.infoGeloeschteKante(von, zu);
 		}
