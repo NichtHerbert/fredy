@@ -49,9 +49,9 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	 */
 	private ZusammenhangsVerwaltung zusammenhangsVerwaltung;
 	/**
-	 * Die aktuelle {@link KantenVerwaltung}.
+	 * Die aktuelle {@link ArcManagement}.
 	 */
-	private KantenVerwaltung kantenVerwaltung;
+	private ArcManagement kantenVerwaltung;
 	/**
 	 * Referenz auf die letzte importierte oder exportierte pnml-Datei.
 	 */
@@ -75,7 +75,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 		elementListeOK = new ArrayList<IWFNElementOK>();
 		zusammenhangsVerwaltung = new ZusammenhangsVerwaltung();
 		startEndStellenVerwaltung = new StartEndStellenVerwaltung(zusammenhangsVerwaltung);
-		kantenVerwaltung = new KantenVerwaltung(idVerwaltung, startEndStellenVerwaltung,
+		kantenVerwaltung = new ArcManagement(idVerwaltung, startEndStellenVerwaltung,
 				zusammenhangsVerwaltung);
 		istGespeichert = false;
 	}
@@ -95,7 +95,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	 * Erstellt ein neues {@link WfnStatusInfo} und sendet es an alle Horcher der Liste {@link #wfnVeraenderungsHorcherListe}.
 	 */
 	private void fireModellAenderungEingetreten() {
-		WfnStatusInfo statusInfo = WfnStatusInfo.getInfo(elementListeOK, kantenVerwaltung.getAlleKanten(), startEndStellenVerwaltung);
+		WfnStatusInfo statusInfo = WfnStatusInfo.getInfo(elementListeOK, kantenVerwaltung.getAllArcs(), startEndStellenVerwaltung);
 		for (IWFNVeraenderungsHorcher horcher : wfnVeraenderungsHorcherListe)
 			horcher.modellAenderungEingetreten(statusInfo);
 		istGespeichert = false;
@@ -142,10 +142,10 @@ public class WFNModell implements 	IWFNModellVeraendern,
 			IWFNElementOK elementOK = (IWFNElementOK)element; 
 			if (elementListeOK.contains(elementOK)) {
 				for (IWFNElementOK nachbar : elementOK.getKantenVon()) {
-					kantenVerwaltung.loescheKante(nachbar, elementOK);
+					kantenVerwaltung.deleteArc(nachbar, elementOK);
 				}
 				for (IWFNElementOK nachbar : elementOK.getKantenZu()) {
-					kantenVerwaltung.loescheKante(elementOK, nachbar);
+					kantenVerwaltung.deleteArc(elementOK, nachbar);
 				}
 				idVerwaltung.passBack(elementOK.getID());
 				if (elementOK.getTyp() == EWFNElement.STELLE) 
@@ -153,7 +153,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 			    elementListeOK.remove(elementOK);
 			}
 		} else 
-			kantenVerwaltung.loescheKante((IWFNElementKante) element);
+			kantenVerwaltung.deleteArc((IWFNElementKante) element);
 	}
 	
 	@Override
@@ -224,7 +224,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	 * @param zu Element, in dem die neue Kante endet
 	 */
 	private void neueKante(String pnmlID, IWFNElementOK von, IWFNElementOK zu) {
-		kantenVerwaltung.neueKante(pnmlID, von, zu);
+		kantenVerwaltung.createArc(pnmlID, von, zu);
 		fireModellAenderungEingetreten();
 	}
 	
@@ -245,7 +245,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	 */
 	private ArrayList<? extends IWFNElement> getAlleElemente() {
 		ArrayList<IWFNElement> ergebnis = new ArrayList<IWFNElement>(elementListeOK);
-		ergebnis.addAll(kantenVerwaltung.getAlleKanten());
+		ergebnis.addAll(kantenVerwaltung.getAllArcs());
 		return ergebnis;
 	}
 
