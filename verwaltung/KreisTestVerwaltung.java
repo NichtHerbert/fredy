@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import gui.IZentraleKonstanten;
 import horcherschnittstellen.IWFNVeraenderungsHorcher;
-import wfnmodell.WFNStatusInfo;
+import wfnmodell.WfnStatusInfo;
 import wfnmodell.schnittstellen.IWFNElement;
 import wfnmodell.schnittstellen.IWFNElementOK;
 
@@ -12,7 +12,7 @@ public class KreisTestVerwaltung implements IWFNVeraenderungsHorcher,
 											IZentraleKonstanten {
 	
 	/*Die aktuelle StatusInfo, ohne die Informationen der Markierungsverwaltung.*/
-	private WFNStatusInfo statusInfo;
+	private WfnStatusInfo statusInfo;
 	
 	private AuswahlVerwaltung<IWFNElement> auswahlVerwaltung;
 	
@@ -22,16 +22,16 @@ public class KreisTestVerwaltung implements IWFNVeraenderungsHorcher,
 	
 	KreisTestVerwaltung(AuswahlVerwaltung<IWFNElement> auswahlVerwaltung2) {
 		this.auswahlVerwaltung = auswahlVerwaltung2;
-		statusInfo = new WFNStatusInfo();
+		statusInfo = new WfnStatusInfo();
 		besuchteElemente = new ArrayList<>();
 		inBearbeitungElemente = new ArrayList<>();
 	}
 	
 	public String kreisTest() {
-		if (statusInfo.istWFN()) {
+		if (statusInfo.isWfn()) {
 			besuchteElemente.clear();
 			inBearbeitungElemente.clear();
-			if (istKreis(statusInfo.getStartStelle())) {
+			if (istKreis(statusInfo.getStartPlace())) {
 				int idxEnd = inBearbeitungElemente.size()-1;
 				IWFNElementOK verbindungsElement = inBearbeitungElemente.get(idxEnd);
 				int idxStart = inBearbeitungElemente.indexOf(verbindungsElement);
@@ -66,7 +66,7 @@ public class KreisTestVerwaltung implements IWFNVeraenderungsHorcher,
 	}
 
 	@Override
-	public void modellAenderungEingetreten(WFNStatusInfo statusInfo) {
+	public void modellAenderungEingetreten(WfnStatusInfo statusInfo) {
 		this.statusInfo = statusInfo;
 	}
 

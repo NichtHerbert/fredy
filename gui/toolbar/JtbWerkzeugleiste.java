@@ -15,7 +15,7 @@ import verwaltung.DateiVerwaltung;
 import verwaltung.ElementGroessenVerwaltung;
 import verwaltung.KreisTestVerwaltung;
 import verwaltung.ZoomFaktorVerwaltung;
-import wfnmodell.WFNStatusInfo;
+import wfnmodell.WfnStatusInfo;
 import wfnmodell.schnittstellen.IWFNElement;
 
 /**
@@ -121,12 +121,12 @@ public class JtbWerkzeugleiste extends JToolBar implements 	IAuswahlVeraenderung
 
 	
 	@Override
-	public void modellStatusAenderung(WFNStatusInfo statusInfo) {
+	public void modellStatusAenderung(WfnStatusInfo statusInfo) {
 		jpDateiOperationen.modellStatusAenderung(statusInfo);
 		jpNetzInfo.modellStatusAenderung(statusInfo);
 		jpSchalten.modellStatusAenderung(statusInfo);
-		if (( !statusInfo.istWFN()) 
-				|| (statusInfo.getStartStelle() == statusInfo.getEndStelle())) 
+		if (( !statusInfo.isWfn()) 
+				|| (statusInfo.getStartPlace() == statusInfo.getEndPlace())) 
 			setKomponenteMitKindernEnabled(jpSchalten, false);
 		else
 			setKomponenteMitKindernEnabled(jpSchalten, true);

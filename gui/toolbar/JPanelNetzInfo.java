@@ -12,7 +12,7 @@ import javax.swing.border.TitledBorder;
 
 import horcherschnittstellen.IWFNModellStatusHorcher;
 import verwaltung.KreisTestVerwaltung;
-import wfnmodell.WFNStatusInfo;
+import wfnmodell.WfnStatusInfo;
 
 /**
  * Panel zur Anzeige, ob die aktuell existierenden WFN-Elemente
@@ -30,7 +30,7 @@ class JPanelNetzInfo extends JPanel implements IWFNModellStatusHorcher {
 	/**
 	 * Der letztübermittelte Zustand/Status des Workflownetzes.
 	 */
-	private WFNStatusInfo statusInfo;
+	private WfnStatusInfo statusInfo;
 	private KreisTestVerwaltung kTVerwaltung;
 
 	/**
@@ -40,7 +40,7 @@ class JPanelNetzInfo extends JPanel implements IWFNModellStatusHorcher {
 	JPanelNetzInfo() {
 		setLayout(new GridLayout(0,1));
 		setAlignmentY(LEFT_ALIGNMENT);
-		statusInfo = new WFNStatusInfo();
+		statusInfo = new WfnStatusInfo();
 		JButton jbKreisCheck = new JButton("Kreis-Check");
 		jbKreisCheck.addActionListener(new ActionListener() {
 			
@@ -68,10 +68,10 @@ class JPanelNetzInfo extends JPanel implements IWFNModellStatusHorcher {
 	 * und schreibt ihn in {@link #jlInfo}.
 	 */
 	private void getGruendeZuLabel() {
-		if (!statusInfo.getGruendeFuerKeinWFN().isEmpty()) {
+		if (!statusInfo.getNotWfnExplanatoryStatements().isEmpty()) {
 			for (int i = 0; i < jlInfo.length; i++)
-				if (i < statusInfo.getGruendeFuerKeinWFN().size())
-					jlInfo[i].setText(statusInfo.getGruendeFuerKeinWFN().get(i));
+				if (i < statusInfo.getNotWfnExplanatoryStatements().size())
+					jlInfo[i].setText(statusInfo.getNotWfnExplanatoryStatements().get(i));
 				else
 					jlInfo[i].setText("");
 		} else {
@@ -81,7 +81,7 @@ class JPanelNetzInfo extends JPanel implements IWFNModellStatusHorcher {
 	}
 
 	@Override
-	public void modellStatusAenderung(WFNStatusInfo statusInfo) {
+	public void modellStatusAenderung(WfnStatusInfo statusInfo) {
 		this.statusInfo = statusInfo;
 		getGruendeZuLabel();
 	}

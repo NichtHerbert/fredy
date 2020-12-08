@@ -14,7 +14,7 @@ import gui.EIcons;
 import horcherschnittstellen.IWFNModellStatusHorcher;
 import verwaltung.DateiVerwaltung;
 import verwaltung.IDateiVerwaltung;
-import wfnmodell.WFNStatusInfo;
+import wfnmodell.WfnStatusInfo;
 
 /**
  * JPanel zur Anzeige des Dateinamens und 4 nebeneinanderliegenden Buttons. 
@@ -129,7 +129,7 @@ class JPanelDateiOperationen extends JPanel implements IWFNModellStatusHorcher {
 	}
 
 	@Override
-	public void modellStatusAenderung(WFNStatusInfo statusInfo) {
+	public void modellStatusAenderung(WfnStatusInfo statusInfo) {
 		jlDateiName.setText("Dateiname:   " + dialogVerwaltung.getDateiName());
 	}
 

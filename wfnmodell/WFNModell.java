@@ -92,10 +92,10 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	}
 	
 	/**
-	 * Erstellt ein neues {@link WFNStatusInfo} und sendet es an alle Horcher der Liste {@link #wfnVeraenderungsHorcherListe}.
+	 * Erstellt ein neues {@link WfnStatusInfo} und sendet es an alle Horcher der Liste {@link #wfnVeraenderungsHorcherListe}.
 	 */
 	private void fireModellAenderungEingetreten() {
-		WFNStatusInfo statusInfo = WFNStatusInfo.getInfo(elementListeOK, kantenVerwaltung.getAlleKanten(), startEndStellenVerwaltung);
+		WfnStatusInfo statusInfo = WfnStatusInfo.getInfo(elementListeOK, kantenVerwaltung.getAlleKanten(), startEndStellenVerwaltung);
 		for (IWFNVeraenderungsHorcher horcher : wfnVeraenderungsHorcherListe)
 			horcher.modellAenderungEingetreten(statusInfo);
 		istGespeichert = false;

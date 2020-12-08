@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import horcherschnittstellen.IElementGroessenHorcher;
 import horcherschnittstellen.IWFNVeraenderungsHorcher;
-import wfnmodell.WFNStatusInfo;
+import wfnmodell.WfnStatusInfo;
 import wfnmodell.elemente.EWFNElement;
 import wfnmodell.schnittstellen.IWFNElement;
 import wfnmodell.schnittstellen.IWFNElementKante;
@@ -57,9 +57,9 @@ class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenH
 	}
 
 	@Override
-	public void modellAenderungEingetreten(WFNStatusInfo statusInfo) {
-		alleElementeOK = statusInfo.getAlleElementeOK();
-		alleKanten = statusInfo.getAlleKanten();
+	public void modellAenderungEingetreten(WfnStatusInfo statusInfo) {
+		alleElementeOK = statusInfo.getTransitionsAndPlaces();
+		alleKanten = statusInfo.getArcs();
 	}
 
 	/**

@@ -1,0 +1,312 @@
+package wfnmodell;
+
+import java.util.ArrayList;
+import wfnmodell.schnittstellen.IWFNElementStelle;
+import wfnmodell.schnittstellen.IWFNElementTransition;
+import wfnmodell.elemente.EWFNElement;
+import wfnmodell.schnittstellen.IWFNElementKante;
+import wfnmodell.schnittstellen.IWFNElementOK;
+
+/**
+ * Klasse, die alle wesentlichen Informationen über den aktuellen Zustand des Workflownetzes in sich trägt 
+ * bzw. tragen kann, und daher prädestiniert ist zur Informations-Weitergabe.
+ */
+public class WfnStatusInfo {
+	
+	/**
+	 * true, wenn der gegenwärtige Zustand des Netzes die Bedingungen für ein WFN erfüllt.
+	 */
+	private boolean isWfn;
+	/**
+	 * true, wenn es nur eine Start- und eine Endstelle gibt.
+	 */
+	private boolean	hasOneStartOneEnd;
+	/**
+	 * Die Startstelle, wenn es nur eine gibt, sonst null.
+	 */
+	private IWFNElementStelle start;
+	/**
+	 * Die Endstelle, wenn es nur eine gibt, sonst null.
+	 */
+	private IWFNElementStelle end; 
+	/**
+	 * Liste der Gründe, warum das Netz die Bedingungen für ein WFN nicht erfüllt,
+	 * oder dass es sich hierbei um ein WFN handelt.
+	 */
+	private ArrayList<String> notWfnExplanatoryStatements;
+	/**
+	 * Liste aller Transitionen und Stellen des aktuellen Workflownetzes.
+	 */
+	private ArrayList<IWFNElementOK> transitionsAndPlaces;
+	/**
+	 * Liste aller Kanten des aktuellen Workflownetzes;
+	 */
+	private ArrayList<IWFNElementKante> arcs;
+	/**
+	 * Liste aller Stellen, die eine Marke haben.
+	 */
+	private ArrayList<IWFNElementStelle> markings;
+    /**
+     * Liste aller aktivierten Transitionen.
+     */
+    private ArrayList<IWFNElementTransition> enabledTransitions;
+    /**
+     * Liste aller Transitionen, bei denen Kontakt besteht.
+     */
+    private ArrayList<IWFNElementTransition> contactTransitions;
+	
+	public WfnStatusInfo() {
+//		isWfn = false;
+//		hasOneStartOneEnd = false;
+//		start = null;
+//		end = null;
+		notWfnExplanatoryStatements = new ArrayList<>(1);
+		transitionsAndPlaces = new ArrayList<>(1);
+		arcs = new ArrayList<>(1);
+		markings = new ArrayList<>();
+		enabledTransitions = new ArrayList<>();
+		contactTransitions = new ArrayList<>();
+		
+	}
+	
+
+	public WfnStatusInfo(boolean isWfn, 
+						boolean hasOneStartOneEnd, 
+						IWFNElementStelle start, 
+						IWFNElementStelle end, 
+						ArrayList<String> notWfnExplanatoryStatements,
+						ArrayList<IWFNElementOK> transitionsAndPlaces, 
+						ArrayList<IWFNElementKante> arcs) {
+		this.isWfn = isWfn;
+		this.hasOneStartOneEnd = hasOneStartOneEnd;
+		this.start = start;
+		this.end = end;
+		this.notWfnExplanatoryStatements = notWfnExplanatoryStatements;
+		this.transitionsAndPlaces = transitionsAndPlaces;
+		this.arcs = arcs;
+	}
+	
+	/**
+	 * Gibt zurück, ob es sich um ein WFN handelt.
+	 * @return true, falls Netz Bedingungen für Workflownetz erfüllt
+	 */
+	public boolean isWfn() {
+		return isWfn;
+	}
+	
+	/**
+	 * Gibt zurück, ob das WFN nur eine Start- und eine Endstelle hat.
+	 * @return true, falls das WFN nur eine Start- und eine Endstelle hat
+	 */
+	public boolean hasOneStartOneEnd() {
+		return hasOneStartOneEnd;
+	}
+	
+	/**
+	 * Gibt die Startstelle des WFN zurück.
+	 * @return Startstelle, oder null, falls es keine eindeutige gibt
+	 */
+	public IWFNElementStelle getStartPlace() {
+		return start;
+	}
+
+	/**
+	 * Gibt die Endstelle des WFN zurück.
+	 * @return Endstelle, oder null, falls es keine eindeutige gibt
+	 */
+	public IWFNElementStelle getEndPlace() {
+		return end;
+	}
+	
+	/**
+	 * Gibt die Begründung, warum es sich um kein WFN handelt als Liste zurück.
+	 * @return Liste der Gründe {@link #notWfnExplanatoryStatements}
+	 */
+	public ArrayList<String> getNotWfnExplanatoryStatements(){
+		return new ArrayList<>(notWfnExplanatoryStatements);
+	}
+	
+	/**
+	 * Fügt eine Begründung hinzu, warum es sich um kein WFN handelt.
+	 * @param statement zu {@link #notWfnExplanatoryStatements} hinzuzufügender Grund
+	 */
+	public void addNotWfnExplanatoryStatements(String statement){
+		notWfnExplanatoryStatements.add(statement);
+	}
+	
+	/**
+	 * Entfernt eine Begründung, warum es sich um kein WFN handelt.
+	 * @param statement von {@link #notWfnExplanatoryStatements} zu entfernender Grund
+	 */
+	public void removeNotWfnExplanatoryStatements(String statement){
+		notWfnExplanatoryStatements.remove(statement);
+	}
+
+	/**
+	 * Gibt eine Liste mit Referenzen auf alle Stellen und Transition des aktuellen WFN zurück.
+	 * @return Liste aller Stellen und Transitionen des WFN {@link #transitionsAndPlaces}
+	 */
+	public ArrayList<IWFNElementOK> getTransitionsAndPlaces() {
+		return new ArrayList<>(transitionsAndPlaces);
+	}
+	
+	/**
+	 * Gibt eine Liste mit allen Kanten des WFN zurück.
+	 * @return Liste aller Kanten des WFN
+	 */
+	public ArrayList<IWFNElementKante> getArcs() {
+		return  new ArrayList<>(arcs);
+	}
+	
+	/**
+	 * Gibt eine Liste aller Stellen mit einer Marke zurück.
+	 * @return Liste aller Stellen mit Marke {@link #markings}
+	 */
+	public ArrayList<IWFNElementStelle> getMarkings() {
+		return markings;
+	}
+	
+	/**
+	 * Setzt die Liste aller Stellen mit Marke.
+	 * @param markings zu setzende Liste für {@link #markings}
+	 */
+	public void setMarkings(ArrayList<IWFNElementStelle> markings) {
+		this.markings = new ArrayList<>(markings);
+	}
+
+	/**
+	 * Gibt eine Liste aller aktivierten Transitionen zurück.
+	 * @return Liste aller aktivierten Transitionen {@link #enabledTransitions}
+	 */
+	public ArrayList<IWFNElementTransition> getEnabledTransitions() {
+		return enabledTransitions;
+	}
+
+	/**
+	 * Setzt die Liste aller aktivierten Transitionen.
+	 * @param enabledTransitions zu setzende Liste für {@link #enabledTransitions}
+	 */
+	public void setEnabledTransitions(ArrayList<IWFNElementTransition> enabledTransitions) {
+		this.enabledTransitions = new ArrayList<>(enabledTransitions);
+	}
+	
+	/**
+	 * Gibt die Liste aller Transitionen mit Kontakt zurück.
+	 * @return Liste aller Transitionen mit Kontakt {@link #contactTransitions}
+	 */
+	public ArrayList<IWFNElementTransition> getContactTransitions() {
+		return contactTransitions;
+	}
+
+	/**
+	 * Setzt die Liste aller Transitionen mit Kontakt.
+	 * @param contactTransitions zu setzenede Liste für {@link #contactTransitions}
+	 */
+	public void setContactTransitions(ArrayList<IWFNElementTransition> contactTransitions) {
+		this.contactTransitions = new ArrayList<>(contactTransitions);
+	}
+
+	// is tostring in use?? because it should be if else, or am i wrong?
+	@Override
+	public String toString() {
+		return "Oha, here is someone using WFNStatusInfo.toString()";
+//		String ergebnis = "";
+//		if (istWFN) 
+//			ergebnis = "Das ist ein Workflow - Netz.\n";
+//		try {
+//			for (String grund : gruendeFuerKeinWFN)
+//				ergebnis += grund + "\n";
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return ergebnis;
+	}
+	
+	/**
+	 * Statische Methode, die aus den übergebenen Parametern alle nötigen Informationen über den
+	 * Zustand des WFN zieht, und diese Informationen einem neu instanzierten Objekt dieser Klasse übergibt.
+	 * Anmerkung: mit Ausnahme derjenigen Informationen, die nur die {@link verwaltung.MarkierungsVerwaltung} stellen
+	 * kann (also: Stellen mit Marken, aktivierte Transitionen, Transitionen mit Kontakt).
+	 * @param transitionsAndPlaces Liste aller Stellen und Transitionen des aktuellen Datenmodells.
+	 * @param arcs Liste aller Kanten des aktuellen Datenmodells 
+	 * @param startEndControll Referenz auf die aktuelle {@link StartEndStellenVerwaltung} des Datenmodells
+	 * @return ein neu instanziertes und mit allen notwendigen Informationen versehenes Objekt dieser Klasse
+	 */
+	public static WfnStatusInfo getInfo(ArrayList<IWFNElementOK> transitionsAndPlaces, 
+										ArrayList<IWFNElementKante> arcs, 
+										StartEndStellenVerwaltung startEndControll) {
+		IWFNElementStelle startPlace = null, endPlace = null;
+		ArrayList<String> statements = new ArrayList<>(5);
+		boolean isWfn = false;
+		if (transitionsAndPlaces.size() == 0) {
+			statements.add("");
+			statements.add("-- no elements --");
+		} else {
+			boolean isNotConnected = false;
+			boolean isNotConnectedAltTest = false;
+			boolean hasOnlyTransitions = true;
+			boolean isNotWfn = false;
+			for (IWFNElementOK element : transitionsAndPlaces) {
+				boolean hasStartPath = element.istAufPfadVomStart();
+				boolean hasEndPath = element.istAufPfadZumEnde(); 
+				if ((hasStartPath)
+						^ (hasEndPath))
+					isNotWfn = true;
+				else if ((!hasStartPath)
+							|| (!hasEndPath))
+						isNotConnected = true;
+				if ((!element.hatAusgehendeKanten())
+						&& (!element.hatEingehendeKanten()))
+					isNotConnectedAltTest = true;
+				if ((hasOnlyTransitions)
+						&& (element.getTyp() != EWFNElement.TRANSITION))
+					hasOnlyTransitions = false;	
+			}
+			if ((isNotConnected) 
+					|| ( !startEndControll.hatNurEineStartUndEineEndStelle())
+					|| (isNotWfn)) {
+				statements.add("Kein Workflow-Netz!");
+				if (!hasOnlyTransitions) {
+					if (isNotConnectedAltTest) {
+						statements.add("Nicht alle Elemente verbunden.");
+					} else {
+						if ((!startEndControll.hatNurEineStartStelle())
+								|| (!startEndControll.hatNurEineEndStelle())) {
+							if (!startEndControll.hatNurEineStartStelle()) {
+								if (startEndControll.getStartStellenAnzahl() == 0) 
+									statements.add("keine Anfangsstelle");
+								else
+									statements.add("zu viele Anfangsstellen");
+							}
+							if (!startEndControll.hatNurEineEndStelle()) {
+								if (startEndControll.getEndStellenAnzahl() == 0) 
+									statements.add("keine Endstelle");
+								else
+									statements.add("zu viele Endstellen");
+							}
+						} else {
+							statements.add("Nicht alle Elemente auf Pfad");
+							statements.add("von Anfangs- zu Endstelle.");
+						}
+					}
+				}
+			} else {
+				isWfn = true;
+				statements.add("Dies ist ein Workflow-Netz.");
+				startPlace = startEndControll.getStartStelle();
+				endPlace = startEndControll.getEndStelle();
+			}
+		}
+		return new WfnStatusInfo(isWfn,
+								startEndControll.hatNurEineStartUndEineEndStelle(),
+								startPlace,
+								endPlace,
+								statements,
+								new ArrayList<>(transitionsAndPlaces),
+								arcs);
+	}
+
+
+	
+}

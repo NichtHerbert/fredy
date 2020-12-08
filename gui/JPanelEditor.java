@@ -16,7 +16,7 @@ import horcherschnittstellen.IElementGroessenHorcher;
 import horcherschnittstellen.IWFNModellStatusHorcher;
 import horcherschnittstellen.IZeichnungBenoetigtHorcher;
 import horcherschnittstellen.IZoomFaktorVeraenderungsHorcher;
-import wfnmodell.WFNStatusInfo;
+import wfnmodell.WfnStatusInfo;
 import wfnmodell.elemente.EWFNElement;
 import wfnmodell.schnittstellen.IWFNElement;
 import wfnmodell.schnittstellen.IWFNElementKante;
@@ -38,7 +38,7 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 	/**
 	 * Der letztübermittelte Zustand/Status des Workflownetzes.
 	 */
-	private WFNStatusInfo statusInfo;
+	private WfnStatusInfo statusInfo;
 	
 	/**
 	 *  Liste der momentan ausgewählten WFN-Elemente.
@@ -60,7 +60,7 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 		istZeichnungBenoetigt = false;
 		benoetigteForm = NICHTS;
 		zoomFaktor = 1d;
-		statusInfo = new WFNStatusInfo(); 
+		statusInfo = new WfnStatusInfo(); 
 		elementGroesse = EWFNElement.URGROESSE;
 
 		setBackground(Color.WHITE);
@@ -174,7 +174,7 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 	private void zeichneAlleElemente(Graphics2D g2) {
 		double maxX = 0d;
 		double maxY = 0d;
-		for (IWFNElementOK elem : statusInfo.getAlleElementeOK()) {
+		for (IWFNElementOK elem : statusInfo.getTransitionsAndPlaces()) {
 			Point position = elem.getPosition();
 			EWFNElement typ = elem.getTyp();
 			if ((position.x*zoomFaktor) > maxX) maxX = position.x * zoomFaktor;
@@ -195,20 +195,20 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 	 * @param g2 Objekt, auf dem die Zeichnung ausgeführt wird
 	 */
 	private void zeichneMarkierungenUndAktivierteTransitionen(Graphics2D g2) {
-		if ((statusInfo.istWFN())
-				&& (statusInfo.getStartStelle() != statusInfo.getEndStelle())
+		if ((statusInfo.isWfn())
+				&& (statusInfo.getStartPlace() != statusInfo.getEndPlace())
 				) {
-			EWFNElement.STELLE.zeichneAlsAusgewaehlt(g2, statusInfo.getStartStelle().getPosition(), EEditorFarben.START, elementGroesse);
-			EWFNElement.STELLE.zeichneAlsAusgewaehlt(g2, statusInfo.getEndStelle().getPosition(), EEditorFarben.ENDE, elementGroesse);
-			for (IWFNElementOK stelle: statusInfo.getMarkierungsListe())
+			EWFNElement.STELLE.zeichneAlsAusgewaehlt(g2, statusInfo.getStartPlace().getPosition(), EEditorFarben.START, elementGroesse);
+			EWFNElement.STELLE.zeichneAlsAusgewaehlt(g2, statusInfo.getEndPlace().getPosition(), EEditorFarben.ENDE, elementGroesse);
+			for (IWFNElementOK stelle: statusInfo.getMarkings())
 				g2.fillOval(stelle.getPosition().x - (elementGroesse/2), 
 							stelle.getPosition().y - (elementGroesse/2), 
 							elementGroesse, elementGroesse);
-			if (statusInfo.getAktivierteTransitionen() != null)
-				for (IWFNElementTransition transition : statusInfo.getAktivierteTransitionen())
+			if (statusInfo.getEnabledTransitions() != null)
+				for (IWFNElementTransition transition : statusInfo.getEnabledTransitions())
 					EWFNElement.TRANSITION.zeichneAlsAusgewaehlt(g2, transition.getPosition(), EEditorFarben.AKTIVIERT, elementGroesse); 
-			if (statusInfo.getKontaktTransitionen() != null)
-				for (IWFNElementTransition transition : statusInfo.getKontaktTransitionen())
+			if (statusInfo.getContactTransitions() != null)
+				for (IWFNElementTransition transition : statusInfo.getContactTransitions())
 					EWFNElement.TRANSITION.zeichneAlsAusgewaehlt(g2, transition.getPosition(), EEditorFarben.KONTAKT, elementGroesse);
 		}
 	}
@@ -231,7 +231,7 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 	 * @see horcherschnittstellen.IWFNModellStatusHorcher#modellStatusAenderung(wfnmodell.WFNStatusInfo)
 	 */
 	@Override
-	public void modellStatusAenderung(WFNStatusInfo statusInfo) {
+	public void modellStatusAenderung(WfnStatusInfo statusInfo) {
 		this.ausgewaehlteElemente = null;
 		this.statusInfo = statusInfo;
 		repaint();

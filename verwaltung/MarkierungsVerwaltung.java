@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import horcherschnittstellen.ITransitionsSchaltungsHorcher;
 import horcherschnittstellen.IWFNModellStatusHorcher;
 import horcherschnittstellen.IWFNVeraenderungsHorcher;
-import wfnmodell.WFNStatusInfo;
+import wfnmodell.WfnStatusInfo;
 import wfnmodell.elemente.EWFNElement;
 import wfnmodell.schnittstellen.IWFNElement;
 import wfnmodell.schnittstellen.IWFNElementStelle;
@@ -20,7 +20,7 @@ import wfnmodell.schnittstellen.IWFNElementOK;
 class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
 									   ITransitionsSchaltungsHorcher {
 	/** Der letztübermittelte Zustand/Status des WFN*/
-	private WFNStatusInfo statusInfo;
+	private WfnStatusInfo statusInfo;
 	/** Liste der markierten Stellen */
 	private ArrayList<IWFNElementStelle> markierungsListe;
 	/** Liste der aktivierten Transitionen*/
@@ -48,7 +48,7 @@ class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
 	 */
 	void schalteWennElementTransition(IWFNElement element) {
 		if ((element != null)
-				&& (statusInfo.istWFN())
+				&& (statusInfo.isWfn())
 				&& (element.getTyp() == EWFNElement.TRANSITION)
 				&& (aktivierteTransitionen.contains(element))) {
 			entferneMarkeDerEingangsstellen(element);
@@ -123,9 +123,9 @@ class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
 	}
 	
 	@Override
-	public void modellAenderungEingetreten(WFNStatusInfo statusInfo) {
+	public void modellAenderungEingetreten(WfnStatusInfo statusInfo) {
 		this.statusInfo = statusInfo;
-		if (statusInfo.istWFN()) {
+		if (statusInfo.isWfn()) {
 			markenAlleZurueckAufStart();
 			statusInfoAktualisieren();
 		}
@@ -165,17 +165,17 @@ class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
 		markierungsListe.clear();
 		aktivierteTransitionen.clear();
 		kontaktTransitionen.clear();
-		for (IWFNElementOK elem : statusInfo.getAlleElementeOK()) 
+		for (IWFNElementOK elem : statusInfo.getTransitionsAndPlaces()) 
 			if (elem.getTyp() == EWFNElement.STELLE) 
 				((IWFNElementStelle)elem).setMarke(false);
-		statusInfo.getStartStelle().setMarke(true);
-		markierungsListe.add(statusInfo.getStartStelle());
-		for (IWFNElementOK folgeTransition : statusInfo.getStartStelle().getKantenZu())
+		statusInfo.getStartPlace().setMarke(true);
+		markierungsListe.add(statusInfo.getStartPlace());
+		for (IWFNElementOK folgeTransition : statusInfo.getStartPlace().getKantenZu())
 			transitionHatNeueMarkierteEingangsstelle(folgeTransition);
-		while (statusInfo.getGruendeFuerKeinWFN().contains(ende_erreicht))
-			statusInfo.removeGruendeFuerKeinWFN(ende_erreicht);
-		while (statusInfo.getGruendeFuerKeinWFN().contains(deadlock))
-			statusInfo.removeGruendeFuerKeinWFN(deadlock);
+		while (statusInfo.getNotWfnExplanatoryStatements().contains(ende_erreicht))
+			statusInfo.removeNotWfnExplanatoryStatements(ende_erreicht);
+		while (statusInfo.getNotWfnExplanatoryStatements().contains(deadlock))
+			statusInfo.removeNotWfnExplanatoryStatements(deadlock);
 	}
 	
 	/**
@@ -185,21 +185,21 @@ class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
 	 * {@link #kontaktTransitionen}
 	 */
 	private void statusInfoAktualisieren() {
-		statusInfo.setMarkierungsListe(markierungsListe);
+		statusInfo.setMarkings(markierungsListe);
 		if ((aktivierteTransitionen.size() == 0)
 				&& (markierungsListe.size() > 0)) {
 			if ((markierungsListe.size() == 1)
-					&& (markierungsListe.contains(statusInfo.getEndStelle()))
-					&& (statusInfo.getStartStelle() != statusInfo.getEndStelle())
-					&& (!statusInfo.getGruendeFuerKeinWFN().contains(ende_erreicht)))
-				statusInfo.addGruendeFuerKeinWFN(ende_erreicht);
+					&& (markierungsListe.contains(statusInfo.getEndPlace()))
+					&& (statusInfo.getStartPlace() != statusInfo.getEndPlace())
+					&& (!statusInfo.getNotWfnExplanatoryStatements().contains(ende_erreicht)))
+				statusInfo.addNotWfnExplanatoryStatements(ende_erreicht);
 			else
-				if ((!statusInfo.getGruendeFuerKeinWFN().contains(deadlock))
-						&& (statusInfo.getStartStelle() != statusInfo.getEndStelle()))
-					statusInfo.addGruendeFuerKeinWFN(deadlock);
+				if ((!statusInfo.getNotWfnExplanatoryStatements().contains(deadlock))
+						&& (statusInfo.getStartPlace() != statusInfo.getEndPlace()))
+					statusInfo.addNotWfnExplanatoryStatements(deadlock);
 		}
-		statusInfo.setAktivierteTransitionen(aktivierteTransitionen);
-		statusInfo.setKontaktTransitionen(kontaktTransitionen);
+		statusInfo.setEnabledTransitions(aktivierteTransitionen);
+		statusInfo.setContactTransitions(kontaktTransitionen);
 	}
 
 	@Override

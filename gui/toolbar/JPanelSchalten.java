@@ -15,7 +15,7 @@ import javax.swing.border.TitledBorder;
 import gui.EIcons;
 import horcherschnittstellen.ITransitionsSchaltungsHorcher;
 import horcherschnittstellen.IWFNModellStatusHorcher;
-import wfnmodell.WFNStatusInfo;
+import wfnmodell.WfnStatusInfo;
 import wfnmodell.elemente.EWFNElement;
 import wfnmodell.elemente.WFNElementTransition;
 import wfnmodell.schnittstellen.IWFNElementTransition;
@@ -36,7 +36,7 @@ class JPanelSchalten extends JPanel implements IWFNModellStatusHorcher {
 	/**
 	 * Der letztübermittelte Zustand/Status des Workflownetzes.
 	 */
-	private WFNStatusInfo statusInfo;
+	private WfnStatusInfo statusInfo;
 	
 	/**
 	 * Leeres Füllelement mit der {@link #jcbModell} gefüllt wird, wenn es ansonsten leer wäre, damit
@@ -61,7 +61,7 @@ class JPanelSchalten extends JPanel implements IWFNModellStatusHorcher {
 	 */
 	JPanelSchalten() {
 		transSchaltHorcherListe = new ArrayList<>(2);
-		statusInfo = new WFNStatusInfo();
+		statusInfo = new WfnStatusInfo();
 		leeresElement = new WFNElementTransition("", 0, new Point(0, 0));
 		leeresElement.setName(" ");
 		
@@ -103,9 +103,9 @@ class JPanelSchalten extends JPanel implements IWFNModellStatusHorcher {
 	 */
 	private void aktualisiereComboBoxModell() {
 		jcbModell.removeAllElements();
-		if ((statusInfo.getAktivierteTransitionen() != null)
-				&& ( !statusInfo.getAktivierteTransitionen().isEmpty())) 
-			for (IWFNElementTransition transition : statusInfo.getAktivierteTransitionen())
+		if ((statusInfo.getEnabledTransitions() != null)
+				&& ( !statusInfo.getEnabledTransitions().isEmpty())) 
+			for (IWFNElementTransition transition : statusInfo.getEnabledTransitions())
 				jcbModell.addElement(transition);
 		else 
 			jcbModell.addElement(leeresElement);
@@ -138,8 +138,8 @@ class JPanelSchalten extends JPanel implements IWFNModellStatusHorcher {
 	}
 
 	@Override
-	public void modellStatusAenderung(WFNStatusInfo statusInfo) {
-		if (statusInfo.getAktivierteTransitionen() != null) {
+	public void modellStatusAenderung(WfnStatusInfo statusInfo) {
+		if (statusInfo.getEnabledTransitions() != null) {
 			this.statusInfo = statusInfo;
 			aktualisiereComboBoxModell();
 		}
