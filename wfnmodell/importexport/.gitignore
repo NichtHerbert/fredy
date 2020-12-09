@@ -6,3 +6,9 @@
 /PNMLParserAngepasst.class
 /PNMLWriter.class
 /TempPNMLElement.class
+/PnmlElement.class
+/ExportManagement.class
+/ImportManagement.class
+/IWfnImport.class
+/IWfnExport.class
+/PnmlParserAdapted.class

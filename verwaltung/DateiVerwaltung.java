@@ -8,10 +8,10 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import gui.IZentraleKonstanten;
-import wfnmodell.importexport.ExportVerwaltung;
-import wfnmodell.importexport.IWFNExport;
-import wfnmodell.importexport.IWFNImport;
-import wfnmodell.importexport.ImportVerwaltung;
+import wfnmodell.importexport.ExportManagement;
+import wfnmodell.importexport.IWfnExport;
+import wfnmodell.importexport.IWfnImport;
+import wfnmodell.importexport.ImportManagement;
 import wfnmodell.interfaces.IWfnElement;
 
 /**
@@ -23,11 +23,11 @@ public class DateiVerwaltung implements IDateiVerwaltung,
 	/**
 	 * Import-Schnittstelle zum Datenmodell.
 	 */
-	private IWFNImport impModell;
+	private IWfnImport impModell;
 	/**
 	 * Export-Schnittstelle zum Datenmodell.
 	 */
-	private IWFNExport expModell;
+	private IWfnExport expModell;
 	/** Die aktuelle AuswahlVerwaltung.*/
 	private AuswahlVerwaltung<IWfnElement> auswahlVerwaltung;
 	/** zur Übersicht was als dateiname anzuzeigen ist.*/
@@ -39,7 +39,7 @@ public class DateiVerwaltung implements IDateiVerwaltung,
 	 * @param expModell Export-Schnittstelle zum Datenmodell
 	 * @param auswahlVerwaltung die aktuelle Auswahlverwaltung
 	 */
-	public DateiVerwaltung(IWFNImport impModell, IWFNExport expModell, AuswahlVerwaltung<IWfnElement> auswahlVerwaltung) {
+	public DateiVerwaltung(IWfnImport impModell, IWfnExport expModell, AuswahlVerwaltung<IWfnElement> auswahlVerwaltung) {
 		super();
 		this.impModell = impModell;
 		this.expModell = expModell;
@@ -58,10 +58,10 @@ public class DateiVerwaltung implements IDateiVerwaltung,
 		JFileChooser chooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Petri-Netze: *.pnml", "pnml");
 		chooser.setFileFilter(filter);
-		chooser.setCurrentDirectory(impModell.getWFNDatei());
+		chooser.setCurrentDirectory(impModell.getWfnFile());
 		int returnVal = chooser.showOpenDialog(ausloeser.getParent());
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			ImportVerwaltung iV = new ImportVerwaltung(chooser.getSelectedFile(), impModell);
+			ImportManagement iV = new ImportManagement(chooser.getSelectedFile(), impModell);
 			iV.startImport();
 			auswahlVerwaltung.clearAndFire(NEUE_AUSWAHL);
 		}
@@ -70,12 +70,12 @@ public class DateiVerwaltung implements IDateiVerwaltung,
 
 	@Override
 	public boolean dateiSpeichern(JComponent ausloeser) {
-		if (!impModell.istDasWFNSoSchonGespeichert()) {
-			if (impModell.getWFNDatei() == null)
+		if (!impModell.isCurrentWfnSaved()) {
+			if (impModell.getWfnFile() == null)
 				return dateiSpeichernUnter(ausloeser);
 			else {
-				(new ExportVerwaltung(impModell.getWFNDatei(), expModell)).startExport();
-				impModell.setIstDasWFNSoSchonGespeichert(true);
+				(new ExportManagement(impModell.getWfnFile(), expModell)).startExport();
+				impModell.setIsCurrentWfnSaved(true);
 				letzteDateiAktionWarDateiNeu = false;
 			}
 		}
@@ -87,7 +87,7 @@ public class DateiVerwaltung implements IDateiVerwaltung,
 		JFileChooser chooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Petri-Netze: *.pnml", "pnml");
 		chooser.setFileFilter(filter);
-		chooser.setCurrentDirectory(impModell.getWFNDatei());
+		chooser.setCurrentDirectory(impModell.getWfnFile());
 		int returnVal = chooser.showSaveDialog(ausloeser.getParent());
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File pnml = chooser.getSelectedFile();
@@ -102,9 +102,9 @@ public class DateiVerwaltung implements IDateiVerwaltung,
 			    if (dateiUeberschreiben != JOptionPane.YES_OPTION) 
 			        return false;
 			}
-			(new ExportVerwaltung(pnml, expModell)).startExport();
-			impModell.setWFNDatei(pnml);
-			impModell.setIstDasWFNSoSchonGespeichert(true);
+			(new ExportManagement(pnml, expModell)).startExport();
+			impModell.setWfnFile(pnml);
+			impModell.setIsCurrentWfnSaved(true);
 			letzteDateiAktionWarDateiNeu = false;
 			return true;
 		}
@@ -114,8 +114,8 @@ public class DateiVerwaltung implements IDateiVerwaltung,
 	@Override
 	public String getDateiName() {
 		return (( !letzteDateiAktionWarDateiNeu)
-				&& (impModell.getWFNDatei() != null)) 
-					? impModell.getWFNDatei().getName()
+				&& (impModell.getWfnFile() != null)) 
+					? impModell.getWfnFile().getName()
 					: "unbenannt";
 	}
 

@@ -125,7 +125,7 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 	 * Methode zum Beenden des gesamten Programms.
 	 */
 	public void programmBeenden() {
-		if (!wfnModell.istDasWFNSoSchonGespeichert()) {
+		if (!wfnModell.isCurrentWfnSaved()) {
 			Object[] buttons = { "Abbrechen",
 								"Ohne Speichern",
 								"Mit Speichern"};

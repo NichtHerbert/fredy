@@ -9,9 +9,9 @@ import horcherschnittstellen.IWFNVeraenderungsHorcher;
 import wfnmodell.elements.EWfnElement;
 import wfnmodell.elements.WfnElementPlace;
 import wfnmodell.elements.WfnElementTransition;
-import wfnmodell.importexport.IWFNExport;
-import wfnmodell.importexport.IWFNImport;
-import wfnmodell.importexport.TempPNMLElement;
+import wfnmodell.importexport.IWfnExport;
+import wfnmodell.importexport.IWfnImport;
+import wfnmodell.importexport.PnmlElement;
 import wfnmodell.interfaces.IWfnElement;
 import wfnmodell.interfaces.IWfnArc;
 import wfnmodell.interfaces.IWfnTransitionAndPlace;
@@ -25,8 +25,8 @@ import wfnmodell.interfaces.IWfnModelPresentation;
  */
 public class WFNModell implements 	IWfnModelChanging, 
 									IWfnModelPresentation, 
-									IWFNImport, 
-									IWFNExport {
+									IWfnImport, 
+									IWfnExport {
 	
 	/**
 	 * Die aktuelle {@link IDManagement}.
@@ -102,12 +102,12 @@ public class WFNModell implements 	IWfnModelChanging,
 	}
 	
 	@Override
-	public void setWFNDatei(File datei) {
+	public void setWfnFile(File datei) {
 		letzteWFNDatei = datei;
 	}
 	
 	@Override
-	public File getWFNDatei() {
+	public File getWfnFile() {
 		return letzteWFNDatei;
 	}
 
@@ -158,11 +158,11 @@ public class WFNModell implements 	IWfnModelChanging,
 	
 	@Override
 	public void createPlace(Point position) {
-		neueStelle("", "", position, false);
+		createPlace("", "", position, false);
 	}
 
 	@Override
-	public void neueStelle(String pnmlID, String name, Point position, boolean marke) {
+	public void createPlace(String pnmlID, String name, Point position, boolean marke) {
 		idVerwaltung.pnmlIDMonitoring(pnmlID);
 		final int neueID = idVerwaltung.get();
 		WfnElementPlace stelle = new WfnElementPlace(pnmlID, neueID, position);
@@ -175,11 +175,11 @@ public class WFNModell implements 	IWfnModelChanging,
 
 	@Override
 	public void createTransition(Point position) {
-		neueTransition("", "", position);
+		createTransition("", "", position);
 	}
 
 	@Override
-	public void neueTransition(String pnmlID, String name, Point position) {
+	public void createTransition(String pnmlID, String name, Point position) {
 		idVerwaltung.pnmlIDMonitoring(pnmlID);
 		final int neueID = idVerwaltung.get();
 		WfnElementTransition transition = new WfnElementTransition(pnmlID, neueID, position);
@@ -189,7 +189,7 @@ public class WFNModell implements 	IWfnModelChanging,
 	}
 	
 	@Override
-	public void neueKante(String pnmlIDKante, String pnmlIDSource, String pnmlIDTarget) {
+	public void createArc(String pnmlIDKante, String pnmlIDSource, String pnmlIDTarget) {
 		boolean sourceNichtGefunden = true;
 		boolean targetNichtGefunden = true;
 		Iterator<IWfnTransitionAndPlace> it = elementListeOK.iterator();
@@ -250,12 +250,12 @@ public class WFNModell implements 	IWfnModelChanging,
 	}
 
 	@Override
-	public boolean istDasWFNSoSchonGespeichert() {
+	public boolean isCurrentWfnSaved() {
 		return istGespeichert;
 	}
 	
 	@Override
-	public void setIstDasWFNSoSchonGespeichert(boolean b) {
+	public void setIsCurrentWfnSaved(boolean b) {
 		istGespeichert = b;
 	}
 
@@ -273,22 +273,22 @@ public class WFNModell implements 	IWfnModelChanging,
 	}
 
 	@Override
-	public ArrayList<TempPNMLElement> getAlleElementeFuerExport() {
+	public ArrayList<PnmlElement> getAllElementsForExport() {
 		ArrayList<? extends IWfnElement> alleElemente = getAlleElemente();
-		ArrayList<TempPNMLElement> ergebnis = new ArrayList<>(alleElemente.size());
+		ArrayList<PnmlElement> ergebnis = new ArrayList<>(alleElemente.size());
 		for (IWfnElement elem : alleElemente) {
 			String pnmlID = elem.getPnmlID();
 			if (pnmlID.equals("")) pnmlID = idVerwaltung.convertIDintoPnmlID(elem.getID());
 			String marke = "";
 			EWfnElement typ = elem.getWfnElementType();
-			TempPNMLElement temp;
+			PnmlElement temp;
 			switch (typ) {
     		case PLACE: 	if (((IWfnPlace) elem).hasMarking()) marke = "1"; 
     						else marke = "0";	
     		case TRANSITION:String name = ((IWfnTransitionAndPlace) elem).getName();
     						String x = String.valueOf((((IWfnTransitionAndPlace) elem).getPosition()).x);
     						String y = String.valueOf((((IWfnTransitionAndPlace) elem).getPosition()).y);
-    						temp = new TempPNMLElement(typ,pnmlID,name,x,y,marke);
+    						temp = new PnmlElement(typ,pnmlID,name,x,y,marke);
     						ergebnis.add(temp);
     						break;
     		case ARC:		String vonPNMLID = (((IWfnArc) elem).getSource()).getPnmlID();
@@ -297,7 +297,7 @@ public class WFNModell implements 	IWfnModelChanging,
     							idVerwaltung.convertIDintoPnmlID((((IWfnArc) elem).getSource()).getID());
     						if (zuPNMLID.equals("")) zuPNMLID = 
         						idVerwaltung.convertIDintoPnmlID((((IWfnArc) elem).getTarget()).getID());
-    							ergebnis.add(new TempPNMLElement(typ,pnmlID,vonPNMLID,zuPNMLID));
+    							ergebnis.add(new PnmlElement(typ,pnmlID,vonPNMLID,zuPNMLID));
     						break;
 			}
 		}

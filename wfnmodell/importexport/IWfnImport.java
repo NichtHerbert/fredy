@@ -8,31 +8,31 @@ import java.io.File;
  * Schnittstelle zum Importieren in das Datenmodell.
  *
  */
-public interface IWFNImport {
+public interface IWfnImport {
 		
 	/**
 	 * Setzt die Referenz auf das Objekt der letzten geöffneten oder gespeicherten pnml-Datei.
-	 * @param datei zu setzende Referenz
+	 * @param file zu setzende Referenz
 	 */
-	void setWFNDatei(File datei);
+	void setWfnFile(File file);
 	
 	/**
 	 * Gibt eine Referenz auf die letzte geöffnete oder gespeicherte pnml-Datei.
 	 * @return Referenz auf die letzte geöffnete oder gespeicherte pnml-Datei
 	 */
-	File getWFNDatei();
+	File getWfnFile();
 	
 	/**
 	 * Gibt zurück, ob das WFN so schon gespeichert / exportiert wurde.
 	 * @return true, wenn das Datenmodell in seiner aktuellen Form abgespeichert ist
 	 */
-	boolean istDasWFNSoSchonGespeichert();
+	boolean isCurrentWfnSaved();
 	
 	/**
 	 * Legt fest, ob das WFN so schon gespeichert / exportiert wurde.
 	 * @param b der festzulegende boolsche Wert
 	 */
-	void setIstDasWFNSoSchonGespeichert(boolean b);
+	void setIsCurrentWfnSaved(boolean b);
 	
 	/**
 	 * Leert das aktuelle Datenmodell, so dass es keine Elemente mehr hat.
@@ -44,9 +44,9 @@ public interface IWFNImport {
 	 * @param pnmlID ID der Stelle laut pnml-Datei
 	 * @param name Name der Stelle
 	 * @param position Position der Stelle
-	 * @param marke Markierung der Stelle
+	 * @param marking Markierung der Stelle
 	 */
-	void neueStelle(String pnmlID, String name, Point position,  boolean marke);
+	void createPlace(String pnmlID, String name, Point position,  boolean marking);
 	
 	/**
 	 * Fügt dem Datenmodell eine neue Transition hinzu.
@@ -54,14 +54,14 @@ public interface IWFNImport {
 	 * @param name Name der Transition
 	 * @param position Position der Transition
 	 */
-	void neueTransition(String pnmlID, String name, Point position);
+	void createTransition(String pnmlID, String name, Point position);
 
 	/**
 	 * Fügt dem Datenmodell eine neue Kante hinzu.
-	 * @param pnmlIDKante ID der Kante laut pnml-Datei
+	 * @param pnmlIDArc ID der Kante laut pnml-Datei
 	 * @param pnmlIDSource pnml-Datei-ID des Ausgangselements der Kante
 	 * @param pnmlIDTarget pnml-Datei-ID des Endelements der Kante
 	 */
-	void neueKante(String pnmlIDKante, String pnmlIDSource, String pnmlIDTarget);
+	void createArc(String pnmlIDArc, String pnmlIDSource, String pnmlIDTarget);
 
 }

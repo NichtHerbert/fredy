@@ -9,41 +9,41 @@ import wfnmodell.elements.EWfnElement;
  * Erweiterung der vorgegebenen Klasse {@link PNMLParser}.
  *
  */
-public class PNMLParserAngepasst extends PNMLParser {
+public class PnmlParserAdapted extends PNMLParser {
 	
 	/**
-	 * HashMap zur Ablage der geparsten Elemente als Objekte der Klasse {@link TempPNMLElement},
+	 * HashMap zur Ablage der geparsten Elemente als Objekte der Klasse {@link PnmlElement},
 	 * als Key dienen die IDs aus der pnml-Datei.
 	 */
-	private HashMap<String,TempPNMLElement> pnmlImport;
+	private HashMap<String,PnmlElement> pnmlImport;
 
-	public PNMLParserAngepasst(File pnml) {
+	public PnmlParserAdapted(File pnml) {
 		super(pnml);
 		pnmlImport = new HashMap<>();
 	}
 	
 	/**
-	 * Gibt alle aus einer pnml-Datei erparsten Elemente in Form von Objekten der Klasse {@link TempPNMLElement} zurück.
+	 * Gibt alle aus einer pnml-Datei erparsten Elemente in Form von Objekten der Klasse {@link PnmlElement} zurück.
 	 * Sie wird vorzugsweise erst ausgeführt, wenn das Parsen abgeschlossen ist!
 	 * @return HashMap aller importierten Elemente
 	 */
-	public HashMap<String,TempPNMLElement> getPNMLImport() {
+	public HashMap<String,PnmlElement> getPnmlImport() {
 		return pnmlImport;
 	}
 	
 	@Override
     public void newTransition(final String id) {
-        pnmlImport.put(id, new TempPNMLElement(EWfnElement.TRANSITION, id));
+        pnmlImport.put(id, new PnmlElement(EWfnElement.TRANSITION, id));
     }
 
     @Override
     public void newPlace(final String id) {
-    	pnmlImport.put(id, new TempPNMLElement(EWfnElement.PLACE, id));
+    	pnmlImport.put(id, new PnmlElement(EWfnElement.PLACE, id));
     }
 
     @Override
     public void newArc(final String id, final String source, final String target) {
-    	TempPNMLElement elem = new TempPNMLElement(EWfnElement.ARC, id);
+    	PnmlElement elem = new PnmlElement(EWfnElement.ARC, id);
     	elem.setPnmlIDSource(source);
     	elem.setPnmlIDTarget(target);
     	pnmlImport.put(id, elem);
@@ -61,6 +61,6 @@ public class PNMLParserAngepasst extends PNMLParser {
 
     @Override
     public void setMarking(final String id, final String marking) {
-    	(pnmlImport.get(id)).setMarkiert(marking);
+    	(pnmlImport.get(id)).setMarking(marking);
     }
 }

@@ -6,9 +6,9 @@ import wfnmodell.elements.EWfnElement;
  * Hilfsklasse zum Zwischenspeichern der Elemente eines Workflownetzes, 
  * während das WFN importiert oder exportiert wird.
  */
-public class TempPNMLElement {
+public class PnmlElement {
 	/** Typ des Elements */
-	private EWfnElement typ;
+	private EWfnElement type;
 	/** pnml-Datei-ID des Elements*/
 	private String pnmlID;
 	/** Name des Elements*/
@@ -18,7 +18,7 @@ public class TempPNMLElement {
 	/** Y-Position des Elements*/
 	private String y;
 	/** Markierung des Elements (relevant, sollte es vom Typ Stelle sein)*/
-	private String markiert;
+	private String marking;
 	/** pnml-Datei-ID des Ausgangselements, von dem die Kante ausgeht 
 	 * (natürlich nur relevant, sollte dass Element vom Typ Kante sein)
 	 */
@@ -33,66 +33,66 @@ public class TempPNMLElement {
 	 * Konstruktor zum instanzieren einer Stelle oder einer Transition.
 	 * Der Konstruktor instanziert ein neues Objekt dieser Klasse mit den übergebenen Parametern.
 	 * Alle anderen Attribute des Objekts haben den Wert "".
-	 * @param typ Typ des zu instanzierenden Elements
+	 * @param type Typ des zu instanzierenden Elements
 	 * @param pnmlID pnml-ID des zu instanzierenden Elements
 	 */
-	public TempPNMLElement(EWfnElement typ, String pnmlID) {
-		this(typ, pnmlID, "", "", "");
+	public PnmlElement(EWfnElement type, String pnmlID) {
+		this(type, pnmlID, "", "", "");
 	}
 
 	/**
 	 * Konstruktor zum instanzieren einer Kante.
 	 * Der Konstruktor instanziert ein neues Objekt dieser Klasse mit den übergebenen Parametern.
 	 * Alle anderen Attribute des Objekts haben den Wert "".
-	 * @param typ Typ des zu instanzierenden Elements
+	 * @param type Typ des zu instanzierenden Elements
 	 * @param pnmlID pnml-ID des zu instanzierenden Elements
 	 * @param pnmlIDSource pnml-Datei-ID des Ausgangselements, von dem die Kante ausgeht 
 	 * @param pnmlIDTarget pnml-Datei-ID des Endelements, in welchem die Kante endet
 	 */
-	public TempPNMLElement(EWfnElement typ, String pnmlID, String pnmlIDSource, String pnmlIDTarget) {
+	public PnmlElement(EWfnElement type, String pnmlID, String pnmlIDSource, String pnmlIDTarget) {
 		super();
-		this.typ = typ;
+		this.type = type;
 		this.pnmlID = pnmlID;
 		this.pnmlIDSource = pnmlIDSource;
 		this.pnmlIDTarget = pnmlIDTarget;
 		name = "";
 		x = "";
 		y = "";
-		markiert = "";
+		marking = "";
 	}
 
 	/**
 	 * Konstruktor zum instanzieren einer Stelle oder einer Transition.
 	 * Der Konstruktor instanziert ein neues Objekt dieser Klasse mit den übergebenen Parametern.
 	 * Alle anderen Attribute des Objekts haben den Wert "".
-	 * @param typ Typ des zu instanzierenden Elements
+	 * @param type Typ des zu instanzierenden Elements
 	 * @param pnmlID pnml-ID des zu instanzierenden Elements
 	 * @param name Name des zu instanzierenden Elements
 	 * @param x X-Position des Elements
 	 * @param y Y-Position des Elements
 	 */
-	public TempPNMLElement(EWfnElement typ, String pnmlID, String name, String x, String y) {
-		this(typ, pnmlID, name, x, y, "");
+	public PnmlElement(EWfnElement type, String pnmlID, String name, String x, String y) {
+		this(type, pnmlID, name, x, y, "");
 	}
 
 	/**
 	 * Konstruktor zum instanzieren einer Stelle oder einer Transition. 
 	 * Der Konstruktor instanziert ein neues Objekt dieser Klasse mit den übergebenen Parametern.
-	 * @param markiert wenn nicht "" muss es sich um eine Stelle handeln.
-	 * @param typ Typ des zu instanzierenden Elements
+	 * @param marking wenn nicht "" muss es sich um eine Stelle handeln.
+	 * @param type Typ des zu instanzierenden Elements
 	 * @param pnmlID pnml-ID des zu instanzierenden Elements
 	 * @param name Name des zu instanzierenden Elements
 	 * @param x X-Position des Elements
 	 * @param y Y-Position des Elements
 	 */
-	public TempPNMLElement(EWfnElement typ, String pnmlID, String name, String x, String y, String markiert) {
+	public PnmlElement(EWfnElement type, String pnmlID, String name, String x, String y, String marking) {
 		super();
-		this.typ = typ;
+		this.type = type;
 		this.pnmlID = pnmlID;
 		this.name = name;
 		this.x = x;
 		this.y = y;
-		this.markiert = markiert;
+		this.marking = marking;
 		pnmlIDSource = "";
 		pnmlIDTarget = "";
 	}
@@ -101,8 +101,8 @@ public class TempPNMLElement {
 	 * Gibt den Typ des Elements zurück.
 	 * @return Typ des Elements
 	 */
-	public EWfnElement getTyp() {
-		return typ;
+	public EWfnElement getType() {
+		return type;
 	}
 
 	/**
@@ -159,16 +159,16 @@ public class TempPNMLElement {
 	 * Gibt die Markierung des Elements zurück.
 	 * @return die Markierung des Elements
 	 */
-	public String getMarkiert() {
-		return markiert;
+	public String getMarking() {
+		return marking;
 	}
 
 	/**
 	 * Legt die Markierung eines Elements fest.
-	 * @param markiert die festzulegende Markierung des Elements
+	 * @param marking die festzulegende Markierung des Elements
 	 */
-	public void setMarkiert(String markiert) {
-		this.markiert = markiert;
+	public void setMarking(String marking) {
+		this.marking = marking;
 	}
 
 	/**
