@@ -12,7 +12,7 @@ import java.util.TreeSet;
  * (was vor Allem dann zu Komplikationen führen könnte, wenn die ID der pnml-Datei 
  * eine niedrige natürliche Zahl ist).
  */
-class Identifier {
+class IDManagement {
 	/**
 	 * Wird von 0 auf hochgezählt: Ist also entweder 0 oder entspricht dem Wert der letzten ID-Zuweisung.
 	 */
@@ -36,7 +36,7 @@ class Identifier {
 	 */
 	private HashMap<Integer, Integer> idsDifferentFromPnmlID;
 
-	Identifier() {
+	IDManagement() {
 		index = 0;
 		unusedIDs = new BitSet(20);
 		importedPnmlIDs = new TreeSet<Integer>();

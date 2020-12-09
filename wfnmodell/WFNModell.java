@@ -29,9 +29,9 @@ public class WFNModell implements 	IWFNModellVeraendern,
 									IWFNExport {
 	
 	/**
-	 * Die aktuelle {@link Identifier}.
+	 * Die aktuelle {@link IDManagement}.
 	 */
-	private Identifier idVerwaltung;
+	private IDManagement idVerwaltung;
 	/**
 	 * Liste aller Transitionen und Stellen des aktuellen Datenmodells.
 	 */
@@ -71,7 +71,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	 * Art zurückgesetzt werden.
 	 */
 	private void newInit() {
-		idVerwaltung = new Identifier();
+		idVerwaltung = new IDManagement();
 		elementListeOK = new ArrayList<IWFNElementOK>();
 		zusammenhangsVerwaltung = new ConnectionManagement();
 		startEndStellenVerwaltung = new StartEndManagement(zusammenhangsVerwaltung);

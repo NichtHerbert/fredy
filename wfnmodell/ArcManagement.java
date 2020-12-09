@@ -13,9 +13,9 @@ import wfnmodell.schnittstellen.IWFNElementOK;
  */
 class ArcManagement {
 	/**
-	 * Die aktuelle {@link Identifier}.
+	 * Die aktuelle {@link IDManagement}.
 	 */
-	private Identifier identifier;
+	private IDManagement identifier;
 	
 	/**
 	 * Die aktuelle {@link StartEndManagement}.
@@ -32,7 +32,7 @@ class ArcManagement {
 	 */
 	private ArrayList<WFNElementKante> arcs;
 
-	ArcManagement(Identifier idManagement, StartEndManagement startEndManagement,
+	ArcManagement(IDManagement idManagement, StartEndManagement startEndManagement,
 			ConnectionManagement connectionManagement) {
 		this.identifier = idManagement;
 		this.startEndManagement = startEndManagement;
