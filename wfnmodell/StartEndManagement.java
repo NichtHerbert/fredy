@@ -2,10 +2,10 @@ package wfnmodell;
 
 import java.util.ArrayList;
 
-import wfnmodell.schnittstellen.IWFNElementStelle;
 import wfnmodell.elements.EWfnElement;
 import wfnmodell.elements.WfnElementPlace;
-import wfnmodell.schnittstellen.IWFNElementOK;
+import wfnmodell.interfaces.IWfnTransitionAndPlace;
+import wfnmodell.interfaces.IWfnPlace;
 
 /**
  * Klasse zur Verwaltung der möglichen Start- und der möglichen Endstellen eines Workflownetzes.
@@ -15,11 +15,11 @@ class StartEndManagement {
 	/**
 	 * Liste der möglichen Startstellen.
 	 */
-	private ArrayList<IWFNElementStelle> startPlaces;
+	private ArrayList<IWfnPlace> startPlaces;
 	/**
 	 * Liste der möglichen Endstellen.
 	 */
-	private ArrayList<IWFNElementStelle> endPlaces;
+	private ArrayList<IWfnPlace> endPlaces;
 	/**
 	 * Die aktuelle {@link ConnectionManagement}.
 	 */
@@ -38,7 +38,7 @@ class StartEndManagement {
 	 * @param origin Element, von dem die neue Kante ausgeht
 	 * @param ending Element, in dem die neue Kante endet
 	 */
-	void infoCreatedArc(IWFNElementOK origin, IWFNElementOK ending) {
+	void infoCreatedArc(IWfnTransitionAndPlace origin, IWfnTransitionAndPlace ending) {
 		if (origin.getWfnElementType() == EWfnElement.PLACE) { 
 			if (endPlaces.contains(origin)) {
 				endPlaces.remove(origin);
@@ -59,7 +59,7 @@ class StartEndManagement {
 	 * @param origin Element, von dem die gelöschte Kante ausging
 	 * @param ending Element, in dem die gelöschte Kante endete
 	 */
-	void infoDeletedArc(IWFNElementOK origin, IWFNElementOK ending) {
+	void infoDeletedArc(IWfnTransitionAndPlace origin, IWfnTransitionAndPlace ending) {
 		if (origin.getWfnElementType() == EWfnElement.PLACE) {
 			if (!origin.hasOutgoingArcs()) {
 				endPlaces.add((WfnElementPlace) origin);
@@ -148,7 +148,7 @@ class StartEndManagement {
 	 * Gibt es eine eindeutige Startstelle, wird eine Referenz auf sie zurückgegeben.
 	 * @return die Startstelle, oder null, wenn es keine eindeutige gibt
 	 */
-	IWFNElementStelle getUniqueStart() {
+	IWfnPlace getUniqueStart() {
 		if (hasUniqueStart())
 			return startPlaces.get(0);
 		else
@@ -159,7 +159,7 @@ class StartEndManagement {
 	 * Gibt es eine eindeutige Endstelle, wird eine Referenz auf sie zurückgegeben.
 	 * @return die Endstelle, oder null, wenn es keine eindeutige gibt
 	 */
-	IWFNElementStelle getUniqueEnd() {
+	IWfnPlace getUniqueEnd() {
 		if (hasUniqueEnd())
 			return endPlaces.get(0);
 		else
@@ -170,7 +170,7 @@ class StartEndManagement {
 	 * Gibt eine Liste der möglichen Startstellen zurück.
 	 * @return {@link #startPlaces}
 	 */
-	ArrayList<IWFNElementStelle> getStartPlaces() {
+	ArrayList<IWfnPlace> getStartPlaces() {
 		return startPlaces;
 	}
 
@@ -178,7 +178,7 @@ class StartEndManagement {
 	 * Gibt eine Liste der möglichen Endstellen zurück.
 	 * @return {@link #endPlaces}
 	 */
-	ArrayList<IWFNElementStelle> getEndPlaces() {
+	ArrayList<IWfnPlace> getEndPlaces() {
 		return endPlaces;
 	}
 	

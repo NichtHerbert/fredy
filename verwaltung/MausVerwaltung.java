@@ -12,9 +12,9 @@ import gui.IZentraleKonstanten;
 import horcherschnittstellen.IEditorModusHorcher;
 import horcherschnittstellen.IZeichnungBenoetigtHorcher;
 import wfnmodell.elements.EWfnElement;
-import wfnmodell.schnittstellen.IWFNElement;
-import wfnmodell.schnittstellen.IWFNElementOK;
-import wfnmodell.schnittstellen.IWFNModellVeraendern;
+import wfnmodell.interfaces.IWfnElement;
+import wfnmodell.interfaces.IWfnTransitionAndPlace;
+import wfnmodell.interfaces.IWfnModelChanging;
 
 /**
  * Klasse zur Verwaltung der möglichen Mausaktionen im {@link gui.JPanelEditor}.
@@ -24,11 +24,11 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 														  IZentraleKonstanten {
 
 	/**Schnittstelle um Veränderungen am Datenmodell vorzunehmen*/
-	private IWFNModellVeraendern wfnModell;
+	private IWfnModelChanging wfnModell;
 	/**Die aktuelle {@link ZoomFaktorVerwaltung}. */
 	private ZoomFaktorVerwaltung zoom;
 	/** Liste der ausgewählten Elemente */
-	private AuswahlVerwaltung<IWFNElement> auswahl;
+	private AuswahlVerwaltung<IWfnElement> auswahl;
 	/**Die aktuelle {@link PositionsVerwaltung} */
 	private PositionsVerwaltung koordinaten;
 	/**Die aktuelle {@link MarkierungsVerwaltung} */
@@ -38,12 +38,12 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 	private boolean gibtEsEinStartElement;
 	/**(Für den Editormodus AUSWAHL) Dasjenige ausgewählte Element, über dem sich der Mauszeiger befand,
 	 * als eine Maustaste gedrückt wurde.*/
-	private IWFNElement startElement;
+	private IWfnElement startElement;
 	/**(Für den Editormodus AUSWAHL) Die Mausposition, wenn die Maustaste gedrückt wurde.*/
 	private Point startMausPosition;
 	/** (Für den Editormodus AUSWAHL) Zum Speichern (bei einer Auswahl größer 1) 
 	 * der Abstandsverhältnisse der ausgewählten Elemente zum {@link #startElement}. */
-	private HashMap<IWFNElement, Point> auswahlElementAbstand;
+	private HashMap<IWfnElement, Point> auswahlElementAbstand;
 	/**(Für den Editormodus AUSWAHL) Zum Speichern (bei einer Auswahl größer 1) 
 	 * der größten x und der größten y Verschiebung der ausgewählten Elemente zum {@link #startElement}
 	 * (so dass man die Auswahl nicht über den Rand hinaus schieben kann).*/
@@ -51,7 +51,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 	/** (Für den Editormus KANTE_HINZU) Gibt an, ob schon ein Kanteausgangselement gewählt wurde.*/
 	private boolean kanteAusgangsElementAusgewaehlt;
 	/**(Für den Editormodus KANTE_HINZU) Das für die hinzuzufügende Kante gewählte Ausgangselement.*/
-	private IWFNElementOK kantenAusgangsElement;
+	private IWfnTransitionAndPlace kantenAusgangsElement;
 	/**Der aktuelle Editormodus */
 	private EWFNEditorModus editorModus;
 	/**Liste der Horcher, die informiert werden möchten, wenn die Zeichnung einer Linie oder eines Rechtecks benötigt wird*/
@@ -65,9 +65,9 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 	 * @param markierungsVerwaltung Die aktuelle {@link MarkierungsVerwaltung}
 	 * @param zoom Die aktuelle {@link ZoomFaktorVerwaltung}
 	 */
-	MausVerwaltung(IWFNModellVeraendern wfnModell,
+	MausVerwaltung(IWfnModelChanging wfnModell,
 						PositionsVerwaltung koordinaten,
-						AuswahlVerwaltung<IWFNElement> auswahl,
+						AuswahlVerwaltung<IWfnElement> auswahl,
 						MarkierungsVerwaltung markierungsVerwaltung,
 						ZoomFaktorVerwaltung zoom) {
 		this.wfnModell = wfnModell;
@@ -151,7 +151,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (editorModus == EWFNEditorModus.AUSWAHL) {
-			IWFNElement elem = koordinaten.getWasDaIst(e.getPoint());
+			IWfnElement elem = koordinaten.getWasDaIst(e.getPoint());
 			if (elem != null) {
 				gibtEsEinStartElement = true;
 				startElement = elem;
@@ -165,20 +165,20 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 				if (auswahl.size() > 1) {
 					int x, y;
 					if (startElement.getWfnElementType() != EWfnElement.ARC ) {
-						x = ((IWFNElementOK)startElement).getPosition().x;
-						y = ((IWFNElementOK)startElement).getPosition().y;
+						x = ((IWfnTransitionAndPlace)startElement).getPosition().x;
+						y = ((IWfnTransitionAndPlace)startElement).getPosition().y;
 					} else {
 						Point p = zoom.ohne(e.getPoint());
 						x = p.x;
 						y = p.y;
 					}
 					auswahlElementAbstand.clear();
-					for (IWFNElement auswahlElem : auswahl) {
+					for (IWfnElement auswahlElem : auswahl) {
 						if ((auswahlElem.getWfnElementType() != EWfnElement.ARC)
 								&& (auswahlElem != startElement)) {
 							Point abstandZuStart = new Point(
-									((IWFNElementOK)auswahlElem).getPosition().x - x,
-									((IWFNElementOK)auswahlElem).getPosition().y - y);
+									((IWfnTransitionAndPlace)auswahlElem).getPosition().x - x,
+									((IWfnTransitionAndPlace)auswahlElem).getPosition().y - y);
 							if (abstandZuStart.x < xNiedrigerAlsStartElement) 
 								xNiedrigerAlsStartElement = abstandZuStart.x;
 							if (abstandZuStart.y < yNiedrigerAlsStartElement)
@@ -220,12 +220,12 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 				if  ((startElement.getWfnElementType() != EWfnElement.ARC)
 						&& (mausPunktOhneZoom.x > (xNiedrigerAlsStartElement + EWfnElement.BASEFACTOR))
 						&& (mausPunktOhneZoom.y > (yNiedrigerAlsStartElement + EWfnElement.BASEFACTOR))) {
-					((IWFNElementOK)startElement).setPosition(mausPunktOhneZoom);
+					((IWfnTransitionAndPlace)startElement).setPosition(mausPunktOhneZoom);
 					if (auswahl.size() > 1) {
-						for (IWFNElement auswahlElem : auswahl) {
+						for (IWfnElement auswahlElem : auswahl) {
 							if ((auswahlElem.getWfnElementType() != EWfnElement.ARC)
 									&& (auswahlElem != startElement)) {
-								Point position = ((IWFNElementOK)auswahlElem).getPosition();
+								Point position = ((IWfnTransitionAndPlace)auswahlElem).getPosition();
 								position.setLocation(mausPunktOhneZoom.getX() + auswahlElementAbstand.get(auswahlElem).x,
 										mausPunktOhneZoom.getY() + auswahlElementAbstand.get(auswahlElem).y);
 							}
@@ -285,7 +285,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 			switch (editorModus) {
 			case AUSWAHL:
 				if (gibtEsEinStartElement) {
-					IWFNElement neueAuswahl = koordinaten.getWasDaIst(e.getPoint());
+					IWfnElement neueAuswahl = koordinaten.getWasDaIst(e.getPoint());
 					if (neueAuswahl != null) {
 						if (!auswahl.contains(neueAuswahl)) {
 							if (!e.isControlDown()) auswahl.clear();
@@ -301,17 +301,17 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 				gibtEsEinStartElement = false;
 				break;
 			case STELLE_HINZU:
-				wfnModell.neueStelle(zoom.ohne(e.getPoint()));
+				wfnModell.createPlace(zoom.ohne(e.getPoint()));
 				break;
 			case TRANSITION_HINZU:
-				wfnModell.neueTransition(zoom.ohne(e.getPoint()));
+				wfnModell.createTransition(zoom.ohne(e.getPoint()));
 				break;
 			case KANTE_HINZU:
-				IWFNElement element = koordinaten.getWasDaIst(e.getPoint());
+				IWfnElement element = koordinaten.getWasDaIst(e.getPoint());
 				if ((element != null)
 					&& (element.getWfnElementType() != EWfnElement.ARC)) {
 						if (!kanteAusgangsElementAusgewaehlt) {
-							kantenAusgangsElement = (IWFNElementOK) element;
+							kantenAusgangsElement = (IWfnTransitionAndPlace) element;
 							kanteAusgangsElementAusgewaehlt = true;
 							auswahl.clearAndAddAndFire(element, KANTEN_AUSWAHL);
 						} else {
@@ -321,7 +321,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 								auswahl.clearAndFire(KANTEN_AUSWAHL);
 							} else {
 								if (element.getWfnElementType() != kantenAusgangsElement.getWfnElementType()) {
-									wfnModell.neueKante(kantenAusgangsElement, (IWFNElementOK) element);
+									wfnModell.createArc(kantenAusgangsElement, (IWfnTransitionAndPlace) element);
 									kanteAusgangsElementAusgewaehlt = false;
 									kantenAusgangsElement = null;
 								}

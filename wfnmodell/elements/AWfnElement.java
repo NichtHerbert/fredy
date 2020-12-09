@@ -1,12 +1,12 @@
 package wfnmodell.elements;
 
-import wfnmodell.schnittstellen.IWFNElement;
+import wfnmodell.interfaces.IWfnElement;
 
 /**
  * Abstrakte Klasse, in der all diejenigen Methoden und Attribute versammelt sind, die 
  * Kanten, Stellen und Transitionen gemeinsam haben. 
  */
-abstract class AWfnElement implements IWFNElement {
+abstract class AWfnElement implements IWfnElement {
 	/**
 	 * Wenn das Element importiert wurde, die entsprechende ID des Elements aus der pnml-Datei, sonst "". 
 	 */
@@ -39,7 +39,7 @@ abstract class AWfnElement implements IWFNElement {
 	}
 
 	@Override
-	public String getPNMLID() {
+	public String getPnmlID() {
 		return pnmlID;
 	}
 

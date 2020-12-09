@@ -18,7 +18,7 @@ import horcherschnittstellen.IWFNModellStatusHorcher;
 import wfnmodell.WfnStatusInfo;
 import wfnmodell.elements.EWfnElement;
 import wfnmodell.elements.WfnElementTransition;
-import wfnmodell.schnittstellen.IWFNElementTransition;
+import wfnmodell.interfaces.IWfnTransition;
 
 /**
  * Panel zuständig zur Anzeige der Steuerung des Schaltens von Transitionen und des Zurücksetzens
@@ -47,12 +47,12 @@ class JPanelSchalten extends JPanel implements IWFNModellStatusHorcher {
 	/**
 	 * ComboBox, welche alle momentan aktivierten Transitionen anzeigt.
 	 */
-	private JComboBox<IWFNElementTransition> jcbAktivierteTransitionen;
+	private JComboBox<IWfnTransition> jcbAktivierteTransitionen;
 	
 	/**
 	 * Datenmodell für {@link #jcbAktivierteTransitionen}.
 	 */
-	private DefaultComboBoxModel<IWFNElementTransition> jcbModell;
+	private DefaultComboBoxModel<IWfnTransition> jcbModell;
 	
 	
 	/**
@@ -88,7 +88,7 @@ class JPanelSchalten extends JPanel implements IWFNModellStatusHorcher {
 		jcbAktivierteTransitionen = new JComboBox<>();
 		jcbAktivierteTransitionen.setPreferredSize(new Dimension(
 				8*EWfnElement.BASEFACTOR, jcbAktivierteTransitionen.getPreferredSize().height));
-		jcbModell = (DefaultComboBoxModel<IWFNElementTransition>) jcbAktivierteTransitionen.getModel();
+		jcbModell = (DefaultComboBoxModel<IWfnTransition>) jcbAktivierteTransitionen.getModel();
 		aktualisiereComboBoxModell();
 		
 		add(jbAufStart);
@@ -105,7 +105,7 @@ class JPanelSchalten extends JPanel implements IWFNModellStatusHorcher {
 		jcbModell.removeAllElements();
 		if ((statusInfo.getEnabledTransitions() != null)
 				&& ( !statusInfo.getEnabledTransitions().isEmpty())) 
-			for (IWFNElementTransition transition : statusInfo.getEnabledTransitions())
+			for (IWfnTransition transition : statusInfo.getEnabledTransitions())
 				jcbModell.addElement(transition);
 		else 
 			jcbModell.addElement(leeresElement);
@@ -126,7 +126,7 @@ class JPanelSchalten extends JPanel implements IWFNModellStatusHorcher {
 	 */
 	private void fireSchalteTransition() {
 		for (ITransitionsSchaltungsHorcher horcher : transSchaltHorcherListe)
-			horcher.schalteTransition((IWFNElementTransition) jcbModell.getSelectedItem());
+			horcher.schalteTransition((IWfnTransition) jcbModell.getSelectedItem());
 	}
 
 	/**

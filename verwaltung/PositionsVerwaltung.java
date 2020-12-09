@@ -8,9 +8,9 @@ import horcherschnittstellen.IElementGroessenHorcher;
 import horcherschnittstellen.IWFNVeraenderungsHorcher;
 import wfnmodell.WfnStatusInfo;
 import wfnmodell.elements.EWfnElement;
-import wfnmodell.schnittstellen.IWFNElement;
-import wfnmodell.schnittstellen.IWFNElementKante;
-import wfnmodell.schnittstellen.IWFNElementOK;
+import wfnmodell.interfaces.IWfnElement;
+import wfnmodell.interfaces.IWfnArc;
+import wfnmodell.interfaces.IWfnTransitionAndPlace;
 
 /**
  * Klasse, die Methoden bereitstellt, um herauszufinden, was sich an einer bestimmten Position des
@@ -32,12 +32,12 @@ class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenH
 	/**
 	 * Liste aller Stellen und Transitionen des WFN.
 	 */
-	private ArrayList<IWFNElementOK> alleElementeOK;
+	private ArrayList<IWfnTransitionAndPlace> alleElementeOK;
 	
 	/**
 	 * Liste aller Kanten des WFN.
 	 */
-	private ArrayList<IWFNElementKante> alleKanten;
+	private ArrayList<IWfnArc> alleKanten;
 	
 	/**
 	 * Die zuletzt untersuchte Position im WFN.
@@ -47,7 +47,7 @@ class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenH
 	/**
 	 * Das Ergebnis der letzten Untersuchung. Was sich also an der Position {@link #wasDaIstVorherigeKoordinate} befindet.
 	 */
-	private IWFNElement wasDaIstVorherigesErgebnis;
+	private IWfnElement wasDaIstVorherigesErgebnis;
 	
 	PositionsVerwaltung(ZoomFaktorVerwaltung zoom) {
 		this.zoom = zoom;
@@ -67,15 +67,15 @@ class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenH
 	 * @param koordinate die zu überprüfende Position
 	 * @return das Element, welches sich an der überprüften Position befindet, oder null, wenn dort kein Element ist
 	 */
-	IWFNElement getWasDaIst(Point koordinate) {
-		IWFNElement ergebnis = null;
+	IWfnElement getWasDaIst(Point koordinate) {
+		IWfnElement ergebnis = null;
 		koordinate = zoom.ohne(koordinate);
 		if ((wasDaIstVorherigeKoordinate == null)
 				|| (! koordinate.equals(wasDaIstVorherigeKoordinate))) {
-			Iterator<IWFNElementOK> itOK = alleElementeOK.iterator();
+			Iterator<IWfnTransitionAndPlace> itOK = alleElementeOK.iterator();
 			while ((ergebnis == null)
 					&& (itOK.hasNext())){ 
-				IWFNElementOK elem = itOK.next();
+				IWfnTransitionAndPlace elem = itOK.next();
 				if ((elem.getPosition().x >= koordinate.x - elementGroesse) 
 						&& (elem.getPosition().x <= koordinate.x + elementGroesse)
 						&& (elem.getPosition().y >= koordinate.y - elementGroesse) 
@@ -83,10 +83,10 @@ class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenH
 						ergebnis = elem;
 			}
 			if (ergebnis == null) {
-				Iterator<IWFNElementKante> itKante = alleKanten.iterator();
+				Iterator<IWfnArc> itKante = alleKanten.iterator();
 				while ((ergebnis == null)
 						&& (itKante.hasNext())){ 
-					IWFNElementKante kante = itKante.next();
+					IWfnArc kante = itKante.next();
 					if (istPunktNaheKante(koordinate, kante, EWfnElement.BASEFACTOR / 2))
 						ergebnis = kante;
 				}
@@ -106,7 +106,7 @@ class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenH
 	 * @param jetztMausPosition der andere Eckpunkt des zu überprüfenden Rechtecks
 	 * @return Liste der Elemente, welche sich innerhalb des Rechtecks befinden
 	 */
-	ArrayList<IWFNElement> getWasDaIst(Point startMausPosition, Point jetztMausPosition) {
+	ArrayList<IWfnElement> getWasDaIst(Point startMausPosition, Point jetztMausPosition) {
 		if (startMausPosition.x > jetztMausPosition.x) {
 			int temp = startMausPosition.x;
 			startMausPosition.x = jetztMausPosition.x;
@@ -117,14 +117,14 @@ class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenH
 			startMausPosition.y = jetztMausPosition.y;
 			jetztMausPosition.y = temp;
 		}
-		ArrayList<IWFNElement> ergebnis = new ArrayList<>();
-		for (IWFNElementOK elem : alleElementeOK)
+		ArrayList<IWfnElement> ergebnis = new ArrayList<>();
+		for (IWfnTransitionAndPlace elem : alleElementeOK)
 			if ((elem.getPosition().x >= startMausPosition.x) 
 					&& (elem.getPosition().x <= jetztMausPosition.x)
 					&& (elem.getPosition().y >= startMausPosition.y) 
 					&& (elem.getPosition().y <= jetztMausPosition.y))
 				ergebnis.add(elem);
-		for (IWFNElementKante kante : alleKanten) {
+		for (IWfnArc kante : alleKanten) {
 			Point mp = kante.getCenter();
 			if ((mp.x >= startMausPosition.x) 
 					&& (mp.x <= jetztMausPosition.x)
@@ -143,7 +143,7 @@ class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenH
 	 * @param maxabstand maximaler Abstand, den p zur Kante haben darf
 	 * @return true, falls der Abstand von p zur Kante kante kleinergleich maxabstand ist
 	 */
-	private static boolean istPunktNaheKante(Point p, IWFNElementKante kante, int maxabstand) {
+	private static boolean istPunktNaheKante(Point p, IWfnArc kante, int maxabstand) {
 		Point v, z;
 		v = kante.getSource().getPosition();
 		z = kante.getTarget().getPosition();

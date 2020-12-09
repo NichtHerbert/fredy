@@ -2,14 +2,14 @@ package wfnmodell.elements;
 
 import java.awt.Point;
 
-import wfnmodell.schnittstellen.IWFNElementTransition;
+import wfnmodell.interfaces.IWfnTransition;
 
 /**
  * Instanzierte Objekte dieser Klasse stellen im Datenmodell des WFN Transitionen dar.
  *
  */
 public class WfnElementTransition extends AWfnElementButNoArc
-		implements IWFNElementTransition {
+		implements IWfnTransition {
 
 	/**
 	 * @param pnmlID wenn das Element importiert wurde, die entsprechende ID des Elements aus der pnml-Datei

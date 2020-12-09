@@ -16,7 +16,7 @@ import verwaltung.ElementGroessenVerwaltung;
 import verwaltung.KreisTestVerwaltung;
 import verwaltung.ZoomFaktorVerwaltung;
 import wfnmodell.WfnStatusInfo;
-import wfnmodell.schnittstellen.IWFNElement;
+import wfnmodell.interfaces.IWfnElement;
 
 /**
  * Die Toolbar des WFN-Editors. Sie startet alle Steuerungs- und Informationspanels und leitet 
@@ -91,7 +91,7 @@ public class JtbWerkzeugleiste extends JToolBar implements 	IAuswahlVeraenderung
 	}
 	
 	@Override
-	public void auswahlAenderungEingetreten(int auswahlArt, ArrayList<? extends IWFNElement> ausgewaehlteElemente) {
+	public void auswahlAenderungEingetreten(int auswahlArt, ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
 		jpElementBearbeitung.auswahlAenderungEingetreten(auswahlArt, ausgewaehlteElemente);
 	}
 

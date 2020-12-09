@@ -11,8 +11,8 @@ import gui.toolbar.JtbWerkzeugleiste;
 import horcherschnittstellen.IAuswahlBearbeitetHorcher;
 import horcherschnittstellen.IEditorModusHorcher;
 import wfnmodell.WFNModell;
-import wfnmodell.schnittstellen.IWFNElement;
-import wfnmodell.schnittstellen.IWFNElementOK;
+import wfnmodell.interfaces.IWfnElement;
+import wfnmodell.interfaces.IWfnTransitionAndPlace;
 
 /**
  * Die Zentrale Klasse des Workflownetzeditors, in der alle Teile miteinander verschaltet werden.
@@ -33,7 +33,7 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 	/** Die {@link PositionsVerwaltung}*/
 	private PositionsVerwaltung koordinatenVerwaltung;
 	/** Die {@link AuswahlVerwaltung}*/
-	private AuswahlVerwaltung<IWFNElement> auswahlVerwaltung;
+	private AuswahlVerwaltung<IWfnElement> auswahlVerwaltung;
 	/** Die {@link MarkierungsVerwaltung}*/
 	private MarkierungsVerwaltung markierungsVerwaltung;
 	/** Die {@link MausVerwaltung}*/
@@ -64,7 +64,7 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 		zoom.addZoomFaktorHorcher(jpEditor);
 		
 		koordinatenVerwaltung = new PositionsVerwaltung(zoom);
-		this.wfnModell.addVeraenderungsHorcher(koordinatenVerwaltung);
+		this.wfnModell.addChangingListener(koordinatenVerwaltung);
 		
 		auswahlVerwaltung = new AuswahlVerwaltung<>();
 		auswahlVerwaltung.addAuswahlAenderungsHorcher(jtbVerwaltung);
@@ -74,7 +74,7 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 		jtbVerwaltung.setDateiVerwaltung(dateiVerwaltung);
 		
 		markierungsVerwaltung = new MarkierungsVerwaltung();
-		wfnModell.addVeraenderungsHorcher(markierungsVerwaltung);
+		wfnModell.addChangingListener(markierungsVerwaltung);
 		jtbVerwaltung.addTransitionsSchaltungsHorcher(markierungsVerwaltung);
 		markierungsVerwaltung.addModellStatusHorcher(jpEditor);
 		markierungsVerwaltung.addModellStatusHorcher(jtbVerwaltung);
@@ -96,7 +96,7 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 		
 		kTVerwaltung = new KreisTestVerwaltung(auswahlVerwaltung);
 		jtbVerwaltung.setKreisTestVerwaltung(kTVerwaltung);
-		wfnModell.addVeraenderungsHorcher(kTVerwaltung);
+		wfnModell.addChangingListener(kTVerwaltung);
 		
 		jtbVerwaltung.addAuswahlBearbeitetHorcher(this);
 		jtbVerwaltung.addEditorModusHorcher(this);
@@ -111,13 +111,13 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 	}
 	
 	@Override
-	public void auswahlSollGeloeschtWerden(ArrayList<? extends IWFNElement> ausgewaehlteElemente) {
-		wfnModell.loesche(ausgewaehlteElemente);
+	public void auswahlSollGeloeschtWerden(ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
+		wfnModell.delete(ausgewaehlteElemente);
 		auswahlVerwaltung.clearAndFire(NEUE_AUSWAHL);
 	}
 	
 	@Override
-	public void elementSollNameAendern(IWFNElementOK element, String name) {
+	public void elementSollNameAendern(IWfnTransitionAndPlace element, String name) {
 		wfnModell.setElementName(element, name);
 	}
 

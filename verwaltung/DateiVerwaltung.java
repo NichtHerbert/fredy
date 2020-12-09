@@ -12,7 +12,7 @@ import wfnmodell.importexport.ExportVerwaltung;
 import wfnmodell.importexport.IWFNExport;
 import wfnmodell.importexport.IWFNImport;
 import wfnmodell.importexport.ImportVerwaltung;
-import wfnmodell.schnittstellen.IWFNElement;
+import wfnmodell.interfaces.IWfnElement;
 
 /**
  * Verwaltung und Steuerung der durch den Benutzer angestoßenen Import- und Exportvorgänge
@@ -29,7 +29,7 @@ public class DateiVerwaltung implements IDateiVerwaltung,
 	 */
 	private IWFNExport expModell;
 	/** Die aktuelle AuswahlVerwaltung.*/
-	private AuswahlVerwaltung<IWFNElement> auswahlVerwaltung;
+	private AuswahlVerwaltung<IWfnElement> auswahlVerwaltung;
 	/** zur Übersicht was als dateiname anzuzeigen ist.*/
 	private boolean letzteDateiAktionWarDateiNeu;
 	
@@ -39,7 +39,7 @@ public class DateiVerwaltung implements IDateiVerwaltung,
 	 * @param expModell Export-Schnittstelle zum Datenmodell
 	 * @param auswahlVerwaltung die aktuelle Auswahlverwaltung
 	 */
-	public DateiVerwaltung(IWFNImport impModell, IWFNExport expModell, AuswahlVerwaltung<IWFNElement> auswahlVerwaltung) {
+	public DateiVerwaltung(IWFNImport impModell, IWFNExport expModell, AuswahlVerwaltung<IWfnElement> auswahlVerwaltung) {
 		super();
 		this.impModell = impModell;
 		this.expModell = expModell;

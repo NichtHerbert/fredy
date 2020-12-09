@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import gui.IZentraleKonstanten;
 import horcherschnittstellen.IWFNVeraenderungsHorcher;
 import wfnmodell.WfnStatusInfo;
-import wfnmodell.schnittstellen.IWFNElement;
-import wfnmodell.schnittstellen.IWFNElementOK;
+import wfnmodell.interfaces.IWfnElement;
+import wfnmodell.interfaces.IWfnTransitionAndPlace;
 
 public class KreisTestVerwaltung implements IWFNVeraenderungsHorcher,
 											IZentraleKonstanten {
@@ -14,13 +14,13 @@ public class KreisTestVerwaltung implements IWFNVeraenderungsHorcher,
 	/*Die aktuelle StatusInfo, ohne die Informationen der Markierungsverwaltung.*/
 	private WfnStatusInfo statusInfo;
 	
-	private AuswahlVerwaltung<IWFNElement> auswahlVerwaltung;
+	private AuswahlVerwaltung<IWfnElement> auswahlVerwaltung;
 	
-	private ArrayList<IWFNElementOK> besuchteElemente;
+	private ArrayList<IWfnTransitionAndPlace> besuchteElemente;
 	
-	private ArrayList<IWFNElementOK> inBearbeitungElemente;
+	private ArrayList<IWfnTransitionAndPlace> inBearbeitungElemente;
 	
-	KreisTestVerwaltung(AuswahlVerwaltung<IWFNElement> auswahlVerwaltung2) {
+	KreisTestVerwaltung(AuswahlVerwaltung<IWfnElement> auswahlVerwaltung2) {
 		this.auswahlVerwaltung = auswahlVerwaltung2;
 		statusInfo = new WfnStatusInfo();
 		besuchteElemente = new ArrayList<>();
@@ -33,9 +33,9 @@ public class KreisTestVerwaltung implements IWFNVeraenderungsHorcher,
 			inBearbeitungElemente.clear();
 			if (istKreis(statusInfo.getStartPlace())) {
 				int idxEnd = inBearbeitungElemente.size()-1;
-				IWFNElementOK verbindungsElement = inBearbeitungElemente.get(idxEnd);
+				IWfnTransitionAndPlace verbindungsElement = inBearbeitungElemente.get(idxEnd);
 				int idxStart = inBearbeitungElemente.indexOf(verbindungsElement);
-				ArrayList<IWFNElement> ergebnisliste = new ArrayList<>();
+				ArrayList<IWfnElement> ergebnisliste = new ArrayList<>();
 				for (int i = idxStart; i<= idxEnd; i++) {
 					ergebnisliste.add(inBearbeitungElemente.get(i));
 				}
@@ -47,11 +47,11 @@ public class KreisTestVerwaltung implements IWFNVeraenderungsHorcher,
 		return "";
 	}
 		
-	private boolean istKreis(IWFNElementOK element) {
+	private boolean istKreis(IWfnTransitionAndPlace element) {
 		if (!besuchteElemente.contains(element)) {
 			besuchteElemente.add(element);
 			inBearbeitungElemente.add(element);	
-			for (IWFNElementOK elementDanach : element.getOutputElements()) {
+			for (IWfnTransitionAndPlace elementDanach : element.getOutputElements()) {
 				if (istKreis(elementDanach)) 
 					return true;
 				else

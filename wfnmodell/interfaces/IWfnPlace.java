@@ -1,10 +1,10 @@
-package wfnmodell.schnittstellen;
+package wfnmodell.interfaces;
 
 /**
  * Schnittstelle für Elemente des WFN vom Typ Stelle.
  *
  */
-public interface IWFNElementStelle extends IWFNElementOK {
+public interface IWfnPlace extends IWfnTransitionAndPlace {
 	
 	/**
 	 * Gibt an, ob die Stelle momentan eine Marke hat / markiert ist.
@@ -14,7 +14,7 @@ public interface IWFNElementStelle extends IWFNElementOK {
 	
 	/**
 	 * Legt fest, ob die Stelle momentan eine Marke hat / markiert ist.
-	 * @param marke festzulegender boolscher Wert
+	 * @param marking festzulegender boolscher Wert
 	 */
-	void setMarking(boolean marke);
+	void setMarking(boolean marking);
 }

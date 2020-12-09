@@ -1,4 +1,4 @@
-package wfnmodell.schnittstellen;
+package wfnmodell.interfaces;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * Schnittstelle aller Elemente außer Kanten, also was Transitionen und Stellen gemein haben.
  */
-public interface IWFNElementOK extends IWFNElement {
+public interface IWfnTransitionAndPlace extends IWfnElement {
 	/**
 	 * Setzt den Namen des Elements.
 	 * @param name der zu setzende Name
@@ -48,25 +48,25 @@ public interface IWFNElementOK extends IWFNElement {
 	 * @param elem Element, von dem diese Kante ausgeht
 	 * @return true, wenn das Hinzufügen erfolgreich war
 	 */
-	boolean addInputElement(IWFNElementOK elem);
+	boolean addInputElement(IWfnTransitionAndPlace elem);
 
 	/** Gibt eine Liste aller Ausgangs-Elemente zurück, deren Kanten in diesem Element enden. 
 	 * @return Liste aller Elemente, von denen Kanten zu diesem Element führen
 	 */
-	ArrayList<IWFNElementOK> getInputElements();
+	ArrayList<IWfnTransitionAndPlace> getInputElements();
 	
 	/**
 	 * Fügt dem Element eine ausgehende Kante hinzu.
 	 * @param elem Element, bei dem diese Kante endet
 	 * @return true, wenn das Hinzufügen erfolgreich war
 	 */
-	boolean addOutputElements(IWFNElementOK elem);
+	boolean addOutputElements(IWfnTransitionAndPlace elem);
 
 	/**
 	 * Gibt eine Liste aller Elemente zurück, in welchen Kanten enden, die von diesem Element ausgehen.
 	 * @return Liste aller Elemente, in denen Kanten enden, die von diesem Element ausgehen
 	 */
-	ArrayList<IWFNElementOK> getOutputElements();
+	ArrayList<IWfnTransitionAndPlace> getOutputElements();
 
 	/**
 	 * Gibt an, ob sich das Element auf mindestens einem gerichteten Pfad von mindestens 
@@ -87,24 +87,24 @@ public interface IWFNElementOK extends IWFNElement {
 	 * einer möglichen Startstelle befindet.
 	 * @param hasStartPath zu setzender boolescher Wert
 	 */
-	void setHasStartPath(boolean pfadVomStart);
+	void setHasStartPath(boolean b);
 	
 	/**
 	 * Legt fest, ob sich das Element auf mindestens einem gerichteten Pfad zu mindestens einer 
 	 * möglichen Endstelle befindet.
 	 * @param hasEndPath zu setzender boolescher Wert
 	 */
-	void setHasEndPath(boolean pfadZumEnde);
+	void setHasEndPath(boolean b);
 	
 	/** 
 	 * Entfernt eine ausgehende Kante.
-	 * @param zu Element, zu dem die zu entfernende Kante führt
+	 * @param target Element, zu dem die zu entfernende Kante führt
 	 */
-	void removeOutputElements(IWFNElementOK zu);
+	void removeOutputElements(IWfnTransitionAndPlace target);
 
 	/**
 	 * Entfernt eine eingehende Kante.
-	 * @param von Element, von dem die eingehende Kante ausgeht
+	 * @param source Element, von dem die eingehende Kante ausgeht
 	 */
-	void removeInputElement(IWFNElementOK von);
+	void removeInputElement(IWfnTransitionAndPlace source);
 }

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import wfnmodell.elements.WfnElementArc;
-import wfnmodell.schnittstellen.IWFNElementKante;
-import wfnmodell.schnittstellen.IWFNElementOK;
+import wfnmodell.interfaces.IWfnArc;
+import wfnmodell.interfaces.IWfnTransitionAndPlace;
 
 /**
  * Klasse speziell zur Verwaltung der Kanten und ihrer Abhängigkeiten.
@@ -49,7 +49,7 @@ class ArcManagement {
 	 * @param origin das Element von dem die Kante ausgeht
 	 * @param ending das Element in dem die Kante endet
 	 */
-	void createArc(String pnmlID, IWFNElementOK origin, IWFNElementOK ending) {
+	void createArc(String pnmlID, IWfnTransitionAndPlace origin, IWfnTransitionAndPlace ending) {
 		if ((origin.getWfnElementType() != ending.getWfnElementType()) 
 				&& ( !existsArcAlready(origin, ending))) {
 			identifier.pnmlIDMonitoring(pnmlID);
@@ -70,11 +70,11 @@ class ArcManagement {
 	 * @param ending Element, welches als Kanten-Endpunkt überprüft wird
 	 * @return true, wenn da schon eine Kante ist, sonst false
 	 */
-	boolean existsArcAlready(IWFNElementOK origin, IWFNElementOK ending) {
+	boolean existsArcAlready(IWfnTransitionAndPlace origin, IWfnTransitionAndPlace ending) {
 		boolean result = false;
-		ArrayList<IWFNElementOK> allArcsStartingInOrigin = origin.getOutputElements();
+		ArrayList<IWfnTransitionAndPlace> allArcsStartingInOrigin = origin.getOutputElements();
 		if (allArcsStartingInOrigin != null) {
-			ArrayList<IWFNElementOK> allArcsEndingInEnding = ending.getInputElements();
+			ArrayList<IWfnTransitionAndPlace> allArcsEndingInEnding = ending.getInputElements();
 			if (allArcsEndingInEnding != null) {
 				int i = 0;
 				while ((i< allArcsStartingInOrigin.size()) && (result == false)) {
@@ -90,8 +90,8 @@ class ArcManagement {
 	 * Gibt eine Liste aller Kanten zurück.
 	 * @return {@link #arcs}
 	 */
-	ArrayList<IWFNElementKante> getAllArcs() {
-		return new ArrayList<IWFNElementKante>(arcs);
+	ArrayList<IWfnArc> getAllArcs() {
+		return new ArrayList<IWfnArc>(arcs);
 	}
 
 	@Override
@@ -100,19 +100,19 @@ class ArcManagement {
 	}
 
 	/**
-	 * Ermittelt die fehlenden Parameter um dann {@link #deleteArc(IWFNElementKante, IWFNElementOK, IWFNElementOK)} aufzurufen.
+	 * Ermittelt die fehlenden Parameter um dann {@link #deleteArc(IWfnArc, IWfnTransitionAndPlace, IWfnTransitionAndPlace)} aufzurufen.
 	 * @param arc Referenz auf das zu löschende Kantenobjekt
 	 */
-	void deleteArc(IWFNElementKante arc) {
+	void deleteArc(IWfnArc arc) {
 		deleteArc(arc, arc.getSource(), arc.getTarget());
 	}
 	
 	/**
-	 * Ermittelt die fehlenden Parameter um dann {@link #deleteArc(IWFNElementKante, IWFNElementOK, IWFNElementOK)} aufzurufen.
+	 * Ermittelt die fehlenden Parameter um dann {@link #deleteArc(IWfnArc, IWfnTransitionAndPlace, IWfnTransitionAndPlace)} aufzurufen.
 	 * @param origin Element, von dem die zu löschende Kante ausgeht
 	 * @param ending Element, in welchem die zu löschende Kante endet
 	 */
-	void deleteArc(IWFNElementOK origin, IWFNElementOK ending) {
+	void deleteArc(IWfnTransitionAndPlace origin, IWfnTransitionAndPlace ending) {
 		deleteArc(getArc(origin,ending), origin, ending);
 	}
 	
@@ -124,7 +124,7 @@ class ArcManagement {
 	 * @param origin Element, von dem die zu löschende Kante ausgeht
 	 * @param ending Element, in welchem die zu löschende Kante endet
 	 */
-	void deleteArc(IWFNElementKante arc, IWFNElementOK origin, IWFNElementOK ending) {
+	void deleteArc(IWfnArc arc, IWfnTransitionAndPlace origin, IWfnTransitionAndPlace ending) {
 		if (arcs.contains(arc)) {
 			arcs.remove(arc);
 			origin.removeOutputElements(ending);
@@ -141,9 +141,9 @@ class ArcManagement {
 	 * @param to Element in dem die gesuchte Kante endet
 	 * @return die Kante zwischen den beiden übergebenen Elementen oder null
 	 */
-	private IWFNElementKante getArc(IWFNElementOK from, IWFNElementOK to) {
+	private IWfnArc getArc(IWfnTransitionAndPlace from, IWfnTransitionAndPlace to) {
 		Iterator<WfnElementArc> it = arcs.iterator();
-		IWFNElementKante result;
+		IWfnArc result;
 		while (it.hasNext()) {
 			result = it.next();
 			if ((result.getSource() == from)

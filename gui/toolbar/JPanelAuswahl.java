@@ -17,8 +17,8 @@ import gui.EIcons;
 import horcherschnittstellen.IAuswahlBearbeitetHorcher;
 import horcherschnittstellen.IAuswahlVeraenderungsHorcher;
 import wfnmodell.elements.EWfnElement;
-import wfnmodell.schnittstellen.IWFNElement;
-import wfnmodell.schnittstellen.IWFNElementOK;
+import wfnmodell.interfaces.IWfnElement;
+import wfnmodell.interfaces.IWfnTransitionAndPlace;
 
 /**
  * JPanel zur Anzeige der momentan ausgewählten Elemente des Editors.
@@ -32,7 +32,7 @@ class JPanelAuswahl extends JPanel implements IAuswahlVeraenderungsHorcher {
 	/**
 	 * Liste der ausgewählten Elemente.
 	 */
-	private ArrayList<? extends IWFNElement> ausgewaehlteElemente;
+	private ArrayList<? extends IWfnElement> ausgewaehlteElemente;
 	
 	/**
 	 * Liste derjenigen IAuswahlVeraenderungsHorcher, die informiert werden wollen, 
@@ -69,7 +69,7 @@ class JPanelAuswahl extends JPanel implements IAuswahlVeraenderungsHorcher {
 					switch (columnIndex) {
 					case 0:	return ausgewaehlteElemente.get(rowIndex).getWfnElementType().toString(); 
 					case 1:	if (ausgewaehlteElemente.get(rowIndex).getWfnElementType() != EWfnElement.ARC)
-								return ((IWFNElementOK) ausgewaehlteElemente.get(rowIndex)).getName();
+								return ((IWfnTransitionAndPlace) ausgewaehlteElemente.get(rowIndex)).getName();
 							break;
 					default:break;
 					}
@@ -116,7 +116,7 @@ class JPanelAuswahl extends JPanel implements IAuswahlVeraenderungsHorcher {
 			@Override
 			public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 				if (ausgewaehlteElemente.get(rowIndex).getWfnElementType() != EWfnElement.ARC) {
-					fireElementSollNamenAendern((IWFNElementOK) ausgewaehlteElemente.get(rowIndex),
+					fireElementSollNamenAendern((IWfnTransitionAndPlace) ausgewaehlteElemente.get(rowIndex),
 							(String) aValue);
 				}
 			}
@@ -148,7 +148,7 @@ class JPanelAuswahl extends JPanel implements IAuswahlVeraenderungsHorcher {
 	}
 	
 	@Override
-	public void auswahlAenderungEingetreten(int auswahlArt, ArrayList<? extends IWFNElement> ausgewaehlteElemente) {
+	public void auswahlAenderungEingetreten(int auswahlArt, ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
 		if ((auswahlArt == NEUE_AUSWAHL)
 				&& (ausgewaehlteElemente != null))
 			this.ausgewaehlteElemente = ausgewaehlteElemente;
@@ -199,7 +199,7 @@ class JPanelAuswahl extends JPanel implements IAuswahlVeraenderungsHorcher {
 	 * @param element Element, dessen Name geändert werden soll
 	 * @param name zu setzender Name
 	 */
-	public void fireElementSollNamenAendern(IWFNElementOK element, String name) {
+	public void fireElementSollNamenAendern(IWfnTransitionAndPlace element, String name) {
 		for (IAuswahlBearbeitetHorcher horcher : auswahlBearbeitetHorcherListe)
 			horcher.elementSollNameAendern(element, name);
 	}

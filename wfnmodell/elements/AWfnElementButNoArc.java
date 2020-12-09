@@ -2,22 +2,23 @@ package wfnmodell.elements;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import wfnmodell.schnittstellen.IWFNElementOK;
+
+import wfnmodell.interfaces.IWfnTransitionAndPlace;
 
 /**
  * Abstrakte Klasse, in der all diejenigen Methoden und Attribute versammelt sind, die 
  * Stellen und Transitionen gemeinsam haben. 
  */
-abstract class AWfnElementButNoArc extends AWfnElement implements IWFNElementOK {
+abstract class AWfnElementButNoArc extends AWfnElement implements IWfnTransitionAndPlace {
 
 	/** Der Name des Elements */
 	private String name;
 	/** Die Koordinaten des Elements */
 	private Point position;
 	/** Liste von Elementen mit ausgehenden Kanten, die in diesem Element enden. */ 
-	protected ArrayList<IWFNElementOK> inputElements;
+	protected ArrayList<IWfnTransitionAndPlace> inputElements;
 	/** Liste von Elementen mit eingehenden Kanten, die von diesem Element ausgehen. */
-	protected ArrayList<IWFNElementOK> outputElements;
+	protected ArrayList<IWfnTransitionAndPlace> outputElements;
 	/** true, wenn es zu diesem Element mindestens einen gerichteten Pfad von mindestens einer möglichen Startstelle gibt. */  
 	protected boolean hasStartPath;
 	/** true, wenn von diesem Element mindestens einen gerichteten Pfad zu mindestens einer möglichen Endstelle gibt. */
@@ -40,8 +41,8 @@ abstract class AWfnElementButNoArc extends AWfnElement implements IWFNElementOK 
 		super(pnmlID, id);
 		this.position = position;
 		name = "";
-		inputElements = new ArrayList<IWFNElementOK>(2);
-		outputElements = new ArrayList<IWFNElementOK>(2);
+		inputElements = new ArrayList<IWfnTransitionAndPlace>(2);
+		outputElements = new ArrayList<IWfnTransitionAndPlace>(2);
 	}
 
 	@Override
@@ -75,7 +76,7 @@ abstract class AWfnElementButNoArc extends AWfnElement implements IWFNElementOK 
 	}
 
 	@Override
-	public boolean addInputElement(IWFNElementOK source) {
+	public boolean addInputElement(IWfnTransitionAndPlace source) {
 		if (this.getWfnElementType() != source.getWfnElementType()) {
 			this.inputElements.add(source);
 			return true;
@@ -84,18 +85,18 @@ abstract class AWfnElementButNoArc extends AWfnElement implements IWFNElementOK 
 	}
 	
 	@Override
-	public void removeInputElement(IWFNElementOK source) {
+	public void removeInputElement(IWfnTransitionAndPlace source) {
 		if (inputElements.contains(source)) 
 			inputElements.remove(source);
 	}
 
 	@Override
-	public ArrayList<IWFNElementOK> getInputElements() {
-		return new ArrayList<IWFNElementOK>(inputElements);
+	public ArrayList<IWfnTransitionAndPlace> getInputElements() {
+		return new ArrayList<IWfnTransitionAndPlace>(inputElements);
 	}
 
 	@Override
-	public boolean addOutputElements(IWFNElementOK target) {
+	public boolean addOutputElements(IWfnTransitionAndPlace target) {
 		if (this.getWfnElementType() != target.getWfnElementType()) {
 			this.outputElements.add(target);
 			return true;
@@ -104,14 +105,14 @@ abstract class AWfnElementButNoArc extends AWfnElement implements IWFNElementOK 
 	}
 	
 	@Override
-	public void removeOutputElements(IWFNElementOK target) {
+	public void removeOutputElements(IWfnTransitionAndPlace target) {
 		if (outputElements.contains(target)) 
 			outputElements.remove(target);
 	}
 
 	@Override
-	public ArrayList<IWFNElementOK> getOutputElements() {
-		return new ArrayList<IWFNElementOK>(outputElements);
+	public ArrayList<IWfnTransitionAndPlace> getOutputElements() {
+		return new ArrayList<IWfnTransitionAndPlace>(outputElements);
 	}
 
 	@Override

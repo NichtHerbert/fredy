@@ -12,19 +12,19 @@ import wfnmodell.elements.WfnElementTransition;
 import wfnmodell.importexport.IWFNExport;
 import wfnmodell.importexport.IWFNImport;
 import wfnmodell.importexport.TempPNMLElement;
-import wfnmodell.schnittstellen.IWFNElement;
-import wfnmodell.schnittstellen.IWFNElementKante;
-import wfnmodell.schnittstellen.IWFNElementStelle;
-import wfnmodell.schnittstellen.IWFNElementOK;
-import wfnmodell.schnittstellen.IWFNModellVeraendern;
-import wfnmodell.schnittstellen.IWFNModellWiedergeben;
+import wfnmodell.interfaces.IWfnElement;
+import wfnmodell.interfaces.IWfnArc;
+import wfnmodell.interfaces.IWfnTransitionAndPlace;
+import wfnmodell.interfaces.IWfnPlace;
+import wfnmodell.interfaces.IWfnModelChanging;
+import wfnmodell.interfaces.IWfnModelPresentation;
 
 /**
  * Das Datenmodell des Workflownetzes.
  *
  */
-public class WFNModell implements 	IWFNModellVeraendern, 
-									IWFNModellWiedergeben, 
+public class WFNModell implements 	IWfnModelChanging, 
+									IWfnModelPresentation, 
 									IWFNImport, 
 									IWFNExport {
 	
@@ -35,7 +35,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	/**
 	 * Liste aller Transitionen und Stellen des aktuellen Datenmodells.
 	 */
-	private ArrayList<IWFNElementOK> elementListeOK;
+	private ArrayList<IWfnTransitionAndPlace> elementListeOK;
 	/**
 	 * Liste der Horcher, die über eine Modell-Änderung informiert werden möchten.
 	 */
@@ -72,7 +72,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	 */
 	private void newInit() {
 		idVerwaltung = new IDManagement();
-		elementListeOK = new ArrayList<IWFNElementOK>();
+		elementListeOK = new ArrayList<IWfnTransitionAndPlace>();
 		zusammenhangsVerwaltung = new ConnectionManagement();
 		startEndStellenVerwaltung = new StartEndManagement(zusammenhangsVerwaltung);
 		kantenVerwaltung = new ArcManagement(idVerwaltung, startEndStellenVerwaltung,
@@ -81,12 +81,12 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	}
 	
 	@Override
-	public void addVeraenderungsHorcher(IWFNVeraenderungsHorcher horcher) {
+	public void addChangingListener(IWFNVeraenderungsHorcher horcher) {
 		wfnVeraenderungsHorcherListe.add(horcher);
 	}
 	
 	@Override
-	public void removeVeraenderungsHorcher(IWFNVeraenderungsHorcher horcher) {
+	public void removeChangingListener(IWFNVeraenderungsHorcher horcher) {
 		if (wfnVeraenderungsHorcherListe.contains(horcher)) 
 			wfnVeraenderungsHorcherListe.remove(horcher);
 	}
@@ -119,14 +119,14 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	}
 	
 	@Override
-	public void loesche(ArrayList<? extends IWFNElement> elementListe) {
-		for (IWFNElement element : elementListe)
+	public void delete(ArrayList<? extends IWfnElement> elementListe) {
+		for (IWfnElement element : elementListe)
 			loescheOhneEventFire(element);
 		fireModellAenderungEingetreten();
 	}
 	
 	@Override
-	public void loesche(IWFNElement element) {
+	public void delete(IWfnElement element) {
 		loescheOhneEventFire(element);
 		fireModellAenderungEingetreten();
 	}
@@ -137,14 +137,14 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	 * enden oder beginnen, gelöscht.
 	 * @param element das zu löschende Element
 	 */
-	private void loescheOhneEventFire(IWFNElement element) {
+	private void loescheOhneEventFire(IWfnElement element) {
 		if (element.getWfnElementType() != EWfnElement.ARC) {
-			IWFNElementOK elementOK = (IWFNElementOK)element; 
+			IWfnTransitionAndPlace elementOK = (IWfnTransitionAndPlace)element; 
 			if (elementListeOK.contains(elementOK)) {
-				for (IWFNElementOK nachbar : elementOK.getInputElements()) {
+				for (IWfnTransitionAndPlace nachbar : elementOK.getInputElements()) {
 					kantenVerwaltung.deleteArc(nachbar, elementOK);
 				}
-				for (IWFNElementOK nachbar : elementOK.getOutputElements()) {
+				for (IWfnTransitionAndPlace nachbar : elementOK.getOutputElements()) {
 					kantenVerwaltung.deleteArc(elementOK, nachbar);
 				}
 				idVerwaltung.passBack(elementOK.getID());
@@ -153,11 +153,11 @@ public class WFNModell implements 	IWFNModellVeraendern,
 			    elementListeOK.remove(elementOK);
 			}
 		} else 
-			kantenVerwaltung.deleteArc((IWFNElementKante) element);
+			kantenVerwaltung.deleteArc((IWfnArc) element);
 	}
 	
 	@Override
-	public void neueStelle(Point position) {
+	public void createPlace(Point position) {
 		neueStelle("", "", position, false);
 	}
 
@@ -174,7 +174,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	}
 
 	@Override
-	public void neueTransition(Point position) {
+	public void createTransition(Point position) {
 		neueTransition("", "", position);
 	}
 
@@ -192,12 +192,12 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	public void neueKante(String pnmlIDKante, String pnmlIDSource, String pnmlIDTarget) {
 		boolean sourceNichtGefunden = true;
 		boolean targetNichtGefunden = true;
-		Iterator<IWFNElementOK> it = elementListeOK.iterator();
-		IWFNElementOK von = null;
-		IWFNElementOK zu = null;
+		Iterator<IWfnTransitionAndPlace> it = elementListeOK.iterator();
+		IWfnTransitionAndPlace von = null;
+		IWfnTransitionAndPlace zu = null;
 		while ((it.hasNext()) && (sourceNichtGefunden || targetNichtGefunden)) {
-			IWFNElementOK elem = it.next();
-			String pnmlID = elem.getPNMLID();
+			IWfnTransitionAndPlace elem = it.next();
+			String pnmlID = elem.getPnmlID();
 			if (pnmlID.equals(pnmlIDSource)) {
 				von = elem;
 				sourceNichtGefunden = false;
@@ -212,7 +212,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	}
 	
 	@Override
-	public void neueKante(IWFNElementOK von, IWFNElementOK zu) {
+	public void createArc(IWfnTransitionAndPlace von, IWfnTransitionAndPlace zu) {
 		neueKante("", von, zu);
 	}
 	
@@ -223,19 +223,19 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	 * @param von Element, von dem die neue Kante ausgeht
 	 * @param zu Element, in dem die neue Kante endet
 	 */
-	private void neueKante(String pnmlID, IWFNElementOK von, IWFNElementOK zu) {
+	private void neueKante(String pnmlID, IWfnTransitionAndPlace von, IWfnTransitionAndPlace zu) {
 		kantenVerwaltung.createArc(pnmlID, von, zu);
 		fireModellAenderungEingetreten();
 	}
 	
 	@Override
-	public void setElementName(IWFNElementOK element, String name) {
+	public void setElementName(IWfnTransitionAndPlace element, String name) {
 		element.setName(name);
 		fireModellAenderungEingetreten();
 	}
 	
 	@Override
-	public ArrayList<IWFNElementOK> getAlleElementeZumZeichnen() {
+	public ArrayList<IWfnTransitionAndPlace> getAllElementsForDrawing() {
 		return elementListeOK;
 	}
 	
@@ -243,8 +243,8 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	 * Gibt alle Ellemente, also auch Kanten, zurück.
 	 * @return Liste aller Stellen, Transitionen und Kanten des aktuellen Datenmodells.
 	 */
-	private ArrayList<? extends IWFNElement> getAlleElemente() {
-		ArrayList<IWFNElement> ergebnis = new ArrayList<IWFNElement>(elementListeOK);
+	private ArrayList<? extends IWfnElement> getAlleElemente() {
+		ArrayList<IWfnElement> ergebnis = new ArrayList<IWfnElement>(elementListeOK);
 		ergebnis.addAll(kantenVerwaltung.getAllArcs());
 		return ergebnis;
 	}
@@ -274,29 +274,29 @@ public class WFNModell implements 	IWFNModellVeraendern,
 
 	@Override
 	public ArrayList<TempPNMLElement> getAlleElementeFuerExport() {
-		ArrayList<? extends IWFNElement> alleElemente = getAlleElemente();
+		ArrayList<? extends IWfnElement> alleElemente = getAlleElemente();
 		ArrayList<TempPNMLElement> ergebnis = new ArrayList<>(alleElemente.size());
-		for (IWFNElement elem : alleElemente) {
-			String pnmlID = elem.getPNMLID();
+		for (IWfnElement elem : alleElemente) {
+			String pnmlID = elem.getPnmlID();
 			if (pnmlID.equals("")) pnmlID = idVerwaltung.convertIDintoPnmlID(elem.getID());
 			String marke = "";
 			EWfnElement typ = elem.getWfnElementType();
 			TempPNMLElement temp;
 			switch (typ) {
-    		case PLACE: 	if (((IWFNElementStelle) elem).hasMarking()) marke = "1"; 
+    		case PLACE: 	if (((IWfnPlace) elem).hasMarking()) marke = "1"; 
     						else marke = "0";	
-    		case TRANSITION:String name = ((IWFNElementOK) elem).getName();
-    						String x = String.valueOf((((IWFNElementOK) elem).getPosition()).x);
-    						String y = String.valueOf((((IWFNElementOK) elem).getPosition()).y);
+    		case TRANSITION:String name = ((IWfnTransitionAndPlace) elem).getName();
+    						String x = String.valueOf((((IWfnTransitionAndPlace) elem).getPosition()).x);
+    						String y = String.valueOf((((IWfnTransitionAndPlace) elem).getPosition()).y);
     						temp = new TempPNMLElement(typ,pnmlID,name,x,y,marke);
     						ergebnis.add(temp);
     						break;
-    		case ARC:		String vonPNMLID = (((IWFNElementKante) elem).getSource()).getPNMLID();
-    						String zuPNMLID = (((IWFNElementKante) elem).getTarget()).getPNMLID();
+    		case ARC:		String vonPNMLID = (((IWfnArc) elem).getSource()).getPnmlID();
+    						String zuPNMLID = (((IWfnArc) elem).getTarget()).getPnmlID();
     						if (vonPNMLID.equals("")) vonPNMLID = 
-    							idVerwaltung.convertIDintoPnmlID((((IWFNElementKante) elem).getSource()).getID());
+    							idVerwaltung.convertIDintoPnmlID((((IWfnArc) elem).getSource()).getID());
     						if (zuPNMLID.equals("")) zuPNMLID = 
-        						idVerwaltung.convertIDintoPnmlID((((IWFNElementKante) elem).getTarget()).getID());
+        						idVerwaltung.convertIDintoPnmlID((((IWfnArc) elem).getTarget()).getID());
     							ergebnis.add(new TempPNMLElement(typ,pnmlID,vonPNMLID,zuPNMLID));
     						break;
 			}

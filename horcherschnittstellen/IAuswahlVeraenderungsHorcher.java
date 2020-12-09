@@ -2,7 +2,7 @@ package horcherschnittstellen;
 
 import java.util.ArrayList;
 
-import wfnmodell.schnittstellen.IWFNElement;
+import wfnmodell.interfaces.IWfnElement;
 
 /**
  * Schnittstelle, um über eine Veränderung der Auswahlliste informiert werden zu können,
@@ -18,5 +18,5 @@ public interface IAuswahlVeraenderungsHorcher {
 	 * @param auswahlArt NEUE_AUSWAHL oder KANTEN_AUSWAHL
 	 * @param ausgewaehlteElemente Liste der aktuell ausgewählten Elemente
 	 */
-	void auswahlAenderungEingetreten(int auswahlArt, ArrayList<? extends IWFNElement> ausgewaehlteElemente);
+	void auswahlAenderungEingetreten(int auswahlArt, ArrayList<? extends IWfnElement> ausgewaehlteElemente);
 }

@@ -1,13 +1,14 @@
 package wfnmodell.elements;
 
 import java.awt.Point;
-import wfnmodell.schnittstellen.IWFNElementStelle;
+
+import wfnmodell.interfaces.IWfnPlace;
 
 /**
  * Instanzierte Objekte dieser Klasse stellen im Datenmodell Stellen dar.
  *
  */
-public class WfnElementPlace extends AWfnElementButNoArc implements IWFNElementStelle {
+public class WfnElementPlace extends AWfnElementButNoArc implements IWfnPlace {
 
 	/** true, wenn die Stelle momentan eine Marke hat bzw. hasMarking ist */
 	private boolean hasMarking;

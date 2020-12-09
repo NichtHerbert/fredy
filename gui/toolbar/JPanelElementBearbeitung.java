@@ -15,7 +15,7 @@ import gui.EWFNEditorModus;
 import horcherschnittstellen.IAuswahlBearbeitetHorcher;
 import horcherschnittstellen.IAuswahlVeraenderungsHorcher;
 import horcherschnittstellen.IEditorModusHorcher;
-import wfnmodell.schnittstellen.IWFNElement;
+import wfnmodell.interfaces.IWfnElement;
 
 /**
  * Panel, in welchem alles versammelt ist, was mit der Bearbeitung einzelner bzw. ausgewählter
@@ -131,7 +131,7 @@ class JPanelElementBearbeitung extends JPanel implements IAuswahlVeraenderungsHo
 	}
 
 	@Override
-	public void auswahlAenderungEingetreten(int auswahlArt, ArrayList<? extends IWFNElement> ausgewaehlteElemente) {
+	public void auswahlAenderungEingetreten(int auswahlArt, ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
 		jpAuswahlInfo.auswahlAenderungEingetreten(auswahlArt, ausgewaehlteElemente);	
 	}
 

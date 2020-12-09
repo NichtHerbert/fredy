@@ -18,10 +18,10 @@ import horcherschnittstellen.IZeichnungBenoetigtHorcher;
 import horcherschnittstellen.IZoomFaktorVeraenderungsHorcher;
 import wfnmodell.WfnStatusInfo;
 import wfnmodell.elements.EWfnElement;
-import wfnmodell.schnittstellen.IWFNElement;
-import wfnmodell.schnittstellen.IWFNElementKante;
-import wfnmodell.schnittstellen.IWFNElementTransition;
-import wfnmodell.schnittstellen.IWFNElementOK;
+import wfnmodell.interfaces.IWfnElement;
+import wfnmodell.interfaces.IWfnArc;
+import wfnmodell.interfaces.IWfnTransitionAndPlace;
+import wfnmodell.interfaces.IWfnTransition;
 
 /**
  * Panel zur Darstellung des Workflownetzes.
@@ -43,7 +43,7 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 	/**
 	 *  Liste der momentan ausgewählten WFN-Elemente.
 	 */
-	private ArrayList<? extends IWFNElement> ausgewaehlteElemente;
+	private ArrayList<? extends IWfnElement> ausgewaehlteElemente;
 	private boolean istZeichnungBenoetigt;
 	private int benoetigteForm;
 	private Point zeichnungPunkt1, zeichnungPunkt2;
@@ -89,26 +89,26 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 				&& (!ausgewaehlteElemente.isEmpty())) {
 			switch (auswahlArt) {
 			case NEUE_AUSWAHL:
-				for (IWFNElement elem : ausgewaehlteElemente) {
+				for (IWfnElement elem : ausgewaehlteElemente) {
 						if (elem.getWfnElementType() != EWfnElement.ARC) {
 							elem.getWfnElementType().drawAsSelected(
 									g2, 
-									((IWFNElementOK) elem).getPosition(), 
+									((IWfnTransitionAndPlace) elem).getPosition(), 
 									EEditorFarben.AUSWAHL, 
 									elementGroesse);
 						} else {
 							elem.getWfnElementType().drawAsSelected(
 									g2, 
-									((IWFNElementKante) elem).getSource().getWfnElementType(),
-									((IWFNElementKante) elem).getSource().getPosition(),
-									((IWFNElementKante) elem).getTarget().getPosition(),
+									((IWfnArc) elem).getSource().getWfnElementType(),
+									((IWfnArc) elem).getSource().getPosition(),
+									((IWfnArc) elem).getTarget().getPosition(),
 									EEditorFarben.AUSWAHL, 
 									elementGroesse);
 						}
 				}	
 				break;
 			case KANTEN_AUSWAHL:
-				IWFNElementOK kantenStart = (IWFNElementOK) ausgewaehlteElemente.get(0);
+				IWfnTransitionAndPlace kantenStart = (IWfnTransitionAndPlace) ausgewaehlteElemente.get(0);
 				kantenStart.getWfnElementType().drawAsSelected(
 						g2, 
 						kantenStart.getPosition(), 
@@ -174,14 +174,14 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 	private void zeichneAlleElemente(Graphics2D g2) {
 		double maxX = 0d;
 		double maxY = 0d;
-		for (IWFNElementOK elem : statusInfo.getTransitionsAndPlaces()) {
+		for (IWfnTransitionAndPlace elem : statusInfo.getTransitionsAndPlaces()) {
 			Point position = elem.getPosition();
 			EWfnElement typ = elem.getWfnElementType();
 			if ((position.x*zoomFaktor) > maxX) maxX = position.x * zoomFaktor;
 			if ((position.y*zoomFaktor) > maxY) maxY = position.y * zoomFaktor;
 			typ.draw(g2, position, elementGroesse);
 			zeichneName(elem.getName(), position, g2);
-			for (IWFNElementOK nextElem :  elem.getOutputElements())
+			for (IWfnTransitionAndPlace nextElem :  elem.getOutputElements())
 				EWfnElement.ARC.draw(g2, typ, position, nextElem.getPosition(), elementGroesse);
 		}
 		Dimension panelGroesse = new Dimension((int)maxX + (2 * elementGroesse) +10, (int)maxY + (2 * elementGroesse) +10);
@@ -200,15 +200,15 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 				) {
 			EWfnElement.PLACE.drawAsSelected(g2, statusInfo.getStartPlace().getPosition(), EEditorFarben.START, elementGroesse);
 			EWfnElement.PLACE.drawAsSelected(g2, statusInfo.getEndPlace().getPosition(), EEditorFarben.ENDE, elementGroesse);
-			for (IWFNElementOK stelle: statusInfo.getMarkings())
+			for (IWfnTransitionAndPlace stelle: statusInfo.getMarkings())
 				g2.fillOval(stelle.getPosition().x - (elementGroesse/2), 
 							stelle.getPosition().y - (elementGroesse/2), 
 							elementGroesse, elementGroesse);
 			if (statusInfo.getEnabledTransitions() != null)
-				for (IWFNElementTransition transition : statusInfo.getEnabledTransitions())
+				for (IWfnTransition transition : statusInfo.getEnabledTransitions())
 					EWfnElement.TRANSITION.drawAsSelected(g2, transition.getPosition(), EEditorFarben.AKTIVIERT, elementGroesse); 
 			if (statusInfo.getContactTransitions() != null)
-				for (IWFNElementTransition transition : statusInfo.getContactTransitions())
+				for (IWfnTransition transition : statusInfo.getContactTransitions())
 					EWfnElement.TRANSITION.drawAsSelected(g2, transition.getPosition(), EEditorFarben.KONTAKT, elementGroesse);
 		}
 	}
@@ -238,7 +238,7 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 	}
 
 	@Override
-	public void auswahlAenderungEingetreten(int auswahlArt, ArrayList<? extends IWFNElement> ausgewaehlteElemente) {
+	public void auswahlAenderungEingetreten(int auswahlArt, ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
 		this.auswahlArt = auswahlArt;
 		this.ausgewaehlteElemente = ausgewaehlteElemente;
 		repaint();	

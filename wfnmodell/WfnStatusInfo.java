@@ -1,11 +1,12 @@
 package wfnmodell;
 
 import java.util.ArrayList;
-import wfnmodell.schnittstellen.IWFNElementStelle;
-import wfnmodell.schnittstellen.IWFNElementTransition;
+
 import wfnmodell.elements.EWfnElement;
-import wfnmodell.schnittstellen.IWFNElementKante;
-import wfnmodell.schnittstellen.IWFNElementOK;
+import wfnmodell.interfaces.IWfnArc;
+import wfnmodell.interfaces.IWfnTransitionAndPlace;
+import wfnmodell.interfaces.IWfnPlace;
+import wfnmodell.interfaces.IWfnTransition;
 
 /**
  * Klasse, die alle wesentlichen Informationen über den aktuellen Zustand des Workflownetzes in sich trägt 
@@ -24,11 +25,11 @@ public class WfnStatusInfo {
 	/**
 	 * Die Startstelle, wenn es nur eine gibt, sonst null.
 	 */
-	private IWFNElementStelle start;
+	private IWfnPlace start;
 	/**
 	 * Die Endstelle, wenn es nur eine gibt, sonst null.
 	 */
-	private IWFNElementStelle end; 
+	private IWfnPlace end; 
 	/**
 	 * Liste der Gründe, warum das Netz die Bedingungen für ein WFN nicht erfüllt,
 	 * oder dass es sich hierbei um ein WFN handelt.
@@ -37,23 +38,23 @@ public class WfnStatusInfo {
 	/**
 	 * Liste aller Transitionen und Stellen des aktuellen Workflownetzes.
 	 */
-	private ArrayList<IWFNElementOK> transitionsAndPlaces;
+	private ArrayList<IWfnTransitionAndPlace> transitionsAndPlaces;
 	/**
 	 * Liste aller Kanten des aktuellen Workflownetzes;
 	 */
-	private ArrayList<IWFNElementKante> arcs;
+	private ArrayList<IWfnArc> arcs;
 	/**
 	 * Liste aller Stellen, die eine Marke haben.
 	 */
-	private ArrayList<IWFNElementStelle> markings;
+	private ArrayList<IWfnPlace> markings;
     /**
      * Liste aller aktivierten Transitionen.
      */
-    private ArrayList<IWFNElementTransition> enabledTransitions;
+    private ArrayList<IWfnTransition> enabledTransitions;
     /**
      * Liste aller Transitionen, bei denen Kontakt besteht.
      */
-    private ArrayList<IWFNElementTransition> contactTransitions;
+    private ArrayList<IWfnTransition> contactTransitions;
 	
 	public WfnStatusInfo() {
 //		isWfn = false;
@@ -72,11 +73,11 @@ public class WfnStatusInfo {
 
 	public WfnStatusInfo(boolean isWfn, 
 						boolean hasOneStartOneEnd, 
-						IWFNElementStelle start, 
-						IWFNElementStelle end, 
+						IWfnPlace start, 
+						IWfnPlace end, 
 						ArrayList<String> notWfnExplanatoryStatements,
-						ArrayList<IWFNElementOK> transitionsAndPlaces, 
-						ArrayList<IWFNElementKante> arcs) {
+						ArrayList<IWfnTransitionAndPlace> transitionsAndPlaces, 
+						ArrayList<IWfnArc> arcs) {
 		this.isWfn = isWfn;
 		this.hasOneStartOneEnd = hasOneStartOneEnd;
 		this.start = start;
@@ -106,7 +107,7 @@ public class WfnStatusInfo {
 	 * Gibt die Startstelle des WFN zurück.
 	 * @return Startstelle, oder null, falls es keine eindeutige gibt
 	 */
-	public IWFNElementStelle getStartPlace() {
+	public IWfnPlace getStartPlace() {
 		return start;
 	}
 
@@ -114,7 +115,7 @@ public class WfnStatusInfo {
 	 * Gibt die Endstelle des WFN zurück.
 	 * @return Endstelle, oder null, falls es keine eindeutige gibt
 	 */
-	public IWFNElementStelle getEndPlace() {
+	public IWfnPlace getEndPlace() {
 		return end;
 	}
 	
@@ -146,7 +147,7 @@ public class WfnStatusInfo {
 	 * Gibt eine Liste mit Referenzen auf alle Stellen und Transition des aktuellen WFN zurück.
 	 * @return Liste aller Stellen und Transitionen des WFN {@link #transitionsAndPlaces}
 	 */
-	public ArrayList<IWFNElementOK> getTransitionsAndPlaces() {
+	public ArrayList<IWfnTransitionAndPlace> getTransitionsAndPlaces() {
 		return new ArrayList<>(transitionsAndPlaces);
 	}
 	
@@ -154,7 +155,7 @@ public class WfnStatusInfo {
 	 * Gibt eine Liste mit allen Kanten des WFN zurück.
 	 * @return Liste aller Kanten des WFN
 	 */
-	public ArrayList<IWFNElementKante> getArcs() {
+	public ArrayList<IWfnArc> getArcs() {
 		return  new ArrayList<>(arcs);
 	}
 	
@@ -162,7 +163,7 @@ public class WfnStatusInfo {
 	 * Gibt eine Liste aller Stellen mit einer Marke zurück.
 	 * @return Liste aller Stellen mit Marke {@link #markings}
 	 */
-	public ArrayList<IWFNElementStelle> getMarkings() {
+	public ArrayList<IWfnPlace> getMarkings() {
 		return markings;
 	}
 	
@@ -170,7 +171,7 @@ public class WfnStatusInfo {
 	 * Setzt die Liste aller Stellen mit Marke.
 	 * @param markings zu setzende Liste für {@link #markings}
 	 */
-	public void setMarkings(ArrayList<IWFNElementStelle> markings) {
+	public void setMarkings(ArrayList<IWfnPlace> markings) {
 		this.markings = new ArrayList<>(markings);
 	}
 
@@ -178,7 +179,7 @@ public class WfnStatusInfo {
 	 * Gibt eine Liste aller aktivierten Transitionen zurück.
 	 * @return Liste aller aktivierten Transitionen {@link #enabledTransitions}
 	 */
-	public ArrayList<IWFNElementTransition> getEnabledTransitions() {
+	public ArrayList<IWfnTransition> getEnabledTransitions() {
 		return enabledTransitions;
 	}
 
@@ -186,7 +187,7 @@ public class WfnStatusInfo {
 	 * Setzt die Liste aller aktivierten Transitionen.
 	 * @param enabledTransitions zu setzende Liste für {@link #enabledTransitions}
 	 */
-	public void setEnabledTransitions(ArrayList<IWFNElementTransition> enabledTransitions) {
+	public void setEnabledTransitions(ArrayList<IWfnTransition> enabledTransitions) {
 		this.enabledTransitions = new ArrayList<>(enabledTransitions);
 	}
 	
@@ -194,7 +195,7 @@ public class WfnStatusInfo {
 	 * Gibt die Liste aller Transitionen mit Kontakt zurück.
 	 * @return Liste aller Transitionen mit Kontakt {@link #contactTransitions}
 	 */
-	public ArrayList<IWFNElementTransition> getContactTransitions() {
+	public ArrayList<IWfnTransition> getContactTransitions() {
 		return contactTransitions;
 	}
 
@@ -202,7 +203,7 @@ public class WfnStatusInfo {
 	 * Setzt die Liste aller Transitionen mit Kontakt.
 	 * @param contactTransitions zu setzenede Liste für {@link #contactTransitions}
 	 */
-	public void setContactTransitions(ArrayList<IWFNElementTransition> contactTransitions) {
+	public void setContactTransitions(ArrayList<IWfnTransition> contactTransitions) {
 		this.contactTransitions = new ArrayList<>(contactTransitions);
 	}
 
@@ -232,10 +233,10 @@ public class WfnStatusInfo {
 	 * @param startEndControll Referenz auf die aktuelle {@link StartEndManagement} des Datenmodells
 	 * @return ein neu instanziertes und mit allen notwendigen Informationen versehenes Objekt dieser Klasse
 	 */
-	public static WfnStatusInfo getInfo(ArrayList<IWFNElementOK> transitionsAndPlaces, 
-										ArrayList<IWFNElementKante> arcs, 
+	public static WfnStatusInfo getInfo(ArrayList<IWfnTransitionAndPlace> transitionsAndPlaces, 
+										ArrayList<IWfnArc> arcs, 
 										StartEndManagement startEndControll) {
-		IWFNElementStelle startPlace = null, endPlace = null;
+		IWfnPlace startPlace = null, endPlace = null;
 		ArrayList<String> statements = new ArrayList<>(5);
 		boolean isWfn = false;
 		if (transitionsAndPlaces.size() == 0) {
@@ -246,7 +247,7 @@ public class WfnStatusInfo {
 			boolean isNotConnectedAltTest = false;
 			boolean hasOnlyTransitions = true;
 			boolean isNotWfn = false;
-			for (IWFNElementOK element : transitionsAndPlaces) {
+			for (IWfnTransitionAndPlace element : transitionsAndPlaces) {
 				boolean hasStartPath = element.hasStartPath();
 				boolean hasEndPath = element.hasEndPath(); 
 				if ((hasStartPath)
