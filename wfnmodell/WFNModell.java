@@ -41,9 +41,9 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	 */
 	private ArrayList<IWFNVeraenderungsHorcher> wfnVeraenderungsHorcherListe;
 	/**
-	 * Die aktuelle {@link StartEndStellenVerwaltung}.
+	 * Die aktuelle {@link StartEndManagement}.
 	 */
-	private StartEndStellenVerwaltung startEndStellenVerwaltung;
+	private StartEndManagement startEndStellenVerwaltung;
 	/**
 	 * Die aktuelle {@link ZusammenhangsVerwaltung}.
 	 */
@@ -74,7 +74,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 		idVerwaltung = new Identifier();
 		elementListeOK = new ArrayList<IWFNElementOK>();
 		zusammenhangsVerwaltung = new ZusammenhangsVerwaltung();
-		startEndStellenVerwaltung = new StartEndStellenVerwaltung(zusammenhangsVerwaltung);
+		startEndStellenVerwaltung = new StartEndManagement(zusammenhangsVerwaltung);
 		kantenVerwaltung = new ArcManagement(idVerwaltung, startEndStellenVerwaltung,
 				zusammenhangsVerwaltung);
 		istGespeichert = false;

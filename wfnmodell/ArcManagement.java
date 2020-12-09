@@ -18,9 +18,9 @@ class ArcManagement {
 	private Identifier identifier;
 	
 	/**
-	 * Die aktuelle {@link StartEndStellenVerwaltung}.
+	 * Die aktuelle {@link StartEndManagement}.
 	 */
-	private StartEndStellenVerwaltung startEndManagement;
+	private StartEndManagement startEndManagement;
 	
 	/**
 	 * Die aktuelle {@link ZusammenhangsVerwaltung}.
@@ -32,7 +32,7 @@ class ArcManagement {
 	 */
 	private ArrayList<WFNElementKante> arcs;
 
-	ArcManagement(Identifier idManagement, StartEndStellenVerwaltung startEndManagement,
+	ArcManagement(Identifier idManagement, StartEndManagement startEndManagement,
 			ZusammenhangsVerwaltung connectionManagement) {
 		this.identifier = idManagement;
 		this.startEndManagement = startEndManagement;
@@ -58,7 +58,7 @@ class ArcManagement {
 			arcs.add(createdArc);
 			origin.addKanteZu(ending);
 			ending.addKanteVon(origin);
-			startEndManagement.infoNeueKante(origin,ending);
+			startEndManagement.infoCreatedArc(origin,ending);
 			connectionManagement.infoNeueKante(origin,ending);
 		}
 	}
@@ -131,7 +131,7 @@ class ArcManagement {
 			ending.removeKanteVon(origin);
 			identifier.passBack(arc.getID());
 			connectionManagement.infoGeloeschteKante(origin, ending);
-			startEndManagement.infoGeloeschteKante(origin, ending);
+			startEndManagement.infoDeletedArc(origin, ending);
 		}
 	}
 	

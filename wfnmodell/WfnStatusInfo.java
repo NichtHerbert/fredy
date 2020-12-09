@@ -217,7 +217,6 @@ public class WfnStatusInfo {
 //			for (String grund : gruendeFuerKeinWFN)
 //				ergebnis += grund + "\n";
 //		} catch (Exception e) {
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 //		return ergebnis;
@@ -230,12 +229,12 @@ public class WfnStatusInfo {
 	 * kann (also: Stellen mit Marken, aktivierte Transitionen, Transitionen mit Kontakt).
 	 * @param transitionsAndPlaces Liste aller Stellen und Transitionen des aktuellen Datenmodells.
 	 * @param arcs Liste aller Kanten des aktuellen Datenmodells 
-	 * @param startEndControll Referenz auf die aktuelle {@link StartEndStellenVerwaltung} des Datenmodells
+	 * @param startEndControll Referenz auf die aktuelle {@link StartEndManagement} des Datenmodells
 	 * @return ein neu instanziertes und mit allen notwendigen Informationen versehenes Objekt dieser Klasse
 	 */
 	public static WfnStatusInfo getInfo(ArrayList<IWFNElementOK> transitionsAndPlaces, 
 										ArrayList<IWFNElementKante> arcs, 
-										StartEndStellenVerwaltung startEndControll) {
+										StartEndManagement startEndControll) {
 		IWFNElementStelle startPlace = null, endPlace = null;
 		ArrayList<String> statements = new ArrayList<>(5);
 		boolean isWfn = false;
@@ -264,23 +263,23 @@ public class WfnStatusInfo {
 					hasOnlyTransitions = false;	
 			}
 			if ((isNotConnected) 
-					|| ( !startEndControll.hatNurEineStartUndEineEndStelle())
+					|| ( !startEndControll.hasUniqueStartAndEnd())
 					|| (isNotWfn)) {
 				statements.add("Kein Workflow-Netz!");
 				if (!hasOnlyTransitions) {
 					if (isNotConnectedAltTest) {
 						statements.add("Nicht alle Elemente verbunden.");
 					} else {
-						if ((!startEndControll.hatNurEineStartStelle())
-								|| (!startEndControll.hatNurEineEndStelle())) {
-							if (!startEndControll.hatNurEineStartStelle()) {
-								if (startEndControll.getStartStellenAnzahl() == 0) 
+						if ((!startEndControll.hasUniqueStart())
+								|| (!startEndControll.hasUniqueEnd())) {
+							if (!startEndControll.hasUniqueStart()) {
+								if (startEndControll.getStartPlacesNumber() == 0) 
 									statements.add("keine Anfangsstelle");
 								else
 									statements.add("zu viele Anfangsstellen");
 							}
-							if (!startEndControll.hatNurEineEndStelle()) {
-								if (startEndControll.getEndStellenAnzahl() == 0) 
+							if (!startEndControll.hasUniqueEnd()) {
+								if (startEndControll.getEndPlacesNumber() == 0) 
 									statements.add("keine Endstelle");
 								else
 									statements.add("zu viele Endstellen");
@@ -294,12 +293,12 @@ public class WfnStatusInfo {
 			} else {
 				isWfn = true;
 				statements.add("Dies ist ein Workflow-Netz.");
-				startPlace = startEndControll.getStartStelle();
-				endPlace = startEndControll.getEndStelle();
+				startPlace = startEndControll.getUniqueStart();
+				endPlace = startEndControll.getUniqueEnd();
 			}
 		}
 		return new WfnStatusInfo(isWfn,
-								startEndControll.hatNurEineStartUndEineEndStelle(),
+								startEndControll.hasUniqueStartAndEnd(),
 								startPlace,
 								endPlace,
 								statements,
