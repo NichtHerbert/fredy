@@ -13,30 +13,30 @@ import wfnmodell.schnittstellen.IWFNElementOK;
  * {@link wfnmodell.schnittstellen.IWFNElementOK#istAufPfadZumEnde()} und
  * {@link wfnmodell.schnittstellen.IWFNElementOK#setPfadZumEnde(boolean)}.
  */
-class ZusammenhangsVerwaltung {
+class ConnectionManagement {
 
 	/**
 	 * Aktualisiert wenn notwendig den PfadVomStart bzw. PfadZumEnde der übergebenen Stelle und Transition
-	 * und ihrer möglichen Folge-Elemente durch Aufruf von {@link #setHatJetztPfadVomStart(IWFNElementOK)}
-	 * und {@link #setHatJetztPfadZumEnde(IWFNElementOK)}.
-	 * @param von das Element, von dem die neue Kante ausgeht
-	 * @param zu das Element, in dem die neue Kante endet
+	 * und ihrer möglichen Folge-Elemente durch Aufruf von {@link #setHasStartPath(IWFNElementOK)}
+	 * und {@link #setHasEndPath(IWFNElementOK)}.
+	 * @param origin das Element, von dem die neue Kante ausgeht
+	 * @param ending das Element, in dem die neue Kante endet
 	 */
-	void infoNeueKante(IWFNElementOK von, IWFNElementOK zu) {
-		if (von.istAufPfadVomStart()) setHatJetztPfadVomStart(zu);
-		if (zu.istAufPfadZumEnde()) setHatJetztPfadZumEnde(von);
+	void infoCreatedArc(IWFNElementOK origin, IWFNElementOK ending) {
+		if (origin.istAufPfadVomStart()) setHasStartPath(ending);
+		if (ending.istAufPfadZumEnde()) setHasEndPath(origin);
 	}
 	
 	/**
 	 * Aktualisiert wenn notwendig den PfadVomStart bzw. PfadZumEnde der übergebenen Stelle und Transition
-	 * und ihrer möglichen Folge-Elemente durch Aufruf von {@link #setHatEinenPfadVomStartVerloren(IWFNElementOK)}
-	 * und {@link #setHatEinenPfadZumEndeVerloren(IWFNElementOK)}.
-	 * @param von das Element, von dem die gelöschte Kante ausging
-	 * @param zu das Element, in dem die gelöschte Kante endete
+	 * und ihrer möglichen Folge-Elemente durch Aufruf von {@link #setLostStartPath(IWFNElementOK)}
+	 * und {@link #setLostEndPath(IWFNElementOK)}.
+	 * @param origin das Element, von dem die gelöschte Kante ausging
+	 * @param ending das Element, in dem die gelöschte Kante endete
 	 */
-	void infoGeloeschteKante(IWFNElementOK von, IWFNElementOK zu) {
-		if (zu.istAufPfadVomStart()) setHatEinenPfadVomStartVerloren(zu);
-		if (von.istAufPfadZumEnde()) setHatEinenPfadZumEndeVerloren(von);
+	void infoDeletedArc(IWFNElementOK origin, IWFNElementOK ending) {
+		if (ending.istAufPfadVomStart()) setLostStartPath(ending);
+		if (origin.istAufPfadZumEnde()) setLostEndPath(origin);
 	}
 	
 	/**
@@ -45,14 +45,14 @@ class ZusammenhangsVerwaltung {
 	 * anwendet.
 	 * @param elem zu überprüfendes Element
 	 */
-	void setHatEinenPfadVomStartVerloren(IWFNElementOK elem) {
+	void setLostStartPath(IWFNElementOK elem) {
 		if (elem.istAufPfadVomStart()) {
-			ArrayList<IWFNElementOK> startListe = getStartPfadStartElemente(elem);
-			if ((startListe == null)
-					|| (startListe.isEmpty())) {
-				setAlleVorgaengerAufPfadVomStart(elem, false);
-				for (IWFNElementOK elementDanach : elem.getKantenZu())
-					setHatEinenPfadVomStartVerloren(elementDanach);
+			ArrayList<IWFNElementOK> starts = getPotentialStarts(elem);
+			if ((starts == null)
+					|| (starts.isEmpty())) {
+				setAllElemOnStartPath(elem, false);
+				for (IWFNElementOK elementForwards : elem.getKantenZu())
+					setLostStartPath(elementForwards);
 			}
 		}
 	}
@@ -63,13 +63,13 @@ class ZusammenhangsVerwaltung {
 	 * @param elem Element, dessen Attribut gesetzt werden soll, und die Attribute aller seiner Vorläufer
 	 * @param b zu setzender boolscher Wert
 	 */	
-	private void setAlleVorgaengerAufPfadVomStart(IWFNElementOK elem, boolean b) {
+	private void setAllElemOnStartPath(IWFNElementOK elem, boolean b) {
 		if (!elem.hatRekursiveMethodeAufgerufen()) {
 			elem.setPfadVomStart(b);
 			if (elem.hatEingehendeKanten()) {
 				elem.setHatRekursiveMethodeAufgerufen(true);
-				for (IWFNElementOK elementDavor : elem.getKantenVon())
-					setAlleVorgaengerAufPfadVomStart(elementDavor, b);
+				for (IWFNElementOK elementBackwards : elem.getKantenVon())
+					setAllElemOnStartPath(elementBackwards, b);
 				elem.setHatRekursiveMethodeAufgerufen(false);
 			}
 		}
@@ -81,25 +81,25 @@ class ZusammenhangsVerwaltung {
 	 * @param element das zu überprüfende Element
 	 * @return Liste aller vorherigen Elemente, die keine eingehenden Kanten haben 
 	 */
-	private ArrayList<IWFNElementOK> getStartPfadStartElemente(IWFNElementOK element) {
-		ArrayList<IWFNElementOK> ergebnis = new ArrayList<>(4);
+	private ArrayList<IWFNElementOK> getPotentialStarts(IWFNElementOK element) {
+		ArrayList<IWFNElementOK> result = new ArrayList<>(4);
 		if (element.istAufPfadVomStart()) {
 			if ((!element.hatEingehendeKanten())
 					&& (element.getTyp() == EWFNElement.STELLE))
-				ergebnis.add(element);
+				result.add(element);
 			else 
 				if (!element.hatRekursiveMethodeAufgerufen()) {
 					element.setHatRekursiveMethodeAufgerufen(true);
-					for (IWFNElementOK elementDavor: element.getKantenVon()) {
-						ArrayList<IWFNElementOK> teilErgebnis = getStartPfadStartElemente(elementDavor);
-						if (teilErgebnis != null)
-							ergebnis.addAll(teilErgebnis);
+					for (IWFNElementOK elementBackwards: element.getKantenVon()) {
+						ArrayList<IWFNElementOK> partResult = getPotentialStarts(elementBackwards);
+						if (partResult != null)
+							result.addAll(partResult);
 					}
 					element.setHatRekursiveMethodeAufgerufen(false);
 				}
-			return ergebnis;
+			return result;
 		} else
-			return ergebnis;
+			return result;
 	}
 
 	/**
@@ -108,14 +108,14 @@ class ZusammenhangsVerwaltung {
 	 * anwendet, von denen Kanten ausgehen, die in dem übergebenen Element enden.
 	 * @param elem zu überprüfendes Element
 	 */
-	void setHatEinenPfadZumEndeVerloren(IWFNElementOK elem) {
+	void setLostEndPath(IWFNElementOK elem) {
 		if (elem.istAufPfadZumEnde()) {
-			ArrayList<IWFNElementOK> endListe = getEndPfadEndElemente(elem);
-			if ((endListe == null)
-					|| (endListe.isEmpty())) {
-				setAlleNachfolgerAufPfadZumEnde(elem, false);
-				for (IWFNElementOK elementDavor : elem.getKantenVon())
-					setHatEinenPfadZumEndeVerloren(elementDavor);
+			ArrayList<IWFNElementOK> ends = getPotentialEnds(elem);
+			if ((ends == null)
+					|| (ends.isEmpty())) {
+				setAllElemOnEndPath(elem, false);
+				for (IWFNElementOK elementBackwards : elem.getKantenVon())
+					setLostEndPath(elementBackwards);
 			}
 		}
 	}
@@ -126,13 +126,13 @@ class ZusammenhangsVerwaltung {
 	 * @param elem Element, dessen Attribut gesetzt werden soll, und die Attribute aller seiner Nachfolger
 	 * @param b zu setzender boolscher Wert
 	 */
-	private void setAlleNachfolgerAufPfadZumEnde(IWFNElementOK elem, boolean b) {
+	private void setAllElemOnEndPath(IWFNElementOK elem, boolean b) {
 		if (!elem.hatRekursiveMethodeAufgerufen()) {
 			elem.setPfadZumEnde(b);
 			if (elem.hatAusgehendeKanten()) {
 				elem.setHatRekursiveMethodeAufgerufen(true);
-				for (IWFNElementOK elementDanach : elem.getKantenZu())
-					setAlleNachfolgerAufPfadZumEnde(elementDanach, b);
+				for (IWFNElementOK elementForwards : elem.getKantenZu())
+					setAllElemOnEndPath(elementForwards, b);
 				elem.setHatRekursiveMethodeAufgerufen(false);
 			}
 		}
@@ -144,25 +144,25 @@ class ZusammenhangsVerwaltung {
 	 * @param element das zu überprüfende Element
 	 * @return Liste aller nachfolgenden Elemente, die keine ausgehenden Kanten haben 
 	 */
-	private ArrayList<IWFNElementOK> getEndPfadEndElemente(IWFNElementOK element) {
-		ArrayList<IWFNElementOK> ergebnis = new ArrayList<>(4);
+	private ArrayList<IWFNElementOK> getPotentialEnds(IWFNElementOK element) {
+		ArrayList<IWFNElementOK> result = new ArrayList<>(4);
 		if (element.istAufPfadZumEnde()) {
 			if ((!element.hatAusgehendeKanten())
 					&& (element.getTyp() == EWFNElement.STELLE))
-				ergebnis.add(element);
+				result.add(element);
 			else 
 				if (!element.hatRekursiveMethodeAufgerufen()) {
 					element.setHatRekursiveMethodeAufgerufen(true);
-					for (IWFNElementOK elementDanach: element.getKantenZu()) {
-						ArrayList<IWFNElementOK> teilErgebnis = getEndPfadEndElemente(elementDanach);
-						if (teilErgebnis != null)
-							ergebnis.addAll(teilErgebnis);
+					for (IWFNElementOK elementForwards: element.getKantenZu()) {
+						ArrayList<IWFNElementOK> partResult = getPotentialEnds(elementForwards);
+						if (partResult != null)
+							result.addAll(partResult);
 					}
 					element.setHatRekursiveMethodeAufgerufen(false);
 				}
-			return ergebnis;
+			return result;
 		} else
-			return ergebnis;
+			return result;
 	}
 
 	/**
@@ -172,11 +172,11 @@ class ZusammenhangsVerwaltung {
 	 * Methode aufgerufen.
 	 * @param elem Element, welches jetzt einen Pfad vom Start hat
 	 */
-	void setHatJetztPfadVomStart(IWFNElementOK elem) {
+	void setHasStartPath(IWFNElementOK elem) {
 		elem.setPfadVomStart(true);
-		for (IWFNElementOK elementDanach : elem.getKantenZu()) {
-			if (!elementDanach.istAufPfadVomStart())
-				setHatJetztPfadVomStart(elementDanach);
+		for (IWFNElementOK elementForwards : elem.getKantenZu()) {
+			if (!elementForwards.istAufPfadVomStart())
+				setHasStartPath(elementForwards);
 		}
 	}
 
@@ -187,11 +187,11 @@ class ZusammenhangsVerwaltung {
 	 * Methode aufgerufen.
 	 * @param elem Element, welches jetzt einen Pfad zum Ende hat
 	 */
-	void setHatJetztPfadZumEnde(IWFNElementOK elem) {
+	void setHasEndPath(IWFNElementOK elem) {
 		elem.setPfadZumEnde(true);
-		for (IWFNElementOK elementDavor : elem.getKantenVon()) {
-			if (elementDavor.istAufPfadZumEnde() == false)
-				setHatJetztPfadZumEnde(elementDavor);
+		for (IWFNElementOK elementBackwards : elem.getKantenVon()) {
+			if (elementBackwards.istAufPfadZumEnde() == false)
+				setHasEndPath(elementBackwards);
 		}
 	}
 		

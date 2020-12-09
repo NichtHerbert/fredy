@@ -21,11 +21,11 @@ class StartEndManagement {
 	 */
 	private ArrayList<IWFNElementStelle> endPlaces;
 	/**
-	 * Die aktuelle {@link ZusammenhangsVerwaltung}.
+	 * Die aktuelle {@link ConnectionManagement}.
 	 */
-	private ZusammenhangsVerwaltung connectionManagement;
+	private ConnectionManagement connectionManagement;
 	
-	StartEndManagement(ZusammenhangsVerwaltung connectionManagement) {
+	StartEndManagement(ConnectionManagement connectionManagement) {
 		startPlaces = new ArrayList<>();
 		endPlaces = new ArrayList<>();
 		this.connectionManagement = connectionManagement;
@@ -42,12 +42,12 @@ class StartEndManagement {
 		if (origin.getTyp() == EWFNElement.STELLE) { 
 			if (endPlaces.contains(origin)) {
 				endPlaces.remove(origin);
-				connectionManagement.setHatEinenPfadZumEndeVerloren(origin);
+				connectionManagement.setLostEndPath(origin);
 			}
 		} else {
 			if (startPlaces.contains(ending)) {
 				startPlaces.remove(ending);
-				connectionManagement.setHatEinenPfadVomStartVerloren(ending);
+				connectionManagement.setLostStartPath(ending);
 			}
 		}
 	}
@@ -63,12 +63,12 @@ class StartEndManagement {
 		if (origin.getTyp() == EWFNElement.STELLE) {
 			if (!origin.hatAusgehendeKanten()) {
 				endPlaces.add((WFNElementStelle) origin);
-				connectionManagement.setHatJetztPfadZumEnde(origin);
+				connectionManagement.setHasEndPath(origin);
 			}
 		} else {
 			if (!ending.hatEingehendeKanten()) {
 				startPlaces.add((WFNElementStelle) ending);
-				connectionManagement.setHatJetztPfadVomStart(ending);
+				connectionManagement.setHasStartPath(ending);
 			}
 		}
 	}
@@ -90,8 +90,8 @@ class StartEndManagement {
 	void add(WFNElementStelle place) {
 		startPlaces.add(place);
 		endPlaces.add(place);
-		connectionManagement.setHatJetztPfadVomStart(place);
-		connectionManagement.setHatJetztPfadZumEnde(place);
+		connectionManagement.setHasStartPath(place);
+		connectionManagement.setHasEndPath(place);
 	}
 
 	/**

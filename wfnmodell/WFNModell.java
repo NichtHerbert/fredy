@@ -45,9 +45,9 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	 */
 	private StartEndManagement startEndStellenVerwaltung;
 	/**
-	 * Die aktuelle {@link ZusammenhangsVerwaltung}.
+	 * Die aktuelle {@link ConnectionManagement}.
 	 */
-	private ZusammenhangsVerwaltung zusammenhangsVerwaltung;
+	private ConnectionManagement zusammenhangsVerwaltung;
 	/**
 	 * Die aktuelle {@link ArcManagement}.
 	 */
@@ -73,7 +73,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	private void newInit() {
 		idVerwaltung = new Identifier();
 		elementListeOK = new ArrayList<IWFNElementOK>();
-		zusammenhangsVerwaltung = new ZusammenhangsVerwaltung();
+		zusammenhangsVerwaltung = new ConnectionManagement();
 		startEndStellenVerwaltung = new StartEndManagement(zusammenhangsVerwaltung);
 		kantenVerwaltung = new ArcManagement(idVerwaltung, startEndStellenVerwaltung,
 				zusammenhangsVerwaltung);

@@ -23,9 +23,9 @@ class ArcManagement {
 	private StartEndManagement startEndManagement;
 	
 	/**
-	 * Die aktuelle {@link ZusammenhangsVerwaltung}.
+	 * Die aktuelle {@link ConnectionManagement}.
 	 */
-	private ZusammenhangsVerwaltung connectionManagement;
+	private ConnectionManagement connectionManagement;
 	
 	/**
 	 * Liste aller Kanten des aktuellen Datenmodells.
@@ -33,7 +33,7 @@ class ArcManagement {
 	private ArrayList<WFNElementKante> arcs;
 
 	ArcManagement(Identifier idManagement, StartEndManagement startEndManagement,
-			ZusammenhangsVerwaltung connectionManagement) {
+			ConnectionManagement connectionManagement) {
 		this.identifier = idManagement;
 		this.startEndManagement = startEndManagement;
 		this.connectionManagement = connectionManagement;
@@ -59,7 +59,7 @@ class ArcManagement {
 			origin.addKanteZu(ending);
 			ending.addKanteVon(origin);
 			startEndManagement.infoCreatedArc(origin,ending);
-			connectionManagement.infoNeueKante(origin,ending);
+			connectionManagement.infoCreatedArc(origin,ending);
 		}
 	}
 	
@@ -130,7 +130,7 @@ class ArcManagement {
 			origin.removeKanteZu(ending);
 			ending.removeKanteVon(origin);
 			identifier.passBack(arc.getID());
-			connectionManagement.infoGeloeschteKante(origin, ending);
+			connectionManagement.infoDeletedArc(origin, ending);
 			startEndManagement.infoDeletedArc(origin, ending);
 		}
 	}
