@@ -1,6 +1,6 @@
 package wfnmodell.schnittstellen;
 
-import wfnmodell.elemente.EWFNElement;
+import wfnmodell.elements.EWfnElement;
 
 /**
  * Schnittstelle für Methoden, die jedes Element des Workflownetzes besitzt. 
@@ -10,9 +10,9 @@ public interface IWFNElement {
 
 	/**
 	 * Gibt den Element-Typ des Elements zurück.
-	 * @return je nach Typ KANTE, TRANSITION oder STELLE
+	 * @return je nach Typ ARC, TRANSITION oder PLACE
 	 */
-	EWFNElement getTyp();
+	EWfnElement getWfnElementType();
 
 	/**
 	 * Gibt die PNML-ID des Elements zurück.
@@ -31,11 +31,11 @@ public interface IWFNElement {
 	 * noch gewartet wird.
 	 * @return true, wenn gerade mit dem Element eine rekursiver Methodenaufruf am Laufen ist
 	 */
-	boolean hatRekursiveMethodeAufgerufen();
+	boolean getRecursiveMethodFlag();
 	
 	/**
 	 * Setzt den boolschen Wert, ob das Element momentan Teil eines rekursiven Methodenaufrufs ist.
 	 * @param hatRekursiveMethodeAufgerufen der zu setzende Wert
 	 */
-	void setHatRekursiveMethodeAufgerufen(boolean hatRekursiveMethodeAufgerufen);
+	void setRecursiveMethodFlag(boolean hatRekursiveMethodeAufgerufen);
 }

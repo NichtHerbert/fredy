@@ -2,9 +2,9 @@ package wfnmodell;
 
 import java.util.ArrayList;
 
-import wfnmodell.elemente.EWFNElement;
-import wfnmodell.elemente.WFNElementStelle;
 import wfnmodell.schnittstellen.IWFNElementStelle;
+import wfnmodell.elements.EWfnElement;
+import wfnmodell.elements.WfnElementPlace;
 import wfnmodell.schnittstellen.IWFNElementOK;
 
 /**
@@ -39,7 +39,7 @@ class StartEndManagement {
 	 * @param ending Element, in dem die neue Kante endet
 	 */
 	void infoCreatedArc(IWFNElementOK origin, IWFNElementOK ending) {
-		if (origin.getTyp() == EWFNElement.STELLE) { 
+		if (origin.getWfnElementType() == EWfnElement.PLACE) { 
 			if (endPlaces.contains(origin)) {
 				endPlaces.remove(origin);
 				connectionManagement.setLostEndPath(origin);
@@ -60,14 +60,14 @@ class StartEndManagement {
 	 * @param ending Element, in dem die gelöschte Kante endete
 	 */
 	void infoDeletedArc(IWFNElementOK origin, IWFNElementOK ending) {
-		if (origin.getTyp() == EWFNElement.STELLE) {
-			if (!origin.hatAusgehendeKanten()) {
-				endPlaces.add((WFNElementStelle) origin);
+		if (origin.getWfnElementType() == EWfnElement.PLACE) {
+			if (!origin.hasOutgoingArcs()) {
+				endPlaces.add((WfnElementPlace) origin);
 				connectionManagement.setHasEndPath(origin);
 			}
 		} else {
-			if (!ending.hatEingehendeKanten()) {
-				startPlaces.add((WFNElementStelle) ending);
+			if (!ending.hasIncomingArcs()) {
+				startPlaces.add((WfnElementPlace) ending);
 				connectionManagement.setHasStartPath(ending);
 			}
 		}
@@ -87,7 +87,7 @@ class StartEndManagement {
 	 * die {@link #connectionManagement}.
 	 * @param place neues WFN-Element Stelle
 	 */
-	void add(WFNElementStelle place) {
+	void add(WfnElementPlace place) {
 		startPlaces.add(place);
 		endPlaces.add(place);
 		connectionManagement.setHasStartPath(place);
@@ -98,7 +98,7 @@ class StartEndManagement {
 	 * Entfernt die übergebene WFN-Stelle aus den Listen {@link #endPlaces} und {@link #startPlaces}.
 	 * @param place zu entfernende WFN-Stelle
 	 */
-	void remove(WFNElementStelle place) {
+	void remove(WfnElementPlace place) {
 		if (startPlaces.contains(place))
 			startPlaces.remove(place);
 		if (endPlaces.contains(place))

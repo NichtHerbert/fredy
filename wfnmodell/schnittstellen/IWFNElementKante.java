@@ -12,29 +12,29 @@ public interface IWFNElementKante extends IWFNElement {
 	 * Legt das Element fest, von dem die Kante ausgeht.
 	 * @param elem das Element, von dem die Kante ausgeht
 	 */
-	void setVon(IWFNElementOK elem);
+	void setSource(IWFNElementOK elem);
 
 	/**
 	 * Gibt dasjenige Element zurück, von welchem die Kante ausgeht.
 	 * @return das Element, von welchem die Kante ausgeht
 	 */
-	IWFNElementOK getVon();
+	IWFNElementOK getSource();
 
 	/**
 	 * Legt das Element fest, in welchem die Kante endet
 	 * @param elem das Element, in welchem die Kante endet
 	 */
-	void setZu(IWFNElementOK elem);
+	void setTarget(IWFNElementOK elem);
 
 	/**
 	 * Gibt dasjenige Element zurück, in welchem die Kante endet.
 	 * @return das Element, in welchem die Kante endet
 	 */
-	IWFNElementOK getZu();
+	IWFNElementOK getTarget();
 	
 	/**
 	 * Berechnet den Mittelpunkt zwischen Ausgangs- und Endelement der Kante.
 	 * @return Point mit den Koordinaten des Mittelpunkts zwischen von und zu.
 	 */
-	Point getMittelpunkt();
+	Point getCenter();
 }

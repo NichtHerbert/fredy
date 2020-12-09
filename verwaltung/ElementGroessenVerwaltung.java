@@ -3,7 +3,7 @@ package verwaltung;
 import java.util.ArrayList;
 
 import horcherschnittstellen.IElementGroessenHorcher;
-import wfnmodell.elemente.EWFNElement;
+import wfnmodell.elements.EWfnElement;
 
 /**
  * Klasse zur Verwaltung der Darstellungsgröße von Stellen, Transitionen und Pfeilspitzen.
@@ -21,7 +21,7 @@ public class ElementGroessenVerwaltung {
 	private ArrayList<IElementGroessenHorcher> eGHorcherListe;
 	
 	public ElementGroessenVerwaltung() {
-		elementGroesse = EWFNElement.URGROESSE;
+		elementGroesse = EWfnElement.BASEFACTOR;
 		eGHorcherListe = new ArrayList<>(2);
 	}
 

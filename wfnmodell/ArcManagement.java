@@ -3,7 +3,7 @@ package wfnmodell;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import wfnmodell.elemente.WFNElementKante;
+import wfnmodell.elements.WfnElementArc;
 import wfnmodell.schnittstellen.IWFNElementKante;
 import wfnmodell.schnittstellen.IWFNElementOK;
 
@@ -30,18 +30,18 @@ class ArcManagement {
 	/**
 	 * Liste aller Kanten des aktuellen Datenmodells.
 	 */
-	private ArrayList<WFNElementKante> arcs;
+	private ArrayList<WfnElementArc> arcs;
 
 	ArcManagement(IDManagement idManagement, StartEndManagement startEndManagement,
 			ConnectionManagement connectionManagement) {
 		this.identifier = idManagement;
 		this.startEndManagement = startEndManagement;
 		this.connectionManagement = connectionManagement;
-		arcs = new ArrayList<WFNElementKante>();
+		arcs = new ArrayList<WfnElementArc>();
 	}
 
 	/**
-	 * Instanziert ein neues Objekt vom Typ {@link wfnmodell.elemente.WFNElementKante} mit einer 
+	 * Instanziert ein neues Objekt vom Typ {@link wfnmodell.elements.WfnElementArc} mit einer 
 	 * neuen ID und den übergebenen Parametern, fügt es der {@link #arcs} hinzu, informiert alle 
 	 * anderen Verwaltungen des Datenmodells und informiert natürlich auch die Stelle und die Transition,
 	 * zwischen denen sie verläuft.
@@ -50,14 +50,14 @@ class ArcManagement {
 	 * @param ending das Element in dem die Kante endet
 	 */
 	void createArc(String pnmlID, IWFNElementOK origin, IWFNElementOK ending) {
-		if ((origin.getTyp() != ending.getTyp()) 
+		if ((origin.getWfnElementType() != ending.getWfnElementType()) 
 				&& ( !existsArcAlready(origin, ending))) {
 			identifier.pnmlIDMonitoring(pnmlID);
 			int id = identifier.get();
-			WFNElementKante createdArc = new WFNElementKante(pnmlID,id,origin,ending);
+			WfnElementArc createdArc = new WfnElementArc(pnmlID,id,origin,ending);
 			arcs.add(createdArc);
-			origin.addKanteZu(ending);
-			ending.addKanteVon(origin);
+			origin.addOutputElements(ending);
+			ending.addInputElement(origin);
 			startEndManagement.infoCreatedArc(origin,ending);
 			connectionManagement.infoCreatedArc(origin,ending);
 		}
@@ -72,9 +72,9 @@ class ArcManagement {
 	 */
 	boolean existsArcAlready(IWFNElementOK origin, IWFNElementOK ending) {
 		boolean result = false;
-		ArrayList<IWFNElementOK> allArcsStartingInOrigin = origin.getKantenZu();
+		ArrayList<IWFNElementOK> allArcsStartingInOrigin = origin.getOutputElements();
 		if (allArcsStartingInOrigin != null) {
-			ArrayList<IWFNElementOK> allArcsEndingInEnding = ending.getKantenVon();
+			ArrayList<IWFNElementOK> allArcsEndingInEnding = ending.getInputElements();
 			if (allArcsEndingInEnding != null) {
 				int i = 0;
 				while ((i< allArcsStartingInOrigin.size()) && (result == false)) {
@@ -104,7 +104,7 @@ class ArcManagement {
 	 * @param arc Referenz auf das zu löschende Kantenobjekt
 	 */
 	void deleteArc(IWFNElementKante arc) {
-		deleteArc(arc, arc.getVon(), arc.getZu());
+		deleteArc(arc, arc.getSource(), arc.getTarget());
 	}
 	
 	/**
@@ -127,8 +127,8 @@ class ArcManagement {
 	void deleteArc(IWFNElementKante arc, IWFNElementOK origin, IWFNElementOK ending) {
 		if (arcs.contains(arc)) {
 			arcs.remove(arc);
-			origin.removeKanteZu(ending);
-			ending.removeKanteVon(origin);
+			origin.removeOutputElements(ending);
+			ending.removeInputElement(origin);
 			identifier.passBack(arc.getID());
 			connectionManagement.infoDeletedArc(origin, ending);
 			startEndManagement.infoDeletedArc(origin, ending);
@@ -142,12 +142,12 @@ class ArcManagement {
 	 * @return die Kante zwischen den beiden übergebenen Elementen oder null
 	 */
 	private IWFNElementKante getArc(IWFNElementOK from, IWFNElementOK to) {
-		Iterator<WFNElementKante> it = arcs.iterator();
+		Iterator<WfnElementArc> it = arcs.iterator();
 		IWFNElementKante result;
 		while (it.hasNext()) {
 			result = it.next();
-			if ((result.getVon() == from)
-				&& (result.getZu() == to))  
+			if ((result.getSource() == from)
+				&& (result.getTarget() == to))  
 					return result;
 		}
 		return null;

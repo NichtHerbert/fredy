@@ -16,7 +16,7 @@ import javax.swing.table.AbstractTableModel;
 import gui.EIcons;
 import horcherschnittstellen.IAuswahlBearbeitetHorcher;
 import horcherschnittstellen.IAuswahlVeraenderungsHorcher;
-import wfnmodell.elemente.EWFNElement;
+import wfnmodell.elements.EWfnElement;
 import wfnmodell.schnittstellen.IWFNElement;
 import wfnmodell.schnittstellen.IWFNElementOK;
 
@@ -67,8 +67,8 @@ class JPanelAuswahl extends JPanel implements IAuswahlVeraenderungsHorcher {
 			public String getValueAt(int rowIndex, int columnIndex) {
 				if (ausgewaehlteElemente.size() >= rowIndex) {
 					switch (columnIndex) {
-					case 0:	return ausgewaehlteElemente.get(rowIndex).getTyp().toString(); 
-					case 1:	if (ausgewaehlteElemente.get(rowIndex).getTyp() != EWFNElement.KANTE)
+					case 0:	return ausgewaehlteElemente.get(rowIndex).getWfnElementType().toString(); 
+					case 1:	if (ausgewaehlteElemente.get(rowIndex).getWfnElementType() != EWfnElement.ARC)
 								return ((IWFNElementOK) ausgewaehlteElemente.get(rowIndex)).getName();
 							break;
 					default:break;
@@ -108,14 +108,14 @@ class JPanelAuswahl extends JPanel implements IAuswahlVeraenderungsHorcher {
 			@Override
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
 				if ((columnIndex == 1)
-						&& (ausgewaehlteElemente.get(rowIndex).getTyp() != EWFNElement.KANTE))
+						&& (ausgewaehlteElemente.get(rowIndex).getWfnElementType() != EWfnElement.ARC))
 					return true;
 				return super.isCellEditable(rowIndex, columnIndex);
 			}
 
 			@Override
 			public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-				if (ausgewaehlteElemente.get(rowIndex).getTyp() != EWFNElement.KANTE) {
+				if (ausgewaehlteElemente.get(rowIndex).getWfnElementType() != EWfnElement.ARC) {
 					fireElementSollNamenAendern((IWFNElementOK) ausgewaehlteElemente.get(rowIndex),
 							(String) aValue);
 				}
@@ -125,11 +125,11 @@ class JPanelAuswahl extends JPanel implements IAuswahlVeraenderungsHorcher {
 		
 		jt_auswahl = new JTable(t_modell);
 		jt_auswahl.setRowSelectionAllowed(false);
-		jt_auswahl.getColumnModel().getColumn(0).setPreferredWidth(8*EWFNElement.URGROESSE);
-		jt_auswahl.getColumnModel().getColumn(1).setPreferredWidth(8*EWFNElement.URGROESSE);
+		jt_auswahl.getColumnModel().getColumn(0).setPreferredWidth(8*EWfnElement.BASEFACTOR);
+		jt_auswahl.getColumnModel().getColumn(1).setPreferredWidth(8*EWfnElement.BASEFACTOR);
 		JScrollPane scrollPane = new JScrollPane(jt_auswahl);
 		jt_auswahl.setFillsViewportHeight(true);
-		scrollPane.setPreferredSize(new Dimension(16*EWFNElement.URGROESSE, 4*EWFNElement.URGROESSE));
+		scrollPane.setPreferredSize(new Dimension(16*EWfnElement.BASEFACTOR, 4*EWfnElement.BASEFACTOR));
 		
 		JButton jbAuswahlLoeschen = new JButton(EIcons.MUELLEIMER.getIcon());
 		jbAuswahlLoeschen.setToolTipText("Auswahl Löschen");

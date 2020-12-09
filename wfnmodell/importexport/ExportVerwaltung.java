@@ -3,7 +3,7 @@ package wfnmodell.importexport;
 import java.io.File;
 import java.util.ArrayList;
 
-import wfnmodell.elemente.EWFNElement;
+import wfnmodell.elements.EWfnElement;
 
 /**
  * Oberklasse zum Exportieren des Datenmodells in eine *.pnml-Datei.
@@ -40,14 +40,14 @@ public class ExportVerwaltung {
 			PNMLWriter pnmlWriter = new PNMLWriter(pnmlDatei);
             pnmlWriter.startXMLDocument();
 			for (TempPNMLElement elem : alleElemente) 
-				if (elem.getTyp() == EWFNElement.STELLE) { 
+				if (elem.getTyp() == EWfnElement.PLACE) { 
 					pnmlWriter.addPlace(elem.getPNMLID(), elem.getName(), elem.getX(), elem.getY(), elem.getMarkiert());
 				}
 			for (TempPNMLElement elem : alleElemente) 
-				if (elem.getTyp() == EWFNElement.TRANSITION) 
+				if (elem.getTyp() == EWfnElement.TRANSITION) 
 					pnmlWriter.addTransition(elem.getPNMLID(), elem.getName(), elem.getX(), elem.getY());
 			for (TempPNMLElement elem : alleElemente) 
-				if (elem.getTyp() == EWFNElement.KANTE) 
+				if (elem.getTyp() == EWfnElement.ARC) 
 					pnmlWriter.addArc(elem.getPNMLID(), elem.getPnmlIDSource(), elem.getPnmlIDTarget());
 			pnmlWriter.finishXMLDocument();
 		}

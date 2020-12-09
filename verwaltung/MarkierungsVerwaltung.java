@@ -6,7 +6,7 @@ import horcherschnittstellen.ITransitionsSchaltungsHorcher;
 import horcherschnittstellen.IWFNModellStatusHorcher;
 import horcherschnittstellen.IWFNVeraenderungsHorcher;
 import wfnmodell.WfnStatusInfo;
-import wfnmodell.elemente.EWFNElement;
+import wfnmodell.elements.EWfnElement;
 import wfnmodell.schnittstellen.IWFNElement;
 import wfnmodell.schnittstellen.IWFNElementStelle;
 import wfnmodell.schnittstellen.IWFNElementTransition;
@@ -49,17 +49,17 @@ class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
 	void schalteWennElementTransition(IWFNElement element) {
 		if ((element != null)
 				&& (statusInfo.isWfn())
-				&& (element.getTyp() == EWFNElement.TRANSITION)
+				&& (element.getWfnElementType() == EWfnElement.TRANSITION)
 				&& (aktivierteTransitionen.contains(element))) {
 			entferneMarkeDerEingangsstellen(element);
-			for (IWFNElementOK stelleDanach : ((IWFNElementOK) element).getKantenZu()) {
-				((IWFNElementStelle) stelleDanach).setMarke(true);
+			for (IWFNElementOK stelleDanach : ((IWFNElementOK) element).getOutputElements()) {
+				((IWFNElementStelle) stelleDanach).setMarking(true);
 				markierungsListe.add((IWFNElementStelle) stelleDanach);
-				for (IWFNElementOK transitionDanach : ((IWFNElementOK) stelleDanach).getKantenZu()) 
+				for (IWFNElementOK transitionDanach : ((IWFNElementOK) stelleDanach).getOutputElements()) 
 					transitionHatNeueMarkierteEingangsstelle(transitionDanach);
-				for (IWFNElementOK transitionVorStelleDanach : ((IWFNElementOK) stelleDanach).getKantenVon())
+				for (IWFNElementOK transitionVorStelleDanach : ((IWFNElementOK) stelleDanach).getInputElements())
 					if ((aktivierteTransitionen.contains(transitionVorStelleDanach))
-							&& (!stelleDanach.getKantenZu().contains(transitionVorStelleDanach))){
+							&& (!stelleDanach.getOutputElements().contains(transitionVorStelleDanach))){
 						aktivierteTransitionen.remove(transitionVorStelleDanach);
 						kontaktTransitionen.add((IWFNElementTransition) transitionVorStelleDanach);
 					}
@@ -76,14 +76,14 @@ class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
 	 */
 	private void transitionHatNeueMarkierteEingangsstelle(IWFNElementOK transition) {
 		boolean istAktiviert = true;
-		for (IWFNElementOK stelleVorTransition : transition.getKantenVon())
-			if (! ((IWFNElementStelle) stelleVorTransition).hatMarke())
+		for (IWFNElementOK stelleVorTransition : transition.getInputElements())
+			if (! ((IWFNElementStelle) stelleVorTransition).hasMarking())
 				istAktiviert = false;
 		if (istAktiviert) {
 			boolean hatKontakt = false;
-			for (IWFNElementOK stelleNachTransition : transition.getKantenZu())
-				if ((((IWFNElementStelle) stelleNachTransition).hatMarke())
-						&& ((stelleNachTransition.getKantenZu()).contains(transition))==false)
+			for (IWFNElementOK stelleNachTransition : transition.getOutputElements())
+				if ((((IWFNElementStelle) stelleNachTransition).hasMarking())
+						&& ((stelleNachTransition.getOutputElements()).contains(transition))==false)
 					hatKontakt = true;
 			if (hatKontakt) 
 				kontaktTransitionen.add((IWFNElementTransition) transition);
@@ -98,21 +98,21 @@ class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
 	 * @param element Transition, deren Eingansstellen unmarkiert werden sollen
 	 */
 	private void entferneMarkeDerEingangsstellen(IWFNElement element) {
-		for (IWFNElementOK stelleDavor : ((IWFNElementOK) element).getKantenVon()) {
-			((IWFNElementStelle) stelleDavor).setMarke(false);
+		for (IWFNElementOK stelleDavor : ((IWFNElementOK) element).getInputElements()) {
+			((IWFNElementStelle) stelleDavor).setMarking(false);
 			markierungsListe.remove(stelleDavor);
-			for (IWFNElementOK transitionDanach : ((IWFNElementOK) stelleDavor).getKantenZu()) {
+			for (IWFNElementOK transitionDanach : ((IWFNElementOK) stelleDavor).getOutputElements()) {
 				if (aktivierteTransitionen.contains(transitionDanach))
 					aktivierteTransitionen.remove(transitionDanach);
 				else
 					if (kontaktTransitionen.contains(transitionDanach))
 						kontaktTransitionen.remove(transitionDanach);
 			}
-			for (IWFNElementOK transitionDavor : ((IWFNElementOK) stelleDavor).getKantenVon())
+			for (IWFNElementOK transitionDavor : ((IWFNElementOK) stelleDavor).getInputElements())
 				if (kontaktTransitionen.contains(transitionDavor)) {
 					boolean kontakt = false;
-					for (IWFNElementOK stelleNachTransitionDavor : transitionDavor.getKantenZu())
-						if (((IWFNElementStelle)stelleNachTransitionDavor).hatMarke())
+					for (IWFNElementOK stelleNachTransitionDavor : transitionDavor.getOutputElements())
+						if (((IWFNElementStelle)stelleNachTransitionDavor).hasMarking())
 							kontakt = true;
 					if (!kontakt) {
 						aktivierteTransitionen.add((IWFNElementTransition) transitionDavor);
@@ -166,11 +166,11 @@ class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
 		aktivierteTransitionen.clear();
 		kontaktTransitionen.clear();
 		for (IWFNElementOK elem : statusInfo.getTransitionsAndPlaces()) 
-			if (elem.getTyp() == EWFNElement.STELLE) 
-				((IWFNElementStelle)elem).setMarke(false);
-		statusInfo.getStartPlace().setMarke(true);
+			if (elem.getWfnElementType() == EWfnElement.PLACE) 
+				((IWFNElementStelle)elem).setMarking(false);
+		statusInfo.getStartPlace().setMarking(true);
 		markierungsListe.add(statusInfo.getStartPlace());
-		for (IWFNElementOK folgeTransition : statusInfo.getStartPlace().getKantenZu())
+		for (IWFNElementOK folgeTransition : statusInfo.getStartPlace().getOutputElements())
 			transitionHatNeueMarkierteEingangsstelle(folgeTransition);
 		while (statusInfo.getNotWfnExplanatoryStatements().contains(ende_erreicht))
 			statusInfo.removeNotWfnExplanatoryStatements(ende_erreicht);

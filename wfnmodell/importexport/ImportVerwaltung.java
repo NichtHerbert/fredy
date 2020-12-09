@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import wfnmodell.elemente.EWFNElement;
+import wfnmodell.elements.EWfnElement;
 
 /**
  * Oberklasse zum Importieren einer unbestimmten Menge von Elementen in das Datenmodell.
@@ -60,7 +60,7 @@ public class ImportVerwaltung {
             	while (it.hasNext()) {
             		TempPNMLElement elem = pnmlElemente.get(it.next());
             		switch (elem.getTyp()) {
-            		case STELLE: 	position = getPositionToPoint(elem.getX(), elem.getY()); 
+            		case PLACE: 	position = getPositionToPoint(elem.getX(), elem.getY()); 
             						boolean marke = getMarkierungToBoolean(elem.getMarkiert());
             						wfnModell.neueStelle(elem.getPNMLID(), elem.getName(), 
             						position , marke);
@@ -69,18 +69,18 @@ public class ImportVerwaltung {
             						wfnModell.neueTransition(elem.getPNMLID(), elem.getName(), 
         							position);
             						break;
-            		case KANTE: kantenKeys.add(elem.getPNMLID());
+            		case ARC: kantenKeys.add(elem.getPNMLID());
             						break;
             		}
             	}
             	it = kantenKeys.iterator();
             	while (it.hasNext()) {
             		TempPNMLElement elem = pnmlElemente.get(it.next());
-            		EWFNElement source = (pnmlElemente.get(elem.getPnmlIDSource())).getTyp();
-            		EWFNElement target = (pnmlElemente.get(elem.getPnmlIDTarget())).getTyp();
+            		EWfnElement source = (pnmlElemente.get(elem.getPnmlIDSource())).getTyp();
+            		EWfnElement target = (pnmlElemente.get(elem.getPnmlIDTarget())).getTyp();
             		if ((source != target) 
-            			&& (source != EWFNElement.KANTE) 
-            			&& (target != EWFNElement.KANTE)) {          			
+            			&& (source != EWfnElement.ARC) 
+            			&& (target != EWfnElement.ARC)) {          			
             				wfnModell.neueKante( elem.getPNMLID(), elem.getPnmlIDSource(), 
             					elem.getPnmlIDTarget() );
             		} else {

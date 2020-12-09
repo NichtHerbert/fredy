@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import horcherschnittstellen.IWFNVeraenderungsHorcher;
-import wfnmodell.elemente.EWFNElement;
-import wfnmodell.elemente.WFNElementStelle;
-import wfnmodell.elemente.WFNElementTransition;
+import wfnmodell.elements.EWfnElement;
+import wfnmodell.elements.WfnElementPlace;
+import wfnmodell.elements.WfnElementTransition;
 import wfnmodell.importexport.IWFNExport;
 import wfnmodell.importexport.IWFNImport;
 import wfnmodell.importexport.TempPNMLElement;
@@ -138,18 +138,18 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	 * @param element das zu löschende Element
 	 */
 	private void loescheOhneEventFire(IWFNElement element) {
-		if (element.getTyp() != EWFNElement.KANTE) {
+		if (element.getWfnElementType() != EWfnElement.ARC) {
 			IWFNElementOK elementOK = (IWFNElementOK)element; 
 			if (elementListeOK.contains(elementOK)) {
-				for (IWFNElementOK nachbar : elementOK.getKantenVon()) {
+				for (IWFNElementOK nachbar : elementOK.getInputElements()) {
 					kantenVerwaltung.deleteArc(nachbar, elementOK);
 				}
-				for (IWFNElementOK nachbar : elementOK.getKantenZu()) {
+				for (IWFNElementOK nachbar : elementOK.getOutputElements()) {
 					kantenVerwaltung.deleteArc(elementOK, nachbar);
 				}
 				idVerwaltung.passBack(elementOK.getID());
-				if (elementOK.getTyp() == EWFNElement.STELLE) 
-					startEndStellenVerwaltung.remove((WFNElementStelle) elementOK);
+				if (elementOK.getWfnElementType() == EWfnElement.PLACE) 
+					startEndStellenVerwaltung.remove((WfnElementPlace) elementOK);
 			    elementListeOK.remove(elementOK);
 			}
 		} else 
@@ -165,9 +165,9 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	public void neueStelle(String pnmlID, String name, Point position, boolean marke) {
 		idVerwaltung.pnmlIDMonitoring(pnmlID);
 		final int neueID = idVerwaltung.get();
-		WFNElementStelle stelle = new WFNElementStelle(pnmlID, neueID, position);
+		WfnElementPlace stelle = new WfnElementPlace(pnmlID, neueID, position);
 		if (!name.equals("")) stelle.setName(name);
-		if (marke) stelle.setMarke(marke);
+		if (marke) stelle.setMarking(marke);
 		elementListeOK.add(stelle);
 		startEndStellenVerwaltung.add(stelle);
 		fireModellAenderungEingetreten();
@@ -182,7 +182,7 @@ public class WFNModell implements 	IWFNModellVeraendern,
 	public void neueTransition(String pnmlID, String name, Point position) {
 		idVerwaltung.pnmlIDMonitoring(pnmlID);
 		final int neueID = idVerwaltung.get();
-		WFNElementTransition transition = new WFNElementTransition(pnmlID, neueID, position);
+		WfnElementTransition transition = new WfnElementTransition(pnmlID, neueID, position);
 		if ( !name.equals("")) transition.setName(name);
 		elementListeOK.add(transition);
 		fireModellAenderungEingetreten();
@@ -280,10 +280,10 @@ public class WFNModell implements 	IWFNModellVeraendern,
 			String pnmlID = elem.getPNMLID();
 			if (pnmlID.equals("")) pnmlID = idVerwaltung.convertIDintoPnmlID(elem.getID());
 			String marke = "";
-			EWFNElement typ = elem.getTyp();
+			EWfnElement typ = elem.getWfnElementType();
 			TempPNMLElement temp;
 			switch (typ) {
-    		case STELLE: 	if (((IWFNElementStelle) elem).hatMarke()) marke = "1"; 
+    		case PLACE: 	if (((IWFNElementStelle) elem).hasMarking()) marke = "1"; 
     						else marke = "0";	
     		case TRANSITION:String name = ((IWFNElementOK) elem).getName();
     						String x = String.valueOf((((IWFNElementOK) elem).getPosition()).x);
@@ -291,12 +291,12 @@ public class WFNModell implements 	IWFNModellVeraendern,
     						temp = new TempPNMLElement(typ,pnmlID,name,x,y,marke);
     						ergebnis.add(temp);
     						break;
-    		case KANTE:		String vonPNMLID = (((IWFNElementKante) elem).getVon()).getPNMLID();
-    						String zuPNMLID = (((IWFNElementKante) elem).getZu()).getPNMLID();
+    		case ARC:		String vonPNMLID = (((IWFNElementKante) elem).getSource()).getPNMLID();
+    						String zuPNMLID = (((IWFNElementKante) elem).getTarget()).getPNMLID();
     						if (vonPNMLID.equals("")) vonPNMLID = 
-    							idVerwaltung.convertIDintoPnmlID((((IWFNElementKante) elem).getVon()).getID());
+    							idVerwaltung.convertIDintoPnmlID((((IWFNElementKante) elem).getSource()).getID());
     						if (zuPNMLID.equals("")) zuPNMLID = 
-        						idVerwaltung.convertIDintoPnmlID((((IWFNElementKante) elem).getZu()).getID());
+        						idVerwaltung.convertIDintoPnmlID((((IWFNElementKante) elem).getTarget()).getID());
     							ergebnis.add(new TempPNMLElement(typ,pnmlID,vonPNMLID,zuPNMLID));
     						break;
 			}

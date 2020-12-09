@@ -16,8 +16,8 @@ import gui.EIcons;
 import horcherschnittstellen.ITransitionsSchaltungsHorcher;
 import horcherschnittstellen.IWFNModellStatusHorcher;
 import wfnmodell.WfnStatusInfo;
-import wfnmodell.elemente.EWFNElement;
-import wfnmodell.elemente.WFNElementTransition;
+import wfnmodell.elements.EWfnElement;
+import wfnmodell.elements.WfnElementTransition;
 import wfnmodell.schnittstellen.IWFNElementTransition;
 
 /**
@@ -42,7 +42,7 @@ class JPanelSchalten extends JPanel implements IWFNModellStatusHorcher {
 	 * Leeres Füllelement mit der {@link #jcbModell} gefüllt wird, wenn es ansonsten leer wäre, damit
 	 * {@link #jcbAktivierteTransitionen} seine Form behält.
 	 */
-	private WFNElementTransition leeresElement;
+	private WfnElementTransition leeresElement;
 	
 	/**
 	 * ComboBox, welche alle momentan aktivierten Transitionen anzeigt.
@@ -62,7 +62,7 @@ class JPanelSchalten extends JPanel implements IWFNModellStatusHorcher {
 	JPanelSchalten() {
 		transSchaltHorcherListe = new ArrayList<>(2);
 		statusInfo = new WfnStatusInfo();
-		leeresElement = new WFNElementTransition("", 0, new Point(0, 0));
+		leeresElement = new WfnElementTransition("", 0, new Point(0, 0));
 		leeresElement.setName(" ");
 		
 		JButton jbAufStart = new JButton(EIcons.AUF_START.getIcon());
@@ -87,7 +87,7 @@ class JPanelSchalten extends JPanel implements IWFNModellStatusHorcher {
 		
 		jcbAktivierteTransitionen = new JComboBox<>();
 		jcbAktivierteTransitionen.setPreferredSize(new Dimension(
-				8*EWFNElement.URGROESSE, jcbAktivierteTransitionen.getPreferredSize().height));
+				8*EWfnElement.BASEFACTOR, jcbAktivierteTransitionen.getPreferredSize().height));
 		jcbModell = (DefaultComboBoxModel<IWFNElementTransition>) jcbAktivierteTransitionen.getModel();
 		aktualisiereComboBoxModell();
 		

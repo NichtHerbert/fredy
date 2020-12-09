@@ -4,7 +4,7 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
-import wfnmodell.elemente.EWFNElement;
+import wfnmodell.elements.EWfnElement;
 
 /**
  * Dient der zentralen Organisation der im Programm verwendeten Icons,
@@ -34,9 +34,9 @@ public enum EIcons {
 	;
 	
 	/**
-	 * festgesetzte Größe der Icons, die sich an der Basiseinheit URGROESSE orientiert.
+	 * festgesetzte Größe der Icons, die sich an der Basiseinheit BASEFACTOR orientiert.
 	 */
-	private final int iconGroesse = EWFNElement.URGROESSE * 2;
+	private final int iconGroesse = EWfnElement.BASEFACTOR * 2;
 	
 	/**
 	 * Das ImageIcon des jeweiligen Enum-Typs

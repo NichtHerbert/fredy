@@ -11,7 +11,7 @@ import gui.EWFNEditorModus;
 import gui.IZentraleKonstanten;
 import horcherschnittstellen.IEditorModusHorcher;
 import horcherschnittstellen.IZeichnungBenoetigtHorcher;
-import wfnmodell.elemente.EWFNElement;
+import wfnmodell.elements.EWfnElement;
 import wfnmodell.schnittstellen.IWFNElement;
 import wfnmodell.schnittstellen.IWFNElementOK;
 import wfnmodell.schnittstellen.IWFNModellVeraendern;
@@ -164,7 +164,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 				}
 				if (auswahl.size() > 1) {
 					int x, y;
-					if (startElement.getTyp() != EWFNElement.KANTE ) {
+					if (startElement.getWfnElementType() != EWfnElement.ARC ) {
 						x = ((IWFNElementOK)startElement).getPosition().x;
 						y = ((IWFNElementOK)startElement).getPosition().y;
 					} else {
@@ -174,7 +174,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 					}
 					auswahlElementAbstand.clear();
 					for (IWFNElement auswahlElem : auswahl) {
-						if ((auswahlElem.getTyp() != EWFNElement.KANTE)
+						if ((auswahlElem.getWfnElementType() != EWfnElement.ARC)
 								&& (auswahlElem != startElement)) {
 							Point abstandZuStart = new Point(
 									((IWFNElementOK)auswahlElem).getPosition().x - x,
@@ -217,13 +217,13 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 		if (editorModus == EWFNEditorModus.AUSWAHL) {
 			if (gibtEsEinStartElement) {
 				Point mausPunktOhneZoom = zoom.ohne(e.getPoint());
-				if  ((startElement.getTyp() != EWFNElement.KANTE)
-						&& (mausPunktOhneZoom.x > (xNiedrigerAlsStartElement + EWFNElement.URGROESSE))
-						&& (mausPunktOhneZoom.y > (yNiedrigerAlsStartElement + EWFNElement.URGROESSE))) {
+				if  ((startElement.getWfnElementType() != EWfnElement.ARC)
+						&& (mausPunktOhneZoom.x > (xNiedrigerAlsStartElement + EWfnElement.BASEFACTOR))
+						&& (mausPunktOhneZoom.y > (yNiedrigerAlsStartElement + EWfnElement.BASEFACTOR))) {
 					((IWFNElementOK)startElement).setPosition(mausPunktOhneZoom);
 					if (auswahl.size() > 1) {
 						for (IWFNElement auswahlElem : auswahl) {
-							if ((auswahlElem.getTyp() != EWFNElement.KANTE)
+							if ((auswahlElem.getWfnElementType() != EWfnElement.ARC)
 									&& (auswahlElem != startElement)) {
 								Point position = ((IWFNElementOK)auswahlElem).getPosition();
 								position.setLocation(mausPunktOhneZoom.getX() + auswahlElementAbstand.get(auswahlElem).x,
@@ -309,7 +309,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 			case KANTE_HINZU:
 				IWFNElement element = koordinaten.getWasDaIst(e.getPoint());
 				if ((element != null)
-					&& (element.getTyp() != EWFNElement.KANTE)) {
+					&& (element.getWfnElementType() != EWfnElement.ARC)) {
 						if (!kanteAusgangsElementAusgewaehlt) {
 							kantenAusgangsElement = (IWFNElementOK) element;
 							kanteAusgangsElementAusgewaehlt = true;
@@ -320,7 +320,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 								kanteAusgangsElementAusgewaehlt = false;
 								auswahl.clearAndFire(KANTEN_AUSWAHL);
 							} else {
-								if (element.getTyp() != kantenAusgangsElement.getTyp()) {
+								if (element.getWfnElementType() != kantenAusgangsElement.getWfnElementType()) {
 									wfnModell.neueKante(kantenAusgangsElement, (IWFNElementOK) element);
 									kanteAusgangsElementAusgewaehlt = false;
 									kantenAusgangsElement = null;

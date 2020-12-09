@@ -7,7 +7,7 @@ import java.util.Iterator;
 import horcherschnittstellen.IElementGroessenHorcher;
 import horcherschnittstellen.IWFNVeraenderungsHorcher;
 import wfnmodell.WfnStatusInfo;
-import wfnmodell.elemente.EWFNElement;
+import wfnmodell.elements.EWfnElement;
 import wfnmodell.schnittstellen.IWFNElement;
 import wfnmodell.schnittstellen.IWFNElementKante;
 import wfnmodell.schnittstellen.IWFNElementOK;
@@ -53,7 +53,7 @@ class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenH
 		this.zoom = zoom;
 		alleElementeOK = new ArrayList<>(1);
 		alleKanten = new ArrayList<>(1);
-		elementGroesse = EWFNElement.URGROESSE;
+		elementGroesse = EWfnElement.BASEFACTOR;
 	}
 
 	@Override
@@ -87,7 +87,7 @@ class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenH
 				while ((ergebnis == null)
 						&& (itKante.hasNext())){ 
 					IWFNElementKante kante = itKante.next();
-					if (istPunktNaheKante(koordinate, kante, EWFNElement.URGROESSE / 2))
+					if (istPunktNaheKante(koordinate, kante, EWfnElement.BASEFACTOR / 2))
 						ergebnis = kante;
 				}
 			}
@@ -125,7 +125,7 @@ class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenH
 					&& (elem.getPosition().y <= jetztMausPosition.y))
 				ergebnis.add(elem);
 		for (IWFNElementKante kante : alleKanten) {
-			Point mp = kante.getMittelpunkt();
+			Point mp = kante.getCenter();
 			if ((mp.x >= startMausPosition.x) 
 					&& (mp.x <= jetztMausPosition.x)
 					&& (mp.y >= startMausPosition.y) 
@@ -145,8 +145,8 @@ class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenH
 	 */
 	private static boolean istPunktNaheKante(Point p, IWFNElementKante kante, int maxabstand) {
 		Point v, z;
-		v = kante.getVon().getPosition();
-		z = kante.getZu().getPosition();
+		v = kante.getSource().getPosition();
+		z = kante.getTarget().getPosition();
 		if ((p.distance(v) + p.distance(z)) 
 				<= (v.distance(z) * ( 1.005))) {
 			return true;

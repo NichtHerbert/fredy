@@ -1,4 +1,4 @@
-package wfnmodell.elemente;
+package wfnmodell.elements;
 
 import java.awt.Point;
 import wfnmodell.schnittstellen.IWFNElementStelle;
@@ -7,33 +7,33 @@ import wfnmodell.schnittstellen.IWFNElementStelle;
  * Instanzierte Objekte dieser Klasse stellen im Datenmodell Stellen dar.
  *
  */
-public class WFNElementStelle extends AWFNElementOK implements IWFNElementStelle {
+public class WfnElementPlace extends AWfnElementButNoArc implements IWFNElementStelle {
 
-	/** true, wenn die Stelle momentan eine Marke hat bzw. markiert ist */
-	private boolean markiert;
+	/** true, wenn die Stelle momentan eine Marke hat bzw. hasMarking ist */
+	private boolean hasMarking;
 
 	/**
 	 * @param pnmlID wenn das Element importiert wurde, die entsprechende ID des Elements aus der pnml-Datei
 	 * @param id die ID, welche das Element eindeutig unterscheidbar macht
 	 * @param position die vorgesehenen Koordinaten des Elements
 	 */	
-	public WFNElementStelle(String pnmlID, int id, Point position) {
+	public WfnElementPlace(String pnmlID, int id, Point position) {
 		super(pnmlID, id, position);
 	}
 
 	@Override
-	public void setMarke(boolean marke) {
-		this.markiert = marke;
+	public void setMarking(boolean marking) {
+		this.hasMarking = marking;
 	}
 
 	@Override
-	public boolean hatMarke() {
-		return markiert;
+	public boolean hasMarking() {
+		return hasMarking;
 	}
 
 	@Override
-	public EWFNElement getTyp() {
-		return EWFNElement.STELLE;
+	public EWfnElement getWfnElementType() {
+		return EWfnElement.PLACE;
 	}
 
 }

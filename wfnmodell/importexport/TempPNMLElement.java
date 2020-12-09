@@ -1,6 +1,6 @@
 package wfnmodell.importexport;
 
-import wfnmodell.elemente.EWFNElement;
+import wfnmodell.elements.EWfnElement;
 
 /**
  * Hilfsklasse zum Zwischenspeichern der Elemente eines Workflownetzes, 
@@ -8,7 +8,7 @@ import wfnmodell.elemente.EWFNElement;
  */
 public class TempPNMLElement {
 	/** Typ des Elements */
-	private EWFNElement typ;
+	private EWfnElement typ;
 	/** pnml-Datei-ID des Elements*/
 	private String pnmlID;
 	/** Name des Elements*/
@@ -36,7 +36,7 @@ public class TempPNMLElement {
 	 * @param typ Typ des zu instanzierenden Elements
 	 * @param pnmlID pnml-ID des zu instanzierenden Elements
 	 */
-	public TempPNMLElement(EWFNElement typ, String pnmlID) {
+	public TempPNMLElement(EWfnElement typ, String pnmlID) {
 		this(typ, pnmlID, "", "", "");
 	}
 
@@ -49,7 +49,7 @@ public class TempPNMLElement {
 	 * @param pnmlIDSource pnml-Datei-ID des Ausgangselements, von dem die Kante ausgeht 
 	 * @param pnmlIDTarget pnml-Datei-ID des Endelements, in welchem die Kante endet
 	 */
-	public TempPNMLElement(EWFNElement typ, String pnmlID, String pnmlIDSource, String pnmlIDTarget) {
+	public TempPNMLElement(EWfnElement typ, String pnmlID, String pnmlIDSource, String pnmlIDTarget) {
 		super();
 		this.typ = typ;
 		this.pnmlID = pnmlID;
@@ -71,7 +71,7 @@ public class TempPNMLElement {
 	 * @param x X-Position des Elements
 	 * @param y Y-Position des Elements
 	 */
-	public TempPNMLElement(EWFNElement typ, String pnmlID, String name, String x, String y) {
+	public TempPNMLElement(EWfnElement typ, String pnmlID, String name, String x, String y) {
 		this(typ, pnmlID, name, x, y, "");
 	}
 
@@ -85,7 +85,7 @@ public class TempPNMLElement {
 	 * @param x X-Position des Elements
 	 * @param y Y-Position des Elements
 	 */
-	public TempPNMLElement(EWFNElement typ, String pnmlID, String name, String x, String y, String markiert) {
+	public TempPNMLElement(EWfnElement typ, String pnmlID, String name, String x, String y, String markiert) {
 		super();
 		this.typ = typ;
 		this.pnmlID = pnmlID;
@@ -101,7 +101,7 @@ public class TempPNMLElement {
 	 * Gibt den Typ des Elements zurück.
 	 * @return Typ des Elements
 	 */
-	public EWFNElement getTyp() {
+	public EWfnElement getTyp() {
 		return typ;
 	}
 

@@ -4,7 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import horcherschnittstellen.IZoomFaktorVeraenderungsHorcher;
-import wfnmodell.elemente.EWFNElement;
+import wfnmodell.elements.EWfnElement;
 
 /**
  * Klasse zur Verwaltung des Zoomfaktors.
@@ -21,9 +21,9 @@ public class ZoomFaktorVerwaltung {
 	 */
 	private ArrayList<IZoomFaktorVeraenderungsHorcher> zoomFaktorHorcherListe;
 	/**
-	 * Maximaler Wert zum Hineinzoomen. Orientiert sich an der Basiseinheit URGROESSE.
+	 * Maximaler Wert zum Hineinzoomen. Orientiert sich an der Basiseinheit BASEFACTOR.
 	 */
-	private final double MAXZOOM = EWFNElement.URGROESSE / 50d;
+	private final double MAXZOOM = EWfnElement.BASEFACTOR / 50d;
 	
 	ZoomFaktorVerwaltung() {
 		zoomFaktor = 1d;

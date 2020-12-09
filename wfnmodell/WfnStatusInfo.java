@@ -3,7 +3,7 @@ package wfnmodell;
 import java.util.ArrayList;
 import wfnmodell.schnittstellen.IWFNElementStelle;
 import wfnmodell.schnittstellen.IWFNElementTransition;
-import wfnmodell.elemente.EWFNElement;
+import wfnmodell.elements.EWfnElement;
 import wfnmodell.schnittstellen.IWFNElementKante;
 import wfnmodell.schnittstellen.IWFNElementOK;
 
@@ -247,19 +247,19 @@ public class WfnStatusInfo {
 			boolean hasOnlyTransitions = true;
 			boolean isNotWfn = false;
 			for (IWFNElementOK element : transitionsAndPlaces) {
-				boolean hasStartPath = element.istAufPfadVomStart();
-				boolean hasEndPath = element.istAufPfadZumEnde(); 
+				boolean hasStartPath = element.hasStartPath();
+				boolean hasEndPath = element.hasEndPath(); 
 				if ((hasStartPath)
 						^ (hasEndPath))
 					isNotWfn = true;
 				else if ((!hasStartPath)
 							|| (!hasEndPath))
 						isNotConnected = true;
-				if ((!element.hatAusgehendeKanten())
-						&& (!element.hatEingehendeKanten()))
+				if ((!element.hasOutgoingArcs())
+						&& (!element.hasIncomingArcs()))
 					isNotConnectedAltTest = true;
 				if ((hasOnlyTransitions)
-						&& (element.getTyp() != EWFNElement.TRANSITION))
+						&& (element.getWfnElementType() != EWfnElement.TRANSITION))
 					hasOnlyTransitions = false;	
 			}
 			if ((isNotConnected) 

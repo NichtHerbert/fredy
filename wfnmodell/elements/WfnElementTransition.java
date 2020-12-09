@@ -1,4 +1,4 @@
-package wfnmodell.elemente;
+package wfnmodell.elements;
 
 import java.awt.Point;
 
@@ -8,7 +8,7 @@ import wfnmodell.schnittstellen.IWFNElementTransition;
  * Instanzierte Objekte dieser Klasse stellen im Datenmodell des WFN Transitionen dar.
  *
  */
-public class WFNElementTransition extends AWFNElementOK
+public class WfnElementTransition extends AWfnElementButNoArc
 		implements IWFNElementTransition {
 
 	/**
@@ -16,13 +16,13 @@ public class WFNElementTransition extends AWFNElementOK
 	 * @param id die ID, welche das Element eindeutig unterscheidbar macht
 	 * @param position die vorgesehenen Koordinaten des Elements
 	 */
-	public WFNElementTransition(String pnmlID, int id, Point position) {
+	public WfnElementTransition(String pnmlID, int id, Point position) {
 		super(pnmlID, id, position);
 	}
 
 	@Override
-	public EWFNElement getTyp() {
-		return EWFNElement.TRANSITION;
+	public EWfnElement getWfnElementType() {
+		return EWfnElement.TRANSITION;
 	}
 
 }

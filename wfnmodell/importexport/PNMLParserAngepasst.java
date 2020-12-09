@@ -3,7 +3,7 @@ package wfnmodell.importexport;
 import java.io.File;
 import java.util.HashMap;
 
-import wfnmodell.elemente.EWFNElement;
+import wfnmodell.elements.EWfnElement;
 
 /**
  * Erweiterung der vorgegebenen Klasse {@link PNMLParser}.
@@ -33,17 +33,17 @@ public class PNMLParserAngepasst extends PNMLParser {
 	
 	@Override
     public void newTransition(final String id) {
-        pnmlImport.put(id, new TempPNMLElement(EWFNElement.TRANSITION, id));
+        pnmlImport.put(id, new TempPNMLElement(EWfnElement.TRANSITION, id));
     }
 
     @Override
     public void newPlace(final String id) {
-    	pnmlImport.put(id, new TempPNMLElement(EWFNElement.STELLE, id));
+    	pnmlImport.put(id, new TempPNMLElement(EWfnElement.PLACE, id));
     }
 
     @Override
     public void newArc(final String id, final String source, final String target) {
-    	TempPNMLElement elem = new TempPNMLElement(EWFNElement.KANTE, id);
+    	TempPNMLElement elem = new TempPNMLElement(EWfnElement.ARC, id);
     	elem.setPnmlIDSource(source);
     	elem.setPnmlIDTarget(target);
     	pnmlImport.put(id, elem);

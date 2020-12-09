@@ -10,11 +10,11 @@ public interface IWFNElementStelle extends IWFNElementOK {
 	 * Gibt an, ob die Stelle momentan eine Marke hat / markiert ist.
 	 * @return true, wenn die Stelle momentan eine Marke hat
 	 */
-	boolean hatMarke();
+	boolean hasMarking();
 	
 	/**
 	 * Legt fest, ob die Stelle momentan eine Marke hat / markiert ist.
 	 * @param marke festzulegender boolscher Wert
 	 */
-	void setMarke(boolean marke);
+	void setMarking(boolean marke);
 }

@@ -1,4 +1,4 @@
-package wfnmodell.elemente;
+package wfnmodell.elements;
 
 import wfnmodell.schnittstellen.IWFNElement;
 
@@ -6,7 +6,7 @@ import wfnmodell.schnittstellen.IWFNElement;
  * Abstrakte Klasse, in der all diejenigen Methoden und Attribute versammelt sind, die 
  * Kanten, Stellen und Transitionen gemeinsam haben. 
  */
-abstract class AWFNElement implements IWFNElement {
+abstract class AWfnElement implements IWFNElement {
 	/**
 	 * Wenn das Element importiert wurde, die entsprechende ID des Elements aus der pnml-Datei, sonst "". 
 	 */
@@ -18,22 +18,22 @@ abstract class AWFNElement implements IWFNElement {
 	/**
 	 * boolsches Attribut zur Verwendung in rekursiven Methodenaufrufen
 	 */
-	private boolean hatRekursiveMethodeAufgerufen;
+	private boolean recursiveMethodFlag;
 	
 	
 	/**
 	 * @param pnmlID wenn das Element importiert wurde, die entsprechende ID des Elements aus der pnml-Datei
 	 * @param identifier die ID, welche das Element eindeutig unterscheidbar macht
 	 */
-	public AWFNElement(String pnmlID, int identifier) {
+	public AWfnElement(String pnmlID, int identifier) {
 		this.pnmlID = pnmlID;
 		this.identifier = identifier;
-		hatRekursiveMethodeAufgerufen = false;
+		recursiveMethodFlag = false;
 	}
 	
 
 	@Override
-	public EWFNElement getTyp() {
+	public EWfnElement getWfnElementType() {
 		// muss in den konkreten Klassen überschrieben werden
 		return null;
 	}
@@ -49,13 +49,13 @@ abstract class AWFNElement implements IWFNElement {
 	}
 	
 	@Override
-	public boolean hatRekursiveMethodeAufgerufen() {
-		return hatRekursiveMethodeAufgerufen;
+	public boolean getRecursiveMethodFlag() {
+		return recursiveMethodFlag;
 	}
 
 	@Override
-	public void setHatRekursiveMethodeAufgerufen(boolean hatRekursiveMethodeAufgerufen) {
-		this.hatRekursiveMethodeAufgerufen = hatRekursiveMethodeAufgerufen;
+	public void setRecursiveMethodFlag(boolean flag) {
+		this.recursiveMethodFlag = flag;
 	}
 	
 }

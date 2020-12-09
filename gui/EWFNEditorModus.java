@@ -6,7 +6,7 @@ import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
 
-import wfnmodell.elemente.EWFNElement;
+import wfnmodell.elements.EWfnElement;
 
 /**
  * Zur Unterscheidung 4 möglicher Modi, deren momentan ausgewählter Modus im Falle einer Mausaktion
@@ -35,7 +35,7 @@ public enum EWFNEditorModus {
 			cursor = new Cursor(Cursor.DEFAULT_CURSOR);
 		else
 			cursor = Toolkit.getDefaultToolkit().createCustomCursor(
-				icon.getImage(), new Point(EWFNElement.URGROESSE, EWFNElement.URGROESSE), toString());
+				icon.getImage(), new Point(EWfnElement.BASEFACTOR, EWfnElement.BASEFACTOR), toString());
 	}
 	
 	/**

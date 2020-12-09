@@ -35,76 +35,76 @@ public interface IWFNElementOK extends IWFNElement {
 	 * Gibt zurück, ob das Element eingehende Kanten hat.
 	 * @return true, wenn das Element eingehende Kanten hat
 	 */
-	boolean hatEingehendeKanten();
+	boolean hasIncomingArcs();
 	
 	/**
 	 * Gibt zurück, ob das Element ausgehende Kanten hat.
 	 * @return true, wenn das Element ausgehende Kanten hat
 	 */
-	boolean hatAusgehendeKanten();
+	boolean hasOutgoingArcs();
 
 	/**
 	 * Fügt dem Element eine eingehende Kante hinzu.
 	 * @param elem Element, von dem diese Kante ausgeht
 	 * @return true, wenn das Hinzufügen erfolgreich war
 	 */
-	boolean addKanteVon(IWFNElementOK elem);
+	boolean addInputElement(IWFNElementOK elem);
 
 	/** Gibt eine Liste aller Ausgangs-Elemente zurück, deren Kanten in diesem Element enden. 
 	 * @return Liste aller Elemente, von denen Kanten zu diesem Element führen
 	 */
-	ArrayList<IWFNElementOK> getKantenVon();
+	ArrayList<IWFNElementOK> getInputElements();
 	
 	/**
 	 * Fügt dem Element eine ausgehende Kante hinzu.
 	 * @param elem Element, bei dem diese Kante endet
 	 * @return true, wenn das Hinzufügen erfolgreich war
 	 */
-	boolean addKanteZu(IWFNElementOK elem);
+	boolean addOutputElements(IWFNElementOK elem);
 
 	/**
 	 * Gibt eine Liste aller Elemente zurück, in welchen Kanten enden, die von diesem Element ausgehen.
 	 * @return Liste aller Elemente, in denen Kanten enden, die von diesem Element ausgehen
 	 */
-	ArrayList<IWFNElementOK> getKantenZu();
+	ArrayList<IWFNElementOK> getOutputElements();
 
 	/**
 	 * Gibt an, ob sich das Element auf mindestens einem gerichteten Pfad von mindestens 
 	 * einer möglichen Startstelle befindet.
 	 * @return true, wenn sich das Element auf einem gerichteten Pfad vom Start befindet
 	 */
-	boolean istAufPfadVomStart();
+	boolean hasStartPath();
 
 	/**
 	 * Gibt an, ob sich das Element auf mindestens einem gerichteten Pfad zu mindestens einer 
 	 * möglichen Endstelle befindet.
 	 * @return true, wenn sich das Element auf einem gerichteten Pfad zum Ende befindet
 	 */
-	boolean istAufPfadZumEnde();
+	boolean hasEndPath();
 	
 	/**
 	 * Legt fest, ob sich das Element auf mindestens einem gerichteten Pfad von mindestens 
 	 * einer möglichen Startstelle befindet.
-	 * @param pfadVomStart zu setzender boolescher Wert
+	 * @param hasStartPath zu setzender boolescher Wert
 	 */
-	void setPfadVomStart(boolean pfadVomStart);
+	void setHasStartPath(boolean pfadVomStart);
 	
 	/**
 	 * Legt fest, ob sich das Element auf mindestens einem gerichteten Pfad zu mindestens einer 
 	 * möglichen Endstelle befindet.
-	 * @param pfadZumEnde zu setzender boolescher Wert
+	 * @param hasEndPath zu setzender boolescher Wert
 	 */
-	void setPfadZumEnde(boolean pfadZumEnde);
+	void setHasEndPath(boolean pfadZumEnde);
 	
 	/** 
 	 * Entfernt eine ausgehende Kante.
 	 * @param zu Element, zu dem die zu entfernende Kante führt
 	 */
-	void removeKanteZu(IWFNElementOK zu);
+	void removeOutputElements(IWFNElementOK zu);
 
 	/**
 	 * Entfernt eine eingehende Kante.
 	 * @param von Element, von dem die eingehende Kante ausgeht
 	 */
-	void removeKanteVon(IWFNElementOK von);
+	void removeInputElement(IWFNElementOK von);
 }

@@ -51,7 +51,7 @@ public class KreisTestVerwaltung implements IWFNVeraenderungsHorcher,
 		if (!besuchteElemente.contains(element)) {
 			besuchteElemente.add(element);
 			inBearbeitungElemente.add(element);	
-			for (IWFNElementOK elementDanach : element.getKantenZu()) {
+			for (IWFNElementOK elementDanach : element.getOutputElements()) {
 				if (istKreis(elementDanach)) 
 					return true;
 				else
