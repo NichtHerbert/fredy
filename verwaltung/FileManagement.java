@@ -8,10 +8,10 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import gui.IZentraleKonstanten;
-import wfnmodel.importexport.ExportManagement;
+import wfnmodel.importexport.Export;
 import wfnmodel.importexport.IWfnExport;
 import wfnmodel.importexport.IWfnImport;
-import wfnmodel.importexport.ImportManagement;
+import wfnmodel.importexport.Import;
 import wfnmodel.interfaces.IWfnElement;
 
 /**
@@ -20,13 +20,9 @@ import wfnmodel.interfaces.IWfnElement;
  */
 public class FileManagement implements IFileManagement,
 										IZentraleKonstanten {
-	/**
-	 * Import-Schnittstelle zum Datenmodell.
-	 */
+	/** Import-Schnittstelle zum Datenmodell.*/
 	private IWfnImport impModel;
-	/**
-	 * Export-Schnittstelle zum Datenmodell.
-	 */
+	/** Export-Schnittstelle zum Datenmodell.*/
 	private IWfnExport expModel;
 	/** Die aktuelle AuswahlVerwaltung.*/
 	private AuswahlVerwaltung<IWfnElement> selectionManagement;
@@ -61,8 +57,7 @@ public class FileManagement implements IFileManagement,
 		chooser.setCurrentDirectory(impModel.getWfnFile());
 		int returnVal = chooser.showOpenDialog(trigger.getParent());
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			ImportManagement iM = new ImportManagement(chooser.getSelectedFile(), impModel);
-			iM.startImport();
+			Import.execute(chooser.getSelectedFile(), impModel);
 			selectionManagement.clearAndFire(NEUE_AUSWAHL);
 		}
 		isFileNew = false;
@@ -74,7 +69,7 @@ public class FileManagement implements IFileManagement,
 			if (impModel.getWfnFile() == null)
 				return fileSaveAs(trigger);
 			else {
-				(new ExportManagement(impModel.getWfnFile(), expModel)).startExport();
+				Export.execute(impModel.getWfnFile(), expModel);
 				impModel.setIsCurrentWfnSaved(true);
 				isFileNew = false;
 			}
@@ -102,7 +97,7 @@ public class FileManagement implements IFileManagement,
 			    if (fileOverwrite != JOptionPane.YES_OPTION) 
 			        return false;
 			}
-			(new ExportManagement(pnmlFile, expModel)).startExport();
+			Export.execute(pnmlFile, expModel);
 			impModel.setWfnFile(pnmlFile);
 			impModel.setIsCurrentWfnSaved(true);
 			isFileNew = false;

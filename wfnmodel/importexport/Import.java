@@ -13,27 +13,7 @@ import wfnmodel.elements.EWfnElement;
  * Oberklasse zum Importieren einer unbestimmten Menge von Elementen in das Datenmodell.
  *
  */
-public class ImportManagement {
-	/**
-	 * Die Datei, aus der importiert werden soll.
-	 */
-	private File pnmlFile;
-	/**
-	 * Import-Schnittstelle zum Datenmodell.
-	 */
-	private IWfnImport wfnModel;
-	
-
-	/**
-	 * Konstruktor zur Instanzierung eines ImportManagement-Objekts, 
-	 * welches einen Konkreten Import-Vorgang umsetzen soll.
-	 * @param pnml die Datei, aus der importiert werden soll
-	 * @param wfnModel die Import-Schnittstelle zum Datenmodell
-	 */
-	public ImportManagement(File pnml, IWfnImport wfnModel) {
-		this.pnmlFile = pnml;
-		this.wfnModel = wfnModel;
-	}
+public class Import {
 	
 	/**
 	 * Führt den konkreten Importvorgang mit Hilfe des Parsers {@link PnmlParserAdapted} durch.
@@ -41,7 +21,7 @@ public class ImportManagement {
 	 * um sicher zu gehen, dass die Elemente, die durch die Kante verbunden werden, schon existieren.
 	 * @return die Anzahl der importierten Elemente, oder -1 wenn es ein Problem beim Öffnen der Datei gab
 	 */
-	public int startImport(){
+	public static int execute(File pnmlFile, IWfnImport wfnModel){
 		int result = -1;
 		Point position;
 		HashMap<String,PnmlElement> pnmlElements;
