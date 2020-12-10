@@ -16,9 +16,9 @@ import javax.swing.table.AbstractTableModel;
 import gui.EIcons;
 import horcherschnittstellen.IAuswahlBearbeitetHorcher;
 import horcherschnittstellen.IAuswahlVeraenderungsHorcher;
-import wfnmodell.elements.EWfnElement;
-import wfnmodell.interfaces.IWfnElement;
-import wfnmodell.interfaces.IWfnTransitionAndPlace;
+import wfnmodel.elements.EWfnElement;
+import wfnmodel.interfaces.IWfnElement;
+import wfnmodel.interfaces.IWfnTransitionAndPlace;
 
 /**
  * JPanel zur Anzeige der momentan ausgewählten Elemente des Editors.

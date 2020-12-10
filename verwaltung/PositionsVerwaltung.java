@@ -6,11 +6,11 @@ import java.util.Iterator;
 
 import horcherschnittstellen.IElementGroessenHorcher;
 import horcherschnittstellen.IWFNVeraenderungsHorcher;
-import wfnmodell.WfnStatusInfo;
-import wfnmodell.elements.EWfnElement;
-import wfnmodell.interfaces.IWfnElement;
-import wfnmodell.interfaces.IWfnArc;
-import wfnmodell.interfaces.IWfnTransitionAndPlace;
+import wfnmodel.WfnStatusInfo;
+import wfnmodel.elements.EWfnElement;
+import wfnmodel.interfaces.IWfnArc;
+import wfnmodel.interfaces.IWfnElement;
+import wfnmodel.interfaces.IWfnTransitionAndPlace;
 
 /**
  * Klasse, die Methoden bereitstellt, um herauszufinden, was sich an einer bestimmten Position des

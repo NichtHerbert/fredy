@@ -12,7 +12,7 @@ import javax.swing.border.TitledBorder;
 
 import horcherschnittstellen.IWFNModellStatusHorcher;
 import verwaltung.KreisTestVerwaltung;
-import wfnmodell.WfnStatusInfo;
+import wfnmodel.WfnStatusInfo;
 
 /**
  * Panel zur Anzeige, ob die aktuell existierenden WFN-Elemente

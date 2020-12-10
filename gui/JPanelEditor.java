@@ -16,12 +16,12 @@ import horcherschnittstellen.IElementGroessenHorcher;
 import horcherschnittstellen.IWFNModellStatusHorcher;
 import horcherschnittstellen.IZeichnungBenoetigtHorcher;
 import horcherschnittstellen.IZoomFaktorVeraenderungsHorcher;
-import wfnmodell.WfnStatusInfo;
-import wfnmodell.elements.EWfnElement;
-import wfnmodell.interfaces.IWfnElement;
-import wfnmodell.interfaces.IWfnArc;
-import wfnmodell.interfaces.IWfnTransitionAndPlace;
-import wfnmodell.interfaces.IWfnTransition;
+import wfnmodel.WfnStatusInfo;
+import wfnmodel.elements.EWfnElement;
+import wfnmodel.interfaces.IWfnArc;
+import wfnmodel.interfaces.IWfnElement;
+import wfnmodel.interfaces.IWfnTransition;
+import wfnmodel.interfaces.IWfnTransitionAndPlace;
 
 /**
  * Panel zur Darstellung des Workflownetzes.
@@ -80,7 +80,7 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 
 	/**
 	 * Zeichnet die in der Liste {@link #ausgewaehlteElemente} gespeicherten WFN-Elemente
-	 * durch Aufruf der Methode {@link wfnmodell.elements.EWfnElement#zeichneAlsAusgewaehlt(Graphics2D, Point, Color)},
+	 * durch Aufruf der Methode {@link wfnmodel.elements.EWfnElement#zeichneAlsAusgewaehlt(Graphics2D, Point, Color)},
 	 * wobei {@link #auswahlArt} Einfluss auf die Farbe hat.
 	 * @param g2 Objekt auf dem die Zeichnung ausgeführt wird
 	 */
@@ -228,7 +228,7 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 	/* 
 	 * Bei Aufruf wird #statusInfo aktualisiert und die Liste #ausgewahlteElemente auf null gesetzt.
 	 * Und repaint() aufgerufen.
-	 * @see horcherschnittstellen.IWFNModellStatusHorcher#modellStatusAenderung(wfnmodell.WFNStatusInfo)
+	 * @see horcherschnittstellen.IWFNModellStatusHorcher#modellStatusAenderung(wfnmodel.WFNStatusInfo)
 	 */
 	@Override
 	public void modellStatusAenderung(WfnStatusInfo statusInfo) {

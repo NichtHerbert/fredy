@@ -11,10 +11,10 @@ import gui.EWFNEditorModus;
 import gui.IZentraleKonstanten;
 import horcherschnittstellen.IEditorModusHorcher;
 import horcherschnittstellen.IZeichnungBenoetigtHorcher;
-import wfnmodell.elements.EWfnElement;
-import wfnmodell.interfaces.IWfnElement;
-import wfnmodell.interfaces.IWfnTransitionAndPlace;
-import wfnmodell.interfaces.IWfnModelChanging;
+import wfnmodel.elements.EWfnElement;
+import wfnmodel.interfaces.IWfnElement;
+import wfnmodel.interfaces.IWfnModelChanging;
+import wfnmodel.interfaces.IWfnTransitionAndPlace;
 
 /**
  * Klasse zur Verwaltung der möglichen Mausaktionen im {@link gui.JPanelEditor}.

@@ -1,6 +1,6 @@
 package horcherschnittstellen;
 
-import wfnmodell.interfaces.IWfnTransition;
+import wfnmodel.interfaces.IWfnTransition;
 
 /**
  * Schnittstelle, um das Schalten von Transitionen umzusetzen.

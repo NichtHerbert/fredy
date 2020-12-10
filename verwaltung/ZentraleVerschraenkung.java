@@ -10,9 +10,9 @@ import gui.JPanelEditor;
 import gui.toolbar.JtbWerkzeugleiste;
 import horcherschnittstellen.IAuswahlBearbeitetHorcher;
 import horcherschnittstellen.IEditorModusHorcher;
-import wfnmodell.WFNModell;
-import wfnmodell.interfaces.IWfnElement;
-import wfnmodell.interfaces.IWfnTransitionAndPlace;
+import wfnmodel.WfnModel;
+import wfnmodel.interfaces.IWfnElement;
+import wfnmodel.interfaces.IWfnTransitionAndPlace;
 
 /**
  * Die Zentrale Klasse des Workflownetzeditors, in der alle Teile miteinander verschaltet werden.
@@ -22,7 +22,7 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 												IAuswahlBearbeitetHorcher,
 												IEditorModusHorcher {
 	/**Das Datenmodell des WFN*/										
-	private WFNModell wfnModell;
+	private WfnModel wfnModell;
 	/**Die Darstellung des WFN */
 	private JPanelEditor jpEditor;
 	/**Die Werkzeuge zum Bearbeiten des WFN*/
@@ -54,7 +54,7 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 	 * @param jpEditor die Darstellung
 	 * @param jtbVerwaltung die Werkzeugleiste
 	 */
-	public ZentraleVerschraenkung(WFNModell wfnModell, JPanelEditor jpEditor, JtbWerkzeugleiste jtbVerwaltung) {
+	public ZentraleVerschraenkung(WfnModel wfnModell, JPanelEditor jpEditor, JtbWerkzeugleiste jtbVerwaltung) {
 		this.wfnModell = wfnModell;
 		this.jpEditor = jpEditor;
 		this.jtbVerwaltung = jtbVerwaltung;

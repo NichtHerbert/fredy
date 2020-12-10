@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import horcherschnittstellen.ITransitionsSchaltungsHorcher;
 import horcherschnittstellen.IWFNModellStatusHorcher;
 import horcherschnittstellen.IWFNVeraenderungsHorcher;
-import wfnmodell.WfnStatusInfo;
-import wfnmodell.elements.EWfnElement;
-import wfnmodell.interfaces.IWfnElement;
-import wfnmodell.interfaces.IWfnTransitionAndPlace;
-import wfnmodell.interfaces.IWfnPlace;
-import wfnmodell.interfaces.IWfnTransition;
+import wfnmodel.WfnStatusInfo;
+import wfnmodel.elements.EWfnElement;
+import wfnmodel.interfaces.IWfnElement;
+import wfnmodel.interfaces.IWfnPlace;
+import wfnmodel.interfaces.IWfnTransition;
+import wfnmodel.interfaces.IWfnTransitionAndPlace;
 
 /**
  * Klasse, die die markierten Stellen, die aktivierten Transitionen und das Schalten

@@ -14,7 +14,7 @@ import gui.EIcons;
 import horcherschnittstellen.IWFNModellStatusHorcher;
 import verwaltung.DateiVerwaltung;
 import verwaltung.IDateiVerwaltung;
-import wfnmodell.WfnStatusInfo;
+import wfnmodel.WfnStatusInfo;
 
 /**
  * JPanel zur Anzeige des Dateinamens und 4 nebeneinanderliegenden Buttons. 

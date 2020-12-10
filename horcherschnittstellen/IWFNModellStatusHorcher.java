@@ -1,6 +1,6 @@
 package horcherschnittstellen;
 
-import wfnmodell.WfnStatusInfo;
+import wfnmodel.WfnStatusInfo;
 
 /**
  * Schnittstelle, um über Veränderungen am Modell oder an den Markierungen /aktivierten Transitionen

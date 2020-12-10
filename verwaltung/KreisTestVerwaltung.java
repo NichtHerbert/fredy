@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import gui.IZentraleKonstanten;
 import horcherschnittstellen.IWFNVeraenderungsHorcher;
-import wfnmodell.WfnStatusInfo;
-import wfnmodell.interfaces.IWfnElement;
-import wfnmodell.interfaces.IWfnTransitionAndPlace;
+import wfnmodel.WfnStatusInfo;
+import wfnmodel.interfaces.IWfnElement;
+import wfnmodel.interfaces.IWfnTransitionAndPlace;
 
 public class KreisTestVerwaltung implements IWFNVeraenderungsHorcher,
 											IZentraleKonstanten {

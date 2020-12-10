@@ -8,11 +8,11 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import gui.IZentraleKonstanten;
-import wfnmodell.importexport.ExportManagement;
-import wfnmodell.importexport.IWfnExport;
-import wfnmodell.importexport.IWfnImport;
-import wfnmodell.importexport.ImportManagement;
-import wfnmodell.interfaces.IWfnElement;
+import wfnmodel.importexport.ExportManagement;
+import wfnmodel.importexport.IWfnExport;
+import wfnmodel.importexport.IWfnImport;
+import wfnmodel.importexport.ImportManagement;
+import wfnmodel.interfaces.IWfnElement;
 
 /**
  * Verwaltung und Steuerung der durch den Benutzer angestoßenen Import- und Exportvorgänge

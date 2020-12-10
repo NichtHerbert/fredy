@@ -2,7 +2,7 @@ package horcherschnittstellen;
 
 import java.util.ArrayList;
 
-import wfnmodell.interfaces.IWfnElement;
+import wfnmodel.interfaces.IWfnElement;
 
 /**
  * Schnittstelle, um über eine Veränderung der Auswahlliste informiert werden zu können,

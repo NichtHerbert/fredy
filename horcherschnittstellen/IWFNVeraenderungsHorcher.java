@@ -1,6 +1,6 @@
 package horcherschnittstellen;
 
-import wfnmodell.WfnStatusInfo;
+import wfnmodel.WfnStatusInfo;
 
 /**
  * Schnittstelle, um über Veränderungen am Datenmodell informiert werden zu können.

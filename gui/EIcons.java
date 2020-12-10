@@ -4,7 +4,7 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
-import wfnmodell.elements.EWfnElement;
+import wfnmodel.elements.EWfnElement;
 
 /**
  * Dient der zentralen Organisation der im Programm verwendeten Icons,

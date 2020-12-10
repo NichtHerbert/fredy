@@ -15,8 +15,8 @@ import verwaltung.DateiVerwaltung;
 import verwaltung.ElementGroessenVerwaltung;
 import verwaltung.KreisTestVerwaltung;
 import verwaltung.ZoomFaktorVerwaltung;
-import wfnmodell.WfnStatusInfo;
-import wfnmodell.interfaces.IWfnElement;
+import wfnmodel.WfnStatusInfo;
+import wfnmodel.interfaces.IWfnElement;
 
 /**
  * Die Toolbar des WFN-Editors. Sie startet alle Steuerungs- und Informationspanels und leitet 

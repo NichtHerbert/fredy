@@ -4,7 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import horcherschnittstellen.IZoomFaktorVeraenderungsHorcher;
-import wfnmodell.elements.EWfnElement;
+import wfnmodel.elements.EWfnElement;
 
 /**
  * Klasse zur Verwaltung des Zoomfaktors.

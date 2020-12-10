@@ -3,13 +3,13 @@ package verwaltung;
 import java.util.ArrayList;
 
 import horcherschnittstellen.IAuswahlVeraenderungsHorcher;
-import wfnmodell.interfaces.IWfnElement;
+import wfnmodel.interfaces.IWfnElement;
 
 /**
  * Klasse zur Verwaltung der ausgewählten Elemente. Sie ist eine Liste, erweitert um Methoden, 
  * Änderungen an der Auswahlliste an interessierte Horcher weiterzuleiten.
  *
- * @param <E> alle Klassen, die die Schnittstelle {@link wfnmodell.interfaces.IWfnElement} implementiert haben.
+ * @param <E> alle Klassen, die die Schnittstelle {@link wfnmodel.interfaces.IWfnElement} implementiert haben.
  */
 class AuswahlVerwaltung<E extends IWfnElement> extends ArrayList<E> {
 

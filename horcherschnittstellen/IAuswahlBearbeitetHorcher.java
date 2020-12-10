@@ -2,8 +2,8 @@ package horcherschnittstellen;
 
 import java.util.ArrayList;
 
-import wfnmodell.interfaces.IWfnElement;
-import wfnmodell.interfaces.IWfnTransitionAndPlace;
+import wfnmodel.interfaces.IWfnElement;
+import wfnmodel.interfaces.IWfnTransitionAndPlace;
 
 /**
  * Schnittstelle um Änderungen an ausgewählten Elementen des Workflownetzes vorzunehmen.

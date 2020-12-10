@@ -15,7 +15,7 @@ import gui.EWFNEditorModus;
 import horcherschnittstellen.IAuswahlBearbeitetHorcher;
 import horcherschnittstellen.IAuswahlVeraenderungsHorcher;
 import horcherschnittstellen.IEditorModusHorcher;
-import wfnmodell.interfaces.IWfnElement;
+import wfnmodel.interfaces.IWfnElement;
 
 /**
  * Panel, in welchem alles versammelt ist, was mit der Bearbeitung einzelner bzw. ausgewählter

@@ -3,7 +3,7 @@ package verwaltung;
 import java.util.ArrayList;
 
 import horcherschnittstellen.IElementGroessenHorcher;
-import wfnmodell.elements.EWfnElement;
+import wfnmodel.elements.EWfnElement;
 
 /**
  * Klasse zur Verwaltung der Darstellungsgröße von Stellen, Transitionen und Pfeilspitzen.

@@ -6,7 +6,7 @@ import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
 
-import wfnmodell.elements.EWfnElement;
+import wfnmodel.elements.EWfnElement;
 
 /**
  * Zur Unterscheidung 4 möglicher Modi, deren momentan ausgewählter Modus im Falle einer Mausaktion

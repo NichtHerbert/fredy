@@ -15,10 +15,10 @@ import javax.swing.border.TitledBorder;
 import gui.EIcons;
 import horcherschnittstellen.ITransitionsSchaltungsHorcher;
 import horcherschnittstellen.IWFNModellStatusHorcher;
-import wfnmodell.WfnStatusInfo;
-import wfnmodell.elements.EWfnElement;
-import wfnmodell.elements.WfnElementTransition;
-import wfnmodell.interfaces.IWfnTransition;
+import wfnmodel.WfnStatusInfo;
+import wfnmodel.elements.EWfnElement;
+import wfnmodel.elements.WfnElementTransition;
+import wfnmodel.interfaces.IWfnTransition;
 
 /**
  * Panel zuständig zur Anzeige der Steuerung des Schaltens von Transitionen und des Zurücksetzens
