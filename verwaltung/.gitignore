@@ -8,3 +8,5 @@
 /PositionsVerwaltung.class
 /ZentraleVerschraenkung.class
 /ZoomFaktorVerwaltung.class
+/FileManagement.class
+/IFileManagement.class

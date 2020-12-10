@@ -11,7 +11,7 @@ import horcherschnittstellen.IAuswahlVeraenderungsHorcher;
 import horcherschnittstellen.IEditorModusHorcher;
 import horcherschnittstellen.ITransitionsSchaltungsHorcher;
 import horcherschnittstellen.IWFNModellStatusHorcher;
-import verwaltung.DateiVerwaltung;
+import verwaltung.FileManagement;
 import verwaltung.ElementGroessenVerwaltung;
 import verwaltung.KreisTestVerwaltung;
 import verwaltung.ZoomFaktorVerwaltung;
@@ -144,7 +144,7 @@ public class JtbWerkzeugleiste extends JToolBar implements 	IAuswahlVeraenderung
 	 * Weiterleitung an gleichnamige Methode von {@link #jpDateiOperationen}.
 	 * @param dateiVerwaltung wird an {@link #jpDateiOperationen} weitergeleitet
 	 */
-	public void setDateiVerwaltung(DateiVerwaltung dateiVerwaltung) {
+	public void setDateiVerwaltung(FileManagement dateiVerwaltung) {
 		jpDateiOperationen.setDateiVerwaltung(dateiVerwaltung);
 	}
 	

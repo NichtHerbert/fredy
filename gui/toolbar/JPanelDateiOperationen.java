@@ -12,8 +12,8 @@ import javax.swing.border.TitledBorder;
 
 import gui.EIcons;
 import horcherschnittstellen.IWFNModellStatusHorcher;
-import verwaltung.DateiVerwaltung;
-import verwaltung.IDateiVerwaltung;
+import verwaltung.FileManagement;
+import verwaltung.IFileManagement;
 import wfnmodel.WfnStatusInfo;
 
 /**
@@ -28,7 +28,7 @@ class JPanelDateiOperationen extends JPanel implements IWFNModellStatusHorcher {
 	/**
 	 * Referenz auf die für Dateioperationen zuständige Verwaltung.
 	 */
-	private IDateiVerwaltung dialogVerwaltung;
+	private IFileManagement dialogVerwaltung;
 
 	/**
 	 * JPanel, in welchem der Dateiname angezeigt wird.
@@ -50,7 +50,7 @@ class JPanelDateiOperationen extends JPanel implements IWFNModellStatusHorcher {
 		this(null);
 	}
 	
-	JPanelDateiOperationen(IDateiVerwaltung dateiDialogVerwaltung) {
+	JPanelDateiOperationen(IFileManagement dateiDialogVerwaltung) {
 		this.dialogVerwaltung = dateiDialogVerwaltung;
 		jpDateiName = new JPanel();
 		jpDateiName.setLayout(new GridLayout(0, 1));
@@ -72,8 +72,8 @@ class JPanelDateiOperationen extends JPanel implements IWFNModellStatusHorcher {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					dialogVerwaltung.dateiNeu();
-					jlDateiName.setText("Dateiname:   " + dialogVerwaltung.getDateiName());
+					dialogVerwaltung.fileNew();
+					jlDateiName.setText("Dateiname:   " + dialogVerwaltung.getFileName());
 				} catch (NullPointerException e1) {}
 			}
 		});
@@ -82,8 +82,8 @@ class JPanelDateiOperationen extends JPanel implements IWFNModellStatusHorcher {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					dialogVerwaltung.dateiOeffnen(JPanelDateiOperationen.this);
-					jlDateiName.setText("Dateiname:   " + dialogVerwaltung.getDateiName());
+					dialogVerwaltung.fileOpen(JPanelDateiOperationen.this);
+					jlDateiName.setText("Dateiname:   " + dialogVerwaltung.getFileName());
 				} catch (NullPointerException e1) {}
 			}
 		});
@@ -92,8 +92,8 @@ class JPanelDateiOperationen extends JPanel implements IWFNModellStatusHorcher {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (dialogVerwaltung.dateiSpeichern(JPanelDateiOperationen.this))
-						jlDateiName.setText("Dateiname:   " + dialogVerwaltung.getDateiName());
+					if (dialogVerwaltung.fileSaved(JPanelDateiOperationen.this))
+						jlDateiName.setText("Dateiname:   " + dialogVerwaltung.getFileName());
 				} catch (NullPointerException e1) {}
 			}
 		});
@@ -102,8 +102,8 @@ class JPanelDateiOperationen extends JPanel implements IWFNModellStatusHorcher {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (dialogVerwaltung.dateiSpeichernUnter(JPanelDateiOperationen.this))
-						jlDateiName.setText("Dateiname:   " + dialogVerwaltung.getDateiName());
+					if (dialogVerwaltung.fileSaveAs(JPanelDateiOperationen.this))
+						jlDateiName.setText("Dateiname:   " + dialogVerwaltung.getFileName());
 				} catch (NullPointerException e1) {}
 			}
 		});
@@ -122,15 +122,15 @@ class JPanelDateiOperationen extends JPanel implements IWFNModellStatusHorcher {
 
 	/**
 	 * Setzt das Attribut {@link #dialogVerwaltung}.
-	 * @param dateiVerwaltung zu setzende DateiVerwaltung
+	 * @param dateiVerwaltung zu setzende FileManagement
 	 */
-	void setDateiVerwaltung(DateiVerwaltung dateiVerwaltung) {
+	void setDateiVerwaltung(FileManagement dateiVerwaltung) {
 		dialogVerwaltung = dateiVerwaltung;
 	}
 
 	@Override
 	public void modellStatusAenderung(WfnStatusInfo statusInfo) {
-		jlDateiName.setText("Dateiname:   " + dialogVerwaltung.getDateiName());
+		jlDateiName.setText("Dateiname:   " + dialogVerwaltung.getFileName());
 	}
 
 

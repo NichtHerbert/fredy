@@ -38,8 +38,8 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 	private MarkierungsVerwaltung markierungsVerwaltung;
 	/** Die {@link MausVerwaltung}*/
 	private MausVerwaltung mausVerwaltung;
-	/** Die {@link DateiVerwaltung}*/
-	private DateiVerwaltung dateiVerwaltung;
+	/** Die {@link FileManagement}*/
+	private FileManagement dateiVerwaltung;
 	/** Die {@link ElementGroessenVerwaltung} */
 	private ElementGroessenVerwaltung eGVerwaltung;
 	/** Die {@link KreisTestVerwaltung}*/
@@ -70,7 +70,7 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 		auswahlVerwaltung.addAuswahlAenderungsHorcher(jtbVerwaltung);
 		auswahlVerwaltung.addAuswahlAenderungsHorcher(jpEditor);
 		
-		dateiVerwaltung = new DateiVerwaltung(wfnModell, wfnModell, auswahlVerwaltung);
+		dateiVerwaltung = new FileManagement(wfnModell, wfnModell, auswahlVerwaltung);
 		jtbVerwaltung.setDateiVerwaltung(dateiVerwaltung);
 		
 		markierungsVerwaltung = new MarkierungsVerwaltung();
@@ -139,7 +139,7 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 					buttons[2]);
 			if (n == 1) System.exit(0);
 			if (n == 2) {
-				dateiVerwaltung.dateiSpeichern(jtbVerwaltung);
+				dateiVerwaltung.fileSaved(jtbVerwaltung);
 				System.exit(0);
 			}
 		} else 
