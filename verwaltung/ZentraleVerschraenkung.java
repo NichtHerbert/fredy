@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import gui.EWFNEditorModus;
+import gui.EWfnEditModus;
 import gui.IZentraleKonstanten;
 import gui.JPanelEditor;
 import gui.toolbar.JtbWerkzeugleiste;
@@ -106,7 +106,7 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 	}
 
 	@Override
-	public void editorModusGeaendert(EWFNEditorModus editorModus) {
+	public void editorModusGeaendert(EWfnEditModus editorModus) {
 		jpEditor.setCursor(editorModus.getCursor());
 	}
 	

@@ -11,7 +11,7 @@ import javax.swing.JToggleButton;
 import javax.swing.border.TitledBorder;
 
 import gui.EIcons;
-import gui.EWFNEditorModus;
+import gui.EWfnEditModus;
 import horcherschnittstellen.IAuswahlBearbeitetHorcher;
 import horcherschnittstellen.IAuswahlVeraenderungsHorcher;
 import horcherschnittstellen.IEditorModusHorcher;
@@ -20,7 +20,7 @@ import wfnmodel.interfaces.IWfnElement;
 /**
  * Panel, in welchem alles versammelt ist, was mit der Bearbeitung einzelner bzw. ausgewählter
  * Elemente des WFN zu tun hat. Zur Bearbeitung gehören Hinzufügen, Löschen, Namensänderung.
- * Hinzufügen wird realisiert duch das Setzen des @see {@link gui.EWFNEditorModus}.
+ * Hinzufügen wird realisiert duch das Setzen des @see {@link gui.EWfnEditModus}.
  * Löschen und Namensänderung durch ein @see {@link JPanelAuswahl}.
  */
 class JPanelElementBearbeitung extends JPanel implements IAuswahlVeraenderungsHorcher{
@@ -34,7 +34,7 @@ class JPanelElementBearbeitung extends JPanel implements IAuswahlVeraenderungsHo
 	/**
 	 * Der aktuelle Editormodus. 
 	 */
-	private EWFNEditorModus modus;
+	private EWfnEditModus modus;
 	/**
 	 * Liste der Horcher, die über eine Änderung des Editormodus informiert werden wollen.
 	 */
@@ -42,10 +42,10 @@ class JPanelElementBearbeitung extends JPanel implements IAuswahlVeraenderungsHo
 
 	/**
 	 * Initialisiert das JPanel mit einem {@link JPanelAuswahl} und 4 {@link JToggleButton}
-	 * zur Setzung des {@link EWFNEditorModus}. 
+	 * zur Setzung des {@link EWfnEditModus}. 
 	 */
 	JPanelElementBearbeitung() {
-		modus = EWFNEditorModus.AUSWAHL;
+		modus = EWfnEditModus.SELECT;
 		editorModusHorcherListe = new ArrayList<>(2);
 		
 		JToggleButton jtb_Auswahl = new JToggleButton(EIcons.CURSOR.getIcon(), true);
@@ -76,13 +76,13 @@ class JPanelElementBearbeitung extends JPanel implements IAuswahlVeraenderungsHo
 			public void actionPerformed(ActionEvent e) {
 
 				if (e.getSource() == jtb_Auswahl)
-					modus = EWFNEditorModus.AUSWAHL;
+					modus = EWfnEditModus.SELECT;
 				if (e.getSource() == jtb_Stelle)
-					modus = EWFNEditorModus.STELLE_HINZU;
+					modus = EWfnEditModus.ADD_PLACE;
 				if (e.getSource() == jtb_Transition)
-					modus = EWFNEditorModus.TRANSITION_HINZU;
+					modus = EWfnEditModus.ADD_TRANSITION;
 				if (e.getSource() == jtb_Kante)
-					modus = EWFNEditorModus.KANTE_HINZU;
+					modus = EWfnEditModus.ADD_ARC;
 				
 				fireEditorModusGeaendert(modus);
 				
@@ -108,7 +108,7 @@ class JPanelElementBearbeitung extends JPanel implements IAuswahlVeraenderungsHo
 	 * über eine Modus-Änderung. 
 	 * @param modus Neuer Editormodus, der an alle Horcher weitergeleitet wird.
 	 */
-	private void fireEditorModusGeaendert(EWFNEditorModus modus) {
+	private void fireEditorModusGeaendert(EWfnEditModus modus) {
 		for (IEditorModusHorcher horcher : editorModusHorcherListe)
 			horcher.editorModusGeaendert(modus);
 	}

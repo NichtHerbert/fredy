@@ -13,11 +13,11 @@ import wfnmodel.elements.EWfnElement;
  * im {@link JPanelEditor} zur Bestimmung, was denn getan werden soll, behilflich sein kann.
  * Desweiteren wird für jeden Modus ein eigener Cursor zur Verfügung gestellt. 
  */
-public enum EWFNEditorModus {
-	AUSWAHL(EIcons.CURSOR.getIcon()),
-	STELLE_HINZU(EIcons.CURSOR_STELLE.getIcon()),
-	TRANSITION_HINZU(EIcons.CURSOR_TRANSITION.getIcon()),
-	KANTE_HINZU(EIcons.CURSOR_KANTE.getIcon())
+public enum EWfnEditModus {
+	SELECT(EIcons.CURSOR.getIcon()),
+	ADD_PLACE(EIcons.CURSOR_STELLE.getIcon()),
+	ADD_TRANSITION(EIcons.CURSOR_TRANSITION.getIcon()),
+	ADD_ARC(EIcons.CURSOR_KANTE.getIcon())
 	;
 	
 	/**
@@ -27,10 +27,10 @@ public enum EWFNEditorModus {
 	
 	/**
 	 * Baut aus dem übergebenen ImageIcon für jeden Modus einen eigenen Cursor.
-	 * Der Modus AUSWAHL behält den DEFAULT_CURSER. 
+	 * Der Modus SELECT behält den DEFAULT_CURSER. 
 	 * @param icon dient als Cursor-Vorlage für den jeweiligen Modus.
 	 */
-	EWFNEditorModus(ImageIcon icon) {
+	EWfnEditModus(ImageIcon icon) {
 		if (icon == EIcons.CURSOR.getIcon())
 			cursor = new Cursor(Cursor.DEFAULT_CURSOR);
 		else

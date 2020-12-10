@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 import javax.swing.event.MouseInputAdapter;
 
-import gui.EWFNEditorModus;
+import gui.EWfnEditModus;
 import gui.IZentraleKonstanten;
 import horcherschnittstellen.IEditorModusHorcher;
 import horcherschnittstellen.IZeichnungBenoetigtHorcher;
@@ -34,31 +34,31 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 	/**Die aktuelle {@link MarkierungsVerwaltung} */
 	private MarkierungsVerwaltung markierungsVerwaltung;
 	
-	/**(Für den Editormodus AUSWAHL) Gibt an ob es ein {@link #startElement} gibt.*/
+	/**(Für den Editormodus SELECT) Gibt an ob es ein {@link #startElement} gibt.*/
 	private boolean gibtEsEinStartElement;
-	/**(Für den Editormodus AUSWAHL) Dasjenige ausgewählte Element, über dem sich der Mauszeiger befand,
+	/**(Für den Editormodus SELECT) Dasjenige ausgewählte Element, über dem sich der Mauszeiger befand,
 	 * als eine Maustaste gedrückt wurde.*/
 	private IWfnElement startElement;
-	/**(Für den Editormodus AUSWAHL) Die Mausposition, wenn die Maustaste gedrückt wurde.*/
+	/**(Für den Editormodus SELECT) Die Mausposition, wenn die Maustaste gedrückt wurde.*/
 	private Point startMausPosition;
-	/** (Für den Editormodus AUSWAHL) Zum Speichern (bei einer Auswahl größer 1) 
+	/** (Für den Editormodus SELECT) Zum Speichern (bei einer Auswahl größer 1) 
 	 * der Abstandsverhältnisse der ausgewählten Elemente zum {@link #startElement}. */
 	private HashMap<IWfnElement, Point> auswahlElementAbstand;
-	/**(Für den Editormodus AUSWAHL) Zum Speichern (bei einer Auswahl größer 1) 
+	/**(Für den Editormodus SELECT) Zum Speichern (bei einer Auswahl größer 1) 
 	 * der größten x und der größten y Verschiebung der ausgewählten Elemente zum {@link #startElement}
 	 * (so dass man die Auswahl nicht über den Rand hinaus schieben kann).*/
 	private int xNiedrigerAlsStartElement, yNiedrigerAlsStartElement;
-	/** (Für den Editormus KANTE_HINZU) Gibt an, ob schon ein Kanteausgangselement gewählt wurde.*/
+	/** (Für den Editormus ADD_ARC) Gibt an, ob schon ein Kanteausgangselement gewählt wurde.*/
 	private boolean kanteAusgangsElementAusgewaehlt;
-	/**(Für den Editormodus KANTE_HINZU) Das für die hinzuzufügende Kante gewählte Ausgangselement.*/
+	/**(Für den Editormodus ADD_ARC) Das für die hinzuzufügende Kante gewählte Ausgangselement.*/
 	private IWfnTransitionAndPlace kantenAusgangsElement;
 	/**Der aktuelle Editormodus */
-	private EWFNEditorModus editorModus;
+	private EWfnEditModus editorModus;
 	/**Liste der Horcher, die informiert werden möchten, wenn die Zeichnung einer Linie oder eines Rechtecks benötigt wird*/
 	private ArrayList<IZeichnungBenoetigtHorcher> zeichnungBenoetigtHorcherListe;
 
 	/**
-	 * Instanziert eine MausVerwaltung und stellt den Editormodus auf AUSWAHL. 
+	 * Instanziert eine MausVerwaltung und stellt den Editormodus auf SELECT. 
 	 * @param wfnModell Schnittstelle um Veränderungen am Datenmodell vorzunehmen
 	 * @param koordinaten Die aktuelle {@link PositionsVerwaltung} 
 	 * @param auswahl Die aktuelle {@link AuswahlVerwaltung}
@@ -80,7 +80,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 		auswahlElementAbstand = new HashMap<>(5);
 		xNiedrigerAlsStartElement = 0;
 		yNiedrigerAlsStartElement = 0;
-		editorModus = EWFNEditorModus.AUSWAHL;
+		editorModus = EWfnEditModus.SELECT;
 		zeichnungBenoetigtHorcherListe = new ArrayList<>(1);	
 	}
 	
@@ -113,18 +113,18 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 	}
 
 	/* (non-Javadoc)
-	 * @see horcherschnittstellen.IEditorModusHorcher#editorModusGeaendert(gui.EWFNEditorModus)
+	 * @see horcherschnittstellen.IEditorModusHorcher#editorModusGeaendert(gui.EWfnEditModus)
 	 * Falls durch die Modus-Änderung nötig, wird die derzeitige Auswahl geleert oder die Kanten-Auswahl abgebrochen
 	 * und jeweils ein neu-zeichnen ausgelöst.
 	 */
 	@Override
-	public void editorModusGeaendert(EWFNEditorModus neuerModus) {
+	public void editorModusGeaendert(EWfnEditModus neuerModus) {
 		if (editorModus != neuerModus) {
 			switch (editorModus) {
-			case AUSWAHL:
+			case SELECT:
 				auswahl.clearAndAddAndFire(null, NEUE_AUSWAHL);
 				break;
-			case KANTE_HINZU:
+			case ADD_ARC:
 				if (kanteAusgangsElementAusgewaehlt) {
 					fireZeichnungBenoetigt(NICHTS, null, null);
 					kanteAusgangsElementAusgewaehlt = false;
@@ -138,11 +138,11 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 	}
 	
 	/* (non-Javadoc)
-	 * Falls im Editormodus AUSWAHL eine Maustaste gedrückt wird
+	 * Falls im Editormodus SELECT eine Maustaste gedrückt wird
 	 * und sich an dieser Stelle ein Element befindet,
 	 * wird die auswahl aktualisiert, 
 	 * und gegebenenfalls die Abstände der ausgewählten Elemente zueinander.
-	 * Falls im Editormodus AUSWAHL eine Maustaste gedrückt wird
+	 * Falls im Editormodus SELECT eine Maustaste gedrückt wird
 	 * und es befindet sich an dieser Stelle kein Element,
 	 * wird die Mausposition in #startMausPosition gespeichert,
 	 * für das mögliche Zeichnen eines Rechtecks bei einer Mausbewegung.
@@ -150,7 +150,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (editorModus == EWFNEditorModus.AUSWAHL) {
+		if (editorModus == EWfnEditModus.SELECT) {
 			IWfnElement elem = koordinaten.getWasDaIst(e.getPoint());
 			if (elem != null) {
 				gibtEsEinStartElement = true;
@@ -199,13 +199,13 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 
 	/* (non-Javadoc)
 	 * 
-	 * Falls im Editormodus AUSWAHL die Maus mit gedrückter Maustaste bewegt wird, 
+	 * Falls im Editormodus SELECT die Maus mit gedrückter Maustaste bewegt wird, 
 	 * und es ausgewählte Elemente gibt,
 	 * werden diese Elemente der Mausbewegung entsprechend verschoben,
 	 * aber in ihrer Entfernung zum Element, über welchem sich die Maus befindet (dem #startElement), 
 	 * bleiben die Elemente gleich (gespeichert in #auswahlElementAbstand).
 	 * 
-	 * Falls im Editormodus AUSWAHL die Maus mit gedrückter Maustaste bewegt wird, 
+	 * Falls im Editormodus SELECT die Maus mit gedrückter Maustaste bewegt wird, 
 	 * und es gibt keine ausgewählten Elemente, 
 	 * dann wird ein Rechteck gezeichnet zwischen der jetzigen Mausposition
 	 * und der Position, an der die Maustaste gedrückt wurde. (#startMausPosition)
@@ -214,7 +214,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 	 */
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if (editorModus == EWFNEditorModus.AUSWAHL) {
+		if (editorModus == EWfnEditModus.SELECT) {
 			if (gibtEsEinStartElement) {
 				Point mausPunktOhneZoom = zoom.ohne(e.getPoint());
 				if  ((startElement.getWfnElementType() != EWfnElement.ARC)
@@ -241,14 +241,14 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 	}
 
 	/* (non-Javadoc)
-	 * Falls im Editormodus KANTE_HINZU die Maus bewegt wird,
+	 * Falls im Editormodus ADD_ARC die Maus bewegt wird,
 	 * und schon eine Kante oder Transition als Kantenausgangselement ausgewählt wurde,
 	 * wird eine Linie vom #kantenAusgangsElement zur Cursorposition gezeichnet. 
 	 * @see java.awt.event.MouseAdapter#mouseMoved(java.awt.event.MouseEvent)
 	 */
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if ((editorModus == EWFNEditorModus.KANTE_HINZU) 
+		if ((editorModus == EWfnEditModus.ADD_ARC) 
 				&& (kanteAusgangsElementAusgewaehlt)) {
 			fireZeichnungBenoetigt(
 					LINIE,
@@ -260,13 +260,13 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 
 	/* (non-Javadoc)
 	 * 
-	 * Falls die linke Maustaste losgelassen wird im Editormodus AUSWAHL,
+	 * Falls die linke Maustaste losgelassen wird im Editormodus SELECT,
 	 *   wird die Auswahl aktualisiert.
-	 * Falls die linke Maustaste losgelassen wird im Editormodus STELLE_HINZU,
+	 * Falls die linke Maustaste losgelassen wird im Editormodus ADD_PLACE,
 	 * 	 dann wird via Datenmodell eine neue Stelle instanziert. 
-	 * Falls die linke Maustaste losgelassen wird im Editormodus TRANSITION_HINZU,
+	 * Falls die linke Maustaste losgelassen wird im Editormodus ADD_TRANSITION,
 	 * 	 dann wird via Datenmodell eine neue Transition instanziert.
-	 * Falls die linke Maustaste losgelassen wird im Editormodus KANTE_HINZU,
+	 * Falls die linke Maustaste losgelassen wird im Editormodus ADD_ARC,
 	 * 	 und es befindet sich an der Mausposition ein Element,
 	 * 	 so wird dieses ein Kantenausgangselement,
 	 *   oder falls ein solches schon gibt, 
@@ -283,7 +283,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 	public void mouseReleased(MouseEvent e) {
 		if (e.getButton()== MouseEvent.BUTTON1)
 			switch (editorModus) {
-			case AUSWAHL:
+			case SELECT:
 				if (gibtEsEinStartElement) {
 					IWfnElement neueAuswahl = koordinaten.getWasDaIst(e.getPoint());
 					if (neueAuswahl != null) {
@@ -300,13 +300,13 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 				}
 				gibtEsEinStartElement = false;
 				break;
-			case STELLE_HINZU:
+			case ADD_PLACE:
 				wfnModell.createPlace(zoom.ohne(e.getPoint()));
 				break;
-			case TRANSITION_HINZU:
+			case ADD_TRANSITION:
 				wfnModell.createTransition(zoom.ohne(e.getPoint()));
 				break;
-			case KANTE_HINZU:
+			case ADD_ARC:
 				IWfnElement element = koordinaten.getWasDaIst(e.getPoint());
 				if ((element != null)
 					&& (element.getWfnElementType() != EWfnElement.ARC)) {

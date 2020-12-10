@@ -39,7 +39,7 @@ public class JtbWerkzeugleiste extends JToolBar implements 	IAuswahlVeraenderung
 	private JPanelNetzInfo jpNetzInfo;
 
 	/**
-	 * Panel zum Setzen des #{@link gui.EWFNEditorModus} und zum Löschen und Namen-Ändern 
+	 * Panel zum Setzen des #{@link gui.EWfnEditModus} und zum Löschen und Namen-Ändern 
 	 * von einzelnen bzw. ausgewählten Elementen.
 	 */
 	private JPanelElementBearbeitung jpElementBearbeitung;
