@@ -12,7 +12,7 @@ import listeners.IEditModusListener;
 import listeners.ITransitionFireListener;
 import listeners.IWfnStatusListener;
 import verwaltung.FileManagement;
-import verwaltung.ElementGroessenVerwaltung;
+import verwaltung.ElementSizeManagement;
 import verwaltung.KreisTestVerwaltung;
 import verwaltung.ZoomManagement;
 import wfnmodel.WfnStatusInfo;
@@ -152,7 +152,7 @@ public class JtbWerkzeugleiste extends JToolBar implements 	ISelectionChangingLi
 	 * Weiterleitung an gleichnamige Methode von {@link #jpEG}.
 	 * @param eGVerwaltung wird an {@link #jpEG} weitergeleitet
 	 */
-	public void setElementGroessenVerwaltung(ElementGroessenVerwaltung eGVerwaltung) {
+	public void setElementGroessenVerwaltung(ElementSizeManagement eGVerwaltung) {
 		jpEG.setElementGroessenVerwaltung(eGVerwaltung);
 	}
 	

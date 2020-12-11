@@ -40,8 +40,8 @@ public class ZentraleVerschraenkung implements 	ICentralConstants,
 	private MausVerwaltung mausVerwaltung;
 	/** Die {@link FileManagement}*/
 	private FileManagement dateiVerwaltung;
-	/** Die {@link ElementGroessenVerwaltung} */
-	private ElementGroessenVerwaltung eGVerwaltung;
+	/** Die {@link ElementSizeManagement} */
+	private ElementSizeManagement eGVerwaltung;
 	/** Die {@link KreisTestVerwaltung}*/
 	private KreisTestVerwaltung kTVerwaltung;
 
@@ -89,10 +89,10 @@ public class ZentraleVerschraenkung implements 	ICentralConstants,
 		this.jpEditor.addMouseMotionListener(mausVerwaltung);
 		this.jtbVerwaltung.addEditorModusHorcher(mausVerwaltung);
 		
-		eGVerwaltung = new ElementGroessenVerwaltung();
+		eGVerwaltung = new ElementSizeManagement();
 		jtbVerwaltung.setElementGroessenVerwaltung(eGVerwaltung);
-		eGVerwaltung.addElementGroessenHorcher(jpEditor);
-		eGVerwaltung.addElementGroessenHorcher(koordinatenVerwaltung);
+		eGVerwaltung.addElementSizeListener(jpEditor);
+		eGVerwaltung.addElementSizeListener(koordinatenVerwaltung);
 		
 		kTVerwaltung = new KreisTestVerwaltung(auswahlVerwaltung);
 		jtbVerwaltung.setKreisTestVerwaltung(kTVerwaltung);

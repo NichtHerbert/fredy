@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 import gui.EIcons;
-import verwaltung.ElementGroessenVerwaltung;
+import verwaltung.ElementSizeManagement;
 
 /**
  * Panel zur Anzeige der Buttons zur Steuerung der Elementgröße.
@@ -21,7 +21,7 @@ public class JPanelElementGroesse extends JPanel {
 	/**
 	 * Referenz auf die für den Zoom zuständige Verwaltung. 
 	 */
-	private ElementGroessenVerwaltung eGVerwaltung;
+	private ElementSizeManagement eGVerwaltung;
 	
 	/**
 	 * Initialisiert das Panel mit zwei nebeneinanderliegenden Buttons für ZoomIn und ZoomOut.
@@ -37,7 +37,7 @@ public class JPanelElementGroesse extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (eGVerwaltung != null) 
-					eGVerwaltung.elementGroesser();
+					eGVerwaltung.bigger();
 			}
 		});
 		btnEKleiner.addActionListener(new ActionListener() {
@@ -45,7 +45,7 @@ public class JPanelElementGroesse extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (eGVerwaltung != null) 
-					eGVerwaltung.elementKleiner();
+					eGVerwaltung.smaller();
 			}
 		});
 		
@@ -55,10 +55,10 @@ public class JPanelElementGroesse extends JPanel {
 	}
 	
 	/**
-	 * Setzt das Attribut {@link #ElementGroessenVerwaltung}.
-	 * @param zoomVerwaltung die neue {@link #ElementGroessenVerwaltung}
+	 * Setzt das Attribut {@link #ElementSizeManagement}.
+	 * @param zoomVerwaltung die neue {@link #ElementSizeManagement}
 	 */
-	void setElementGroessenVerwaltung(ElementGroessenVerwaltung eGVerwaltung) {
+	void setElementGroessenVerwaltung(ElementSizeManagement eGVerwaltung) {
 		this.eGVerwaltung = eGVerwaltung;
 	}
 	
