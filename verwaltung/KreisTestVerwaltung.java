@@ -2,14 +2,14 @@ package verwaltung;
 
 import java.util.ArrayList;
 
-import gui.IZentraleKonstanten;
+import gui.ICentralConstants;
 import listeners.IWfnNetListener;
 import wfnmodel.WfnStatusInfo;
 import wfnmodel.interfaces.IWfnElement;
 import wfnmodel.interfaces.IWfnTransitionAndPlace;
 
 public class KreisTestVerwaltung implements IWfnNetListener,
-											IZentraleKonstanten {
+											ICentralConstants {
 	
 	/*Die aktuelle StatusInfo, ohne die Informationen der Markierungsverwaltung.*/
 	private WfnStatusInfo statusInfo;
@@ -39,7 +39,7 @@ public class KreisTestVerwaltung implements IWfnNetListener,
 				for (int i = idxStart; i<= idxEnd; i++) {
 					ergebnisliste.add(inBearbeitungElemente.get(i));
 				}
-				auswahlVerwaltung.clearAndAddALLAndFire(ergebnisliste, NEUE_AUSWAHL);
+				auswahlVerwaltung.clearAndAddALLAndFire(ergebnisliste, NEW_SELECTION);
 				return "Mindestens ein Kreis im WFN";
 			}
 			return "Kein Kreis im WFN";	

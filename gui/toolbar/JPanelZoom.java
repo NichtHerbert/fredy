@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 import gui.EIcons;
-import verwaltung.ZoomFaktorVerwaltung;
+import verwaltung.ZoomManagement;
 
 /**
  * Panel zur Anzeige der Zoom-Steuer-Instrumente.
@@ -21,7 +21,7 @@ class JPanelZoom extends JPanel {
 	/**
 	 * Referenz auf die für den Zoom zuständige Verwaltung. 
 	 */
-	private ZoomFaktorVerwaltung zoomVerwaltung;
+	private ZoomManagement zoomVerwaltung;
 	
 	/**
 	 * Initialisiert das Panel mit zwei nebeneinanderliegenden Buttons für ZoomIn und ZoomOut.
@@ -57,7 +57,7 @@ class JPanelZoom extends JPanel {
 	 * Setzt das Attribut {@link #zoomVerwaltung}.
 	 * @param zoomVerwaltung die neue {@link #zoomVerwaltung}
 	 */
-	void setZoomFaktorVerwaltung(ZoomFaktorVerwaltung zoomVerwaltung) {
+	void setZoomFaktorVerwaltung(ZoomManagement zoomVerwaltung) {
 		this.zoomVerwaltung = zoomVerwaltung;
 	}
 	

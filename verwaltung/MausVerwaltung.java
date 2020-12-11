@@ -8,7 +8,7 @@ import java.util.HashMap;
 import javax.swing.event.MouseInputAdapter;
 
 import gui.EWfnEditModus;
-import gui.IZentraleKonstanten;
+import gui.ICentralConstants;
 import listeners.IEditModusListener;
 import listeners.IRedrawListener;
 import wfnmodel.elements.EWfnElement;
@@ -21,12 +21,12 @@ import wfnmodel.interfaces.IWfnTransitionAndPlace;
  *
  */
 class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
-														  IZentraleKonstanten {
+														  ICentralConstants {
 
 	/**Schnittstelle um Veränderungen am Datenmodell vorzunehmen*/
 	private IWfnModelChanging wfnModell;
-	/**Die aktuelle {@link ZoomFaktorVerwaltung}. */
-	private ZoomFaktorVerwaltung zoom;
+	/**Die aktuelle {@link ZoomManagement}. */
+	private ZoomManagement zoom;
 	/** Liste der ausgewählten Elemente */
 	private AuswahlVerwaltung<IWfnElement> auswahl;
 	/**Die aktuelle {@link PositionsVerwaltung} */
@@ -63,13 +63,13 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 	 * @param koordinaten Die aktuelle {@link PositionsVerwaltung} 
 	 * @param auswahl Die aktuelle {@link AuswahlVerwaltung}
 	 * @param markierungsVerwaltung Die aktuelle {@link MarkierungsVerwaltung}
-	 * @param zoom Die aktuelle {@link ZoomFaktorVerwaltung}
+	 * @param zoom Die aktuelle {@link ZoomManagement}
 	 */
 	MausVerwaltung(IWfnModelChanging wfnModell,
 						PositionsVerwaltung koordinaten,
 						AuswahlVerwaltung<IWfnElement> auswahl,
 						MarkierungsVerwaltung markierungsVerwaltung,
-						ZoomFaktorVerwaltung zoom) {
+						ZoomManagement zoom) {
 		this.wfnModell = wfnModell;
 		this.koordinaten = koordinaten;
 		this.auswahl = auswahl;
@@ -122,11 +122,11 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 		if (editorModus != neuerModus) {
 			switch (editorModus) {
 			case SELECT:
-				auswahl.clearAndAddAndFire(null, NEUE_AUSWAHL);
+				auswahl.clearAndAddAndFire(null, NEW_SELECTION);
 				break;
 			case ADD_ARC:
 				if (kanteAusgangsElementAusgewaehlt) {
-					fireZeichnungBenoetigt(NICHTS, null, null);
+					fireZeichnungBenoetigt(NOTHING, null, null);
 					kanteAusgangsElementAusgewaehlt = false;
 					kantenAusgangsElement = null;
 				}
@@ -160,7 +160,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 				if (!auswahl.contains(startElement)) {
 					if (!e.isControlDown()) 
 						auswahl.clear();
-					auswahl.addAndFire(startElement, NEUE_AUSWAHL);
+					auswahl.addAndFire(startElement, NEW_SELECTION);
 				}
 				if (auswahl.size() > 1) {
 					int x, y;
@@ -168,7 +168,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 						x = ((IWfnTransitionAndPlace)startElement).getPosition().x;
 						y = ((IWfnTransitionAndPlace)startElement).getPosition().y;
 					} else {
-						Point p = zoom.ohne(e.getPoint());
+						Point p = zoom.calculateOut(e.getPoint());
 						x = p.x;
 						y = p.y;
 					}
@@ -190,7 +190,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 					yNiedrigerAlsStartElement *= -1;
 				}
 			} else {
-				startMausPosition = zoom.ohne(e.getPoint());
+				startMausPosition = zoom.calculateOut(e.getPoint());
 			}
 			
 		}
@@ -216,7 +216,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 	public void mouseDragged(MouseEvent e) {
 		if (editorModus == EWfnEditModus.SELECT) {
 			if (gibtEsEinStartElement) {
-				Point mausPunktOhneZoom = zoom.ohne(e.getPoint());
+				Point mausPunktOhneZoom = zoom.calculateOut(e.getPoint());
 				if  ((startElement.getWfnElementType() != EWfnElement.ARC)
 						&& (mausPunktOhneZoom.x > (xNiedrigerAlsStartElement + EWfnElement.BASEFACTOR))
 						&& (mausPunktOhneZoom.y > (yNiedrigerAlsStartElement + EWfnElement.BASEFACTOR))) {
@@ -231,10 +231,10 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 							}
 						}
 					}
-					auswahl.fireAuswahlAenderungEingetreten(NEUE_AUSWAHL);
+					auswahl.fireAuswahlAenderungEingetreten(NEW_SELECTION);
 				}
 			} else {
-				fireZeichnungBenoetigt(RECHTECK, startMausPosition, zoom.ohne(e.getPoint()));
+				fireZeichnungBenoetigt(RECTANGLE, startMausPosition, zoom.calculateOut(e.getPoint()));
 			}
 		}
 		super.mouseDragged(e);
@@ -251,9 +251,9 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 		if ((editorModus == EWfnEditModus.ADD_ARC) 
 				&& (kanteAusgangsElementAusgewaehlt)) {
 			fireZeichnungBenoetigt(
-					LINIE,
+					LINE,
 					kantenAusgangsElement.getPosition(),
-					zoom.ohne(e.getPoint()));
+					zoom.calculateOut(e.getPoint()));
 		}
 		super.mouseMoved(e);
 	}
@@ -289,22 +289,22 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 					if (neueAuswahl != null) {
 						if (!auswahl.contains(neueAuswahl)) {
 							if (!e.isControlDown()) auswahl.clear();
-							auswahl.addAndFire(neueAuswahl, NEUE_AUSWAHL);
+							auswahl.addAndFire(neueAuswahl, NEW_SELECTION);
 						}
 					} else 
 						if (auswahl.size() != 0) {
-							auswahl.clearAndAddAndFire(null, NEUE_AUSWAHL);
+							auswahl.clearAndAddAndFire(null, NEW_SELECTION);
 						}
 				} else {
-					auswahl.clearAndAddALLAndFire(koordinaten.getWasDaIst(startMausPosition, zoom.ohne(e.getPoint())),NEUE_AUSWAHL);
+					auswahl.clearAndAddALLAndFire(koordinaten.getWasDaIst(startMausPosition, zoom.calculateOut(e.getPoint())),NEW_SELECTION);
 				}
 				gibtEsEinStartElement = false;
 				break;
 			case ADD_PLACE:
-				wfnModell.createPlace(zoom.ohne(e.getPoint()));
+				wfnModell.createPlace(zoom.calculateOut(e.getPoint()));
 				break;
 			case ADD_TRANSITION:
-				wfnModell.createTransition(zoom.ohne(e.getPoint()));
+				wfnModell.createTransition(zoom.calculateOut(e.getPoint()));
 				break;
 			case ADD_ARC:
 				IWfnElement element = koordinaten.getWasDaIst(e.getPoint());
@@ -313,12 +313,12 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 						if (!kanteAusgangsElementAusgewaehlt) {
 							kantenAusgangsElement = (IWfnTransitionAndPlace) element;
 							kanteAusgangsElementAusgewaehlt = true;
-							auswahl.clearAndAddAndFire(element, KANTEN_AUSWAHL);
+							auswahl.clearAndAddAndFire(element, ARC_SELECTION);
 						} else {
 							if (element == kantenAusgangsElement) {
 								kantenAusgangsElement = null;
 								kanteAusgangsElementAusgewaehlt = false;
-								auswahl.clearAndFire(KANTEN_AUSWAHL);
+								auswahl.clearAndFire(ARC_SELECTION);
 							} else {
 								if (element.getWfnElementType() != kantenAusgangsElement.getWfnElementType()) {
 									wfnModell.createArc(kantenAusgangsElement, (IWfnTransitionAndPlace) element);

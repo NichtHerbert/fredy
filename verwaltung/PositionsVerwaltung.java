@@ -20,9 +20,9 @@ import wfnmodel.interfaces.IWfnTransitionAndPlace;
 class PositionsVerwaltung implements IWfnNetListener, IElementSizeListener {
 	
 	/**
-	 * Die aktuelle {@link ZoomFaktorVerwaltung}.
+	 * Die aktuelle {@link ZoomManagement}.
 	 */
-	private ZoomFaktorVerwaltung zoom;
+	private ZoomManagement zoom;
 	
 	/**
 	 * Die aktuelle Elementgroesse.
@@ -49,7 +49,7 @@ class PositionsVerwaltung implements IWfnNetListener, IElementSizeListener {
 	 */
 	private IWfnElement wasDaIstVorherigesErgebnis;
 	
-	PositionsVerwaltung(ZoomFaktorVerwaltung zoom) {
+	PositionsVerwaltung(ZoomManagement zoom) {
 		this.zoom = zoom;
 		alleElementeOK = new ArrayList<>(1);
 		alleKanten = new ArrayList<>(1);
@@ -69,7 +69,7 @@ class PositionsVerwaltung implements IWfnNetListener, IElementSizeListener {
 	 */
 	IWfnElement getWasDaIst(Point koordinate) {
 		IWfnElement ergebnis = null;
-		koordinate = zoom.ohne(koordinate);
+		koordinate = zoom.calculateOut(koordinate);
 		if ((wasDaIstVorherigeKoordinate == null)
 				|| (! koordinate.equals(wasDaIstVorherigeKoordinate))) {
 			Iterator<IWfnTransitionAndPlace> itOK = alleElementeOK.iterator();

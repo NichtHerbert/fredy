@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import gui.EWfnEditModus;
-import gui.IZentraleKonstanten;
+import gui.ICentralConstants;
 import gui.JPanelEditor;
 import gui.toolbar.JtbWerkzeugleiste;
 import listeners.ISelectionEditingListener;
@@ -18,7 +18,7 @@ import wfnmodel.interfaces.IWfnTransitionAndPlace;
  * Die Zentrale Klasse des Workflownetzeditors, in der alle Teile miteinander verschaltet werden.
  *
  */
-public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
+public class ZentraleVerschraenkung implements 	ICentralConstants,
 												ISelectionEditingListener,
 												IEditModusListener {
 	/**Das Datenmodell des WFN*/										
@@ -28,8 +28,8 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 	/**Die Werkzeuge zum Bearbeiten des WFN*/
 	private JtbWerkzeugleiste jtbVerwaltung;
 	
-	/** Die {@link ZoomFaktorVerwaltung}*/
-	private ZoomFaktorVerwaltung zoom;
+	/** Die {@link ZoomManagement}*/
+	private ZoomManagement zoom;
 	/** Die {@link PositionsVerwaltung}*/
 	private PositionsVerwaltung koordinatenVerwaltung;
 	/** Die {@link AuswahlVerwaltung}*/
@@ -59,9 +59,9 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 		this.jpEditor = jpEditor;
 		this.jtbVerwaltung = jtbVerwaltung;
 		
-		zoom = new ZoomFaktorVerwaltung();
+		zoom = new ZoomManagement();
 		this.jtbVerwaltung.setZoomFaktorVerwaltung(zoom);
-		zoom.addZoomFaktorHorcher(jpEditor);
+		zoom.addZoomListener(jpEditor);
 		
 		koordinatenVerwaltung = new PositionsVerwaltung(zoom);
 		this.wfnModell.addChangingListener(koordinatenVerwaltung);
@@ -113,7 +113,7 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 	@Override
 	public void elementsToDelete(ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
 		wfnModell.delete(ausgewaehlteElemente);
-		auswahlVerwaltung.clearAndFire(NEUE_AUSWAHL);
+		auswahlVerwaltung.clearAndFire(NEW_SELECTION);
 	}
 	
 	@Override

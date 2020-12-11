@@ -7,7 +7,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import gui.IZentraleKonstanten;
+import gui.ICentralConstants;
 import wfnmodel.importexport.Export;
 import wfnmodel.importexport.IWfnExport;
 import wfnmodel.importexport.IWfnImport;
@@ -19,7 +19,7 @@ import wfnmodel.interfaces.IWfnElement;
  *
  */
 public class FileManagement implements IFileManagement,
-										IZentraleKonstanten {
+										ICentralConstants {
 	/** Import-Schnittstelle zum Datenmodell.*/
 	private IWfnImport impModel;
 	/** Export-Schnittstelle zum Datenmodell.*/
@@ -46,7 +46,7 @@ public class FileManagement implements IFileManagement,
 	public void fileNew() {
 		impModel.clear();
 		isFileNew = true;
-		selectionManagement.clearAndFire(NEUE_AUSWAHL);
+		selectionManagement.clearAndFire(NEW_SELECTION);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class FileManagement implements IFileManagement,
 		int returnVal = chooser.showOpenDialog(trigger.getParent());
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			Import.execute(chooser.getSelectedFile(), impModel);
-			selectionManagement.clearAndFire(NEUE_AUSWAHL);
+			selectionManagement.clearAndFire(NEW_SELECTION);
 		}
 		isFileNew = false;
 	}

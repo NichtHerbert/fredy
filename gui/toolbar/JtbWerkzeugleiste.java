@@ -14,7 +14,7 @@ import listeners.IWfnStatusListener;
 import verwaltung.FileManagement;
 import verwaltung.ElementGroessenVerwaltung;
 import verwaltung.KreisTestVerwaltung;
-import verwaltung.ZoomFaktorVerwaltung;
+import verwaltung.ZoomManagement;
 import wfnmodel.WfnStatusInfo;
 import wfnmodel.interfaces.IWfnElement;
 
@@ -136,7 +136,7 @@ public class JtbWerkzeugleiste extends JToolBar implements 	ISelectionChangingLi
 	 * Weiterleitung an gleichnamige Methode von {@link #jpZoom}.
 	 * @param zoomVerwaltung wird an {@link #jpZoom} weitergeleitet
 	 */
-	public void setZoomFaktorVerwaltung(ZoomFaktorVerwaltung zoomVerwaltung) {
+	public void setZoomFaktorVerwaltung(ZoomManagement zoomVerwaltung) {
 		jpZoom.setZoomFaktorVerwaltung(zoomVerwaltung);
 	}
 
