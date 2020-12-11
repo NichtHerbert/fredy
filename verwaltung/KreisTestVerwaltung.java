@@ -14,13 +14,13 @@ public class KreisTestVerwaltung implements IWfnNetListener,
 	/*Die aktuelle StatusInfo, ohne die Informationen der Markierungsverwaltung.*/
 	private WfnStatusInfo statusInfo;
 	
-	private AuswahlVerwaltung<IWfnElement> auswahlVerwaltung;
+	private SelectionManagement<IWfnElement> auswahlVerwaltung;
 	
 	private ArrayList<IWfnTransitionAndPlace> besuchteElemente;
 	
 	private ArrayList<IWfnTransitionAndPlace> inBearbeitungElemente;
 	
-	KreisTestVerwaltung(AuswahlVerwaltung<IWfnElement> auswahlVerwaltung2) {
+	KreisTestVerwaltung(SelectionManagement<IWfnElement> auswahlVerwaltung2) {
 		this.auswahlVerwaltung = auswahlVerwaltung2;
 		statusInfo = new WfnStatusInfo();
 		besuchteElemente = new ArrayList<>();

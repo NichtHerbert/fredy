@@ -24,8 +24,8 @@ public class FileManagement implements IFileManagement,
 	private IWfnImport impModel;
 	/** Export-Schnittstelle zum Datenmodell.*/
 	private IWfnExport expModel;
-	/** Die aktuelle AuswahlVerwaltung.*/
-	private AuswahlVerwaltung<IWfnElement> selectionManagement;
+	/** Die aktuelle SelectionManagement.*/
+	private SelectionManagement<IWfnElement> selectionManagement;
 	/** zur Übersicht was als dateiname anzuzeigen ist.*/
 	private boolean isFileNew;
 	
@@ -35,7 +35,7 @@ public class FileManagement implements IFileManagement,
 	 * @param expModel Export-Schnittstelle zum Datenmodell
 	 * @param selectionManagement die aktuelle Auswahlverwaltung
 	 */
-	public FileManagement(IWfnImport impModel, IWfnExport expModel, AuswahlVerwaltung<IWfnElement> selectionManagement) {
+	public FileManagement(IWfnImport impModel, IWfnExport expModel, SelectionManagement<IWfnElement> selectionManagement) {
 		super();
 		this.impModel = impModel;
 		this.expModel = expModel;

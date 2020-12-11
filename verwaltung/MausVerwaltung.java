@@ -28,7 +28,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 	/**Die aktuelle {@link ZoomManagement}. */
 	private ZoomManagement zoom;
 	/** Liste der ausgewählten Elemente */
-	private AuswahlVerwaltung<IWfnElement> auswahl;
+	private SelectionManagement<IWfnElement> auswahl;
 	/**Die aktuelle {@link PositionsVerwaltung} */
 	private PositionsVerwaltung koordinaten;
 	/**Die aktuelle {@link MarkierungsVerwaltung} */
@@ -61,13 +61,13 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 	 * Instanziert eine MausVerwaltung und stellt den Editormodus auf SELECT. 
 	 * @param wfnModell Schnittstelle um Veränderungen am Datenmodell vorzunehmen
 	 * @param koordinaten Die aktuelle {@link PositionsVerwaltung} 
-	 * @param auswahl Die aktuelle {@link AuswahlVerwaltung}
+	 * @param auswahl Die aktuelle {@link SelectionManagement}
 	 * @param markierungsVerwaltung Die aktuelle {@link MarkierungsVerwaltung}
 	 * @param zoom Die aktuelle {@link ZoomManagement}
 	 */
 	MausVerwaltung(IWfnModelChanging wfnModell,
 						PositionsVerwaltung koordinaten,
-						AuswahlVerwaltung<IWfnElement> auswahl,
+						SelectionManagement<IWfnElement> auswahl,
 						MarkierungsVerwaltung markierungsVerwaltung,
 						ZoomManagement zoom) {
 		this.wfnModell = wfnModell;
@@ -231,7 +231,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 							}
 						}
 					}
-					auswahl.fireAuswahlAenderungEingetreten(NEW_SELECTION);
+					auswahl.fireSelectionChangeOccurred(NEW_SELECTION);
 				}
 			} else {
 				fireZeichnungBenoetigt(RECTANGLE, startMausPosition, zoom.calculateOut(e.getPoint()));
