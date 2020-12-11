@@ -8,8 +8,8 @@ import gui.EWfnEditModus;
 import gui.IZentraleKonstanten;
 import gui.JPanelEditor;
 import gui.toolbar.JtbWerkzeugleiste;
-import horcherschnittstellen.IAuswahlBearbeitetHorcher;
-import horcherschnittstellen.IEditorModusHorcher;
+import listeners.ISelectionEditingListener;
+import listeners.IEditModusListener;
 import wfnmodel.WfnModel;
 import wfnmodel.interfaces.IWfnElement;
 import wfnmodel.interfaces.IWfnTransitionAndPlace;
@@ -19,8 +19,8 @@ import wfnmodel.interfaces.IWfnTransitionAndPlace;
  *
  */
 public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
-												IAuswahlBearbeitetHorcher,
-												IEditorModusHorcher {
+												ISelectionEditingListener,
+												IEditModusListener {
 	/**Das Datenmodell des WFN*/										
 	private WfnModel wfnModell;
 	/**Die Darstellung des WFN */
@@ -106,18 +106,18 @@ public class ZentraleVerschraenkung implements 	IZentraleKonstanten,
 	}
 
 	@Override
-	public void editorModusGeaendert(EWfnEditModus editorModus) {
+	public void editModusChanged(EWfnEditModus editorModus) {
 		jpEditor.setCursor(editorModus.getCursor());
 	}
 	
 	@Override
-	public void auswahlSollGeloeschtWerden(ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
+	public void elementsToDelete(ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
 		wfnModell.delete(ausgewaehlteElemente);
 		auswahlVerwaltung.clearAndFire(NEUE_AUSWAHL);
 	}
 	
 	@Override
-	public void elementSollNameAendern(IWfnTransitionAndPlace element, String name) {
+	public void elementToSetName(IWfnTransitionAndPlace element, String name) {
 		wfnModell.setElementName(element, name);
 	}
 

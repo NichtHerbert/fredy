@@ -5,7 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-import horcherschnittstellen.IWFNVeraenderungsHorcher;
+import listeners.IWfnNetListener;
 import wfnmodel.elements.EWfnElement;
 import wfnmodel.elements.WfnElementPlace;
 import wfnmodel.elements.WfnElementTransition;
@@ -39,7 +39,7 @@ public class WfnModel implements 	IWfnModelChanging,
 	/**
 	 * Liste der Horcher, die über eine Modell-Änderung informiert werden möchten.
 	 */
-	private ArrayList<IWFNVeraenderungsHorcher> changingListeners;
+	private ArrayList<IWfnNetListener> changingListeners;
 	/**
 	 * Die aktuelle {@link StartEndManagement}.
 	 */
@@ -63,7 +63,7 @@ public class WfnModel implements 	IWfnModelChanging,
 
 	public WfnModel() {
 		newInit();
-		changingListeners = new ArrayList<IWFNVeraenderungsHorcher>();
+		changingListeners = new ArrayList<IWfnNetListener>();
 	}
 
 	/**
@@ -81,12 +81,12 @@ public class WfnModel implements 	IWfnModelChanging,
 	}
 	
 	@Override
-	public void addChangingListener(IWFNVeraenderungsHorcher listener) {
+	public void addChangingListener(IWfnNetListener listener) {
 		changingListeners.add(listener);
 	}
 	
 	@Override
-	public void removeChangingListener(IWFNVeraenderungsHorcher listener) {
+	public void removeChangingListener(IWfnNetListener listener) {
 		if (changingListeners.contains(listener)) 
 			changingListeners.remove(listener);
 	}
@@ -96,8 +96,8 @@ public class WfnModel implements 	IWfnModelChanging,
 	 */
 	private void fireModelChange() {
 		WfnStatusInfo statusInfo = WfnStatusInfo.getInfo(transitionsAndPlaces, arcManagement.getAllArcs(), startEndManagement);
-		for (IWFNVeraenderungsHorcher listener : changingListeners)
-			listener.modellAenderungEingetreten(statusInfo);
+		for (IWfnNetListener listener : changingListeners)
+			listener.netChangeOccurred(statusInfo);
 		isSaved = false;
 	}
 	

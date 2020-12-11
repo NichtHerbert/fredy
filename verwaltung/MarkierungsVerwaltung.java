@@ -2,9 +2,9 @@ package verwaltung;
 
 import java.util.ArrayList;
 
-import horcherschnittstellen.ITransitionsSchaltungsHorcher;
-import horcherschnittstellen.IWFNModellStatusHorcher;
-import horcherschnittstellen.IWFNVeraenderungsHorcher;
+import listeners.ITransitionFireListener;
+import listeners.IWfnStatusListener;
+import listeners.IWfnNetListener;
 import wfnmodel.WfnStatusInfo;
 import wfnmodel.elements.EWfnElement;
 import wfnmodel.interfaces.IWfnElement;
@@ -17,8 +17,8 @@ import wfnmodel.interfaces.IWfnTransitionAndPlace;
  * von Transitionen verwaltet.
  *
  */
-class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
-									   ITransitionsSchaltungsHorcher {
+class MarkierungsVerwaltung implements IWfnNetListener,
+									   ITransitionFireListener {
 	/** Der letztübermittelte Zustand/Status des WFN*/
 	private WfnStatusInfo statusInfo;
 	/** Liste der markierten Stellen */
@@ -28,7 +28,7 @@ class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
 	/** Liste der Transitionen mit Kontakt*/
 	private ArrayList<IWfnTransition> kontaktTransitionen;
 	/** Liste der Horcher, die über eine Veränderung des Modell-Status informiert werden möchten.*/ 
-	private ArrayList<IWFNModellStatusHorcher> wfnModellStatusHorcherListe;
+	private ArrayList<IWfnStatusListener> wfnModellStatusHorcherListe;
 	/** Satz, mit dem dem Benutzer ein Deadlock mitgeteilt wird. */ 
 	private final String deadlock = "DEADLOCK!";
 	/** Satz, mit dem dem Benutzer das Erreichen der Endposition mitgeteilt wird. */
@@ -123,7 +123,7 @@ class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
 	}
 	
 	@Override
-	public void modellAenderungEingetreten(WfnStatusInfo statusInfo) {
+	public void netChangeOccurred(WfnStatusInfo statusInfo) {
 		this.statusInfo = statusInfo;
 		if (statusInfo.isWfn()) {
 			markenAlleZurueckAufStart();
@@ -136,7 +136,7 @@ class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
 	 * Fügt den übergebenen Horcher der {@link #wfnModellStatusHorcherListe} hinzu.
 	 * @param horcher wird {@link #wfnModellStatusHorcherListe} hinzugefügt
 	 */
-	void addModellStatusHorcher(IWFNModellStatusHorcher horcher) {
+	void addModellStatusHorcher(IWfnStatusListener horcher) {
 		wfnModellStatusHorcherListe.add(horcher);
 	}
 	
@@ -144,7 +144,7 @@ class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
 	 * Entfernt den übergebenen Horcher von der {@link #wfnModellStatusHorcherListe}.
 	 * @param horcher wird von der {@link #wfnModellStatusHorcherListe} entfernt
 	 */
-	void removeModellStatusHorcher(IWFNModellStatusHorcher horcher) {
+	void removeModellStatusHorcher(IWfnStatusListener horcher) {
 		if (wfnModellStatusHorcherListe.contains(horcher)) 
 			wfnModellStatusHorcherListe.remove(horcher);
 	}
@@ -153,8 +153,8 @@ class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
 	 * Übersendet allen Horchern der {@link #wfnModellStatusHorcherListe} das aktuelle {@link #statusInfo}.
 	 */
 	private void fireModellStatusAenderung() {
-		for (IWFNModellStatusHorcher horcher : wfnModellStatusHorcherListe)
-			horcher.modellStatusAenderung(statusInfo);	
+		for (IWfnStatusListener horcher : wfnModellStatusHorcherListe)
+			horcher.newWfnStatus(statusInfo);	
 	}
 	
 	/**
@@ -203,14 +203,14 @@ class MarkierungsVerwaltung implements IWFNVeraenderungsHorcher,
 	}
 
 	@Override
-	public void allesZurueckAufStart() {
+	public void everythingBackToStart() {
 		markenAlleZurueckAufStart();
 		statusInfoAktualisieren();
 		fireModellStatusAenderung();
 	}
 
 	@Override
-	public void schalteTransition(IWfnTransition transition) {
+	public void fireTransition(IWfnTransition transition) {
 		schalteWennElementTransition(transition);
 	}
 }

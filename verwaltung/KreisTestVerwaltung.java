@@ -3,12 +3,12 @@ package verwaltung;
 import java.util.ArrayList;
 
 import gui.IZentraleKonstanten;
-import horcherschnittstellen.IWFNVeraenderungsHorcher;
+import listeners.IWfnNetListener;
 import wfnmodel.WfnStatusInfo;
 import wfnmodel.interfaces.IWfnElement;
 import wfnmodel.interfaces.IWfnTransitionAndPlace;
 
-public class KreisTestVerwaltung implements IWFNVeraenderungsHorcher,
+public class KreisTestVerwaltung implements IWfnNetListener,
 											IZentraleKonstanten {
 	
 	/*Die aktuelle StatusInfo, ohne die Informationen der Markierungsverwaltung.*/
@@ -66,7 +66,7 @@ public class KreisTestVerwaltung implements IWFNVeraenderungsHorcher,
 	}
 
 	@Override
-	public void modellAenderungEingetreten(WfnStatusInfo statusInfo) {
+	public void netChangeOccurred(WfnStatusInfo statusInfo) {
 		this.statusInfo = statusInfo;
 	}
 

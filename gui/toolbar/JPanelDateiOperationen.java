@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 import gui.EIcons;
-import horcherschnittstellen.IWFNModellStatusHorcher;
+import listeners.IWfnStatusListener;
 import verwaltung.FileManagement;
 import verwaltung.IFileManagement;
 import wfnmodel.WfnStatusInfo;
@@ -21,7 +21,7 @@ import wfnmodel.WfnStatusInfo;
  * Die Buttons sollen zum Öffnen, Speichern(-Unter) und Leeren 
  * des Datenmodells führen.
  */
-class JPanelDateiOperationen extends JPanel implements IWFNModellStatusHorcher {
+class JPanelDateiOperationen extends JPanel implements IWfnStatusListener {
 
 	private static final long serialVersionUID = -4237254650736397557L;
 	
@@ -129,7 +129,7 @@ class JPanelDateiOperationen extends JPanel implements IWFNModellStatusHorcher {
 	}
 
 	@Override
-	public void modellStatusAenderung(WfnStatusInfo statusInfo) {
+	public void newWfnStatus(WfnStatusInfo statusInfo) {
 		jlDateiName.setText("Dateiname:   " + dialogVerwaltung.getFileName());
 	}
 

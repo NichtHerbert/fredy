@@ -14,8 +14,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 
 import gui.EIcons;
-import horcherschnittstellen.IAuswahlBearbeitetHorcher;
-import horcherschnittstellen.IAuswahlVeraenderungsHorcher;
+import listeners.ISelectionEditingListener;
+import listeners.ISelectionChangingListener;
 import wfnmodel.elements.EWfnElement;
 import wfnmodel.interfaces.IWfnElement;
 import wfnmodel.interfaces.IWfnTransitionAndPlace;
@@ -25,7 +25,7 @@ import wfnmodel.interfaces.IWfnTransitionAndPlace;
  * Über dieses Panel kann der Benutzer die Namen der ausgewählten Elemente ändern,
  * sowie auch alle ausgewählten Elemente löschen.
  */
-class JPanelAuswahl extends JPanel implements IAuswahlVeraenderungsHorcher {
+class JPanelAuswahl extends JPanel implements ISelectionChangingListener {
 
 	private static final long serialVersionUID = 6151200173301427145L;
 	
@@ -35,10 +35,10 @@ class JPanelAuswahl extends JPanel implements IAuswahlVeraenderungsHorcher {
 	private ArrayList<? extends IWfnElement> ausgewaehlteElemente;
 	
 	/**
-	 * Liste derjenigen IAuswahlVeraenderungsHorcher, die informiert werden wollen, 
+	 * Liste derjenigen ISelectionChangingListener, die informiert werden wollen, 
 	 * wenn ein Elementname geändert oder die Auswahl gelöscht werden soll.
 	 */
-	private ArrayList<IAuswahlBearbeitetHorcher> auswahlBearbeitetHorcherListe;
+	private ArrayList<ISelectionEditingListener> auswahlBearbeitetHorcherListe;
 	
 	/**
 	 * Datenmodell für das JTable jt_auswahl.
@@ -148,8 +148,8 @@ class JPanelAuswahl extends JPanel implements IAuswahlVeraenderungsHorcher {
 	}
 	
 	@Override
-	public void auswahlAenderungEingetreten(int auswahlArt, ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
-		if ((auswahlArt == NEUE_AUSWAHL)
+	public void selectionChangeOccurred(int auswahlArt, ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
+		if ((auswahlArt == NEW_SELECTION)
 				&& (ausgewaehlteElemente != null))
 			this.ausgewaehlteElemente = ausgewaehlteElemente;
 		else 
@@ -167,7 +167,7 @@ class JPanelAuswahl extends JPanel implements IAuswahlVeraenderungsHorcher {
 	 * Fügt den übergebenen Horcher der {@link #auswahlBearbeitetHorcherListe} hinzu.
 	 * @param horcher wird {@link #auswahlBearbeitetHorcherListe} hinzugefügt
 	 */
-	public void addAuswahlBearbeitetHorcher(IAuswahlBearbeitetHorcher horcher) {
+	public void addAuswahlBearbeitetHorcher(ISelectionEditingListener horcher) {
 		auswahlBearbeitetHorcherListe.add(horcher);
 	}
 
@@ -176,7 +176,7 @@ class JPanelAuswahl extends JPanel implements IAuswahlVeraenderungsHorcher {
 	 * Entfernt den übergebenen Horcher von der {@link #auswahlBearbeitetHorcherListe}.
 	 * @param horcher wird von {@link #auswahlBearbeitetHorcherListe} entfernt
 	 */
-	public void removeAuswahlBearbeitetHorcher(IAuswahlBearbeitetHorcher horcher) {
+	public void removeAuswahlBearbeitetHorcher(ISelectionEditingListener horcher) {
 		if (auswahlBearbeitetHorcherListe.contains(horcher)) 
 			auswahlBearbeitetHorcherListe.remove(horcher);
 	}
@@ -188,8 +188,8 @@ class JPanelAuswahl extends JPanel implements IAuswahlVeraenderungsHorcher {
 	 */
 	public void fireAuswahlSollGeloeschtWerden() {
 		if (!ausgewaehlteElemente.isEmpty())
-			for (IAuswahlBearbeitetHorcher horcher : auswahlBearbeitetHorcherListe)
-				horcher.auswahlSollGeloeschtWerden(ausgewaehlteElemente);
+			for (ISelectionEditingListener horcher : auswahlBearbeitetHorcherListe)
+				horcher.elementsToDelete(ausgewaehlteElemente);
 	}
 
 	
@@ -200,8 +200,8 @@ class JPanelAuswahl extends JPanel implements IAuswahlVeraenderungsHorcher {
 	 * @param name zu setzender Name
 	 */
 	public void fireElementSollNamenAendern(IWfnTransitionAndPlace element, String name) {
-		for (IAuswahlBearbeitetHorcher horcher : auswahlBearbeitetHorcherListe)
-			horcher.elementSollNameAendern(element, name);
+		for (ISelectionEditingListener horcher : auswahlBearbeitetHorcherListe)
+			horcher.elementToSetName(element, name);
 	}
 	
 	

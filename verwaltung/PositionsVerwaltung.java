@@ -4,8 +4,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import horcherschnittstellen.IElementGroessenHorcher;
-import horcherschnittstellen.IWFNVeraenderungsHorcher;
+import listeners.IElementSizeListener;
+import listeners.IWfnNetListener;
 import wfnmodel.WfnStatusInfo;
 import wfnmodel.elements.EWfnElement;
 import wfnmodel.interfaces.IWfnArc;
@@ -17,7 +17,7 @@ import wfnmodel.interfaces.IWfnTransitionAndPlace;
  * Workflownetzes befindet.
  *
  */
-class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenHorcher {
+class PositionsVerwaltung implements IWfnNetListener, IElementSizeListener {
 	
 	/**
 	 * Die aktuelle {@link ZoomFaktorVerwaltung}.
@@ -57,7 +57,7 @@ class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenH
 	}
 
 	@Override
-	public void modellAenderungEingetreten(WfnStatusInfo statusInfo) {
+	public void netChangeOccurred(WfnStatusInfo statusInfo) {
 		alleElementeOK = statusInfo.getTransitionsAndPlaces();
 		alleKanten = statusInfo.getArcs();
 	}
@@ -155,7 +155,7 @@ class PositionsVerwaltung implements IWFNVeraenderungsHorcher, IElementGroessenH
 	}
 
 	@Override
-	public void elementGroesseGeaendert(int neueGroesse) {
+	public void elementSizeChanged(int neueGroesse) {
 		elementGroesse = neueGroesse;
 	}
 	

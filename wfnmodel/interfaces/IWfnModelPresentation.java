@@ -2,7 +2,7 @@ package wfnmodel.interfaces;
 
 import java.util.ArrayList;
 
-import horcherschnittstellen.IWFNVeraenderungsHorcher;
+import listeners.IWfnNetListener;
 
 /**
  * Schnittstelle, zum Wiedergeben / Darstellen des Datenmodells des WFN.
@@ -21,13 +21,13 @@ public interface IWfnModelPresentation {
 	 * einen weiteren Horcher hinzu.
 	 * @param listener der hinzuzufügende Horcher
 	 */
-	public void addChangingListener(IWFNVeraenderungsHorcher listener);
+	public void addChangingListener(IWfnNetListener listener);
 
 	/**
 	 * Entfernt aus der Menge derjenigen, die über eine Veränderung des Datenmodells informiert werden,
 	 * den mitgegebenen Horcher.
 	 * @param listener der zu entfernende Horcher
 	 */
-	public void removeChangingListener(IWFNVeraenderungsHorcher listener);
+	public void removeChangingListener(IWfnNetListener listener);
 	
 }

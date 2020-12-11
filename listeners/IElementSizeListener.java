@@ -1,15 +1,15 @@
-package horcherschnittstellen;
+package listeners;
 
 /**
  * Schnittstelle, um über eine Veränderung der Elementgröße informiert zu werden.
  *
  */
-public interface IElementGroessenHorcher {
+public interface IElementSizeListener {
 	
 	
 	/**
 	 * Wird bei einer Änderung der Elementgröße aufgerufen.
-	 * @param neueGroesse die neue Elementgröße
+	 * @param newSize die neue Elementgröße ???in welcher Maßeinheit?
 	 */
-	void elementGroesseGeaendert(int neueGroesse);
+	void elementSizeChanged(int newSize);
 }

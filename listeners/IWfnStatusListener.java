@@ -1,4 +1,4 @@
-package horcherschnittstellen;
+package listeners;
 
 import wfnmodel.WfnStatusInfo;
 
@@ -7,10 +7,10 @@ import wfnmodel.WfnStatusInfo;
  * informiert werden zu können.
  *
  */
-public interface IWFNModellStatusHorcher {
+public interface IWfnStatusListener {
 	
 	/**Wird aufgerufen, wenn es zu einer Änderung am Modell und oder den Markierungen der Stellen kam. 
 	 * @param statusInfo der aktuelle Zustand des WFN inklusive aller Infos der {@link verwaltung.MarkierungsVerwaltung}.
 	 */
-	void modellStatusAenderung(WfnStatusInfo statusInfo);
+	void newWfnStatus(WfnStatusInfo statusInfo);
 }

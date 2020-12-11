@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
 
-import horcherschnittstellen.IAuswahlBearbeitetHorcher;
-import horcherschnittstellen.IAuswahlVeraenderungsHorcher;
-import horcherschnittstellen.IEditorModusHorcher;
-import horcherschnittstellen.ITransitionsSchaltungsHorcher;
-import horcherschnittstellen.IWFNModellStatusHorcher;
+import listeners.ISelectionEditingListener;
+import listeners.ISelectionChangingListener;
+import listeners.IEditModusListener;
+import listeners.ITransitionFireListener;
+import listeners.IWfnStatusListener;
 import verwaltung.FileManagement;
 import verwaltung.ElementGroessenVerwaltung;
 import verwaltung.KreisTestVerwaltung;
@@ -22,8 +22,8 @@ import wfnmodel.interfaces.IWfnElement;
  * Die Toolbar des WFN-Editors. Sie startet alle Steuerungs- und Informationspanels und leitet 
  * notwendige Nachrichten an das jeweilige Panel weiter. 
  */
-public class JtbWerkzeugleiste extends JToolBar implements 	IAuswahlVeraenderungsHorcher,
-															IWFNModellStatusHorcher {
+public class JtbWerkzeugleiste extends JToolBar implements 	ISelectionChangingListener,
+															IWfnStatusListener {
 
 	private static final long serialVersionUID = 145715004147453701L;
 	
@@ -91,15 +91,15 @@ public class JtbWerkzeugleiste extends JToolBar implements 	IAuswahlVeraenderung
 	}
 	
 	@Override
-	public void auswahlAenderungEingetreten(int auswahlArt, ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
-		jpElementBearbeitung.auswahlAenderungEingetreten(auswahlArt, ausgewaehlteElemente);
+	public void selectionChangeOccurred(int auswahlArt, ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
+		jpElementBearbeitung.selectionChangeOccurred(auswahlArt, ausgewaehlteElemente);
 	}
 
 	/**
 	 * Weiterleitung an gleichnamige Methode von {@link #jpElementBearbeitung}.
 	 * @param horcher wird an {@link #jpElementBearbeitung} weitergeleitet
 	 */
-	public void addAuswahlBearbeitetHorcher(IAuswahlBearbeitetHorcher horcher) {
+	public void addAuswahlBearbeitetHorcher(ISelectionEditingListener horcher) {
 		jpElementBearbeitung.addAuswahlBearbeitetHorcher(horcher);
 	}
 
@@ -107,7 +107,7 @@ public class JtbWerkzeugleiste extends JToolBar implements 	IAuswahlVeraenderung
 	 * Weiterleitung an gleichnamige Methode von {@link #jpElementBearbeitung}.
 	 * @param horcher wird an {@link #jpElementBearbeitung} weitergeleitet
 	 */
-	public void addEditorModusHorcher(IEditorModusHorcher horcher) {
+	public void addEditorModusHorcher(IEditModusListener horcher) {
 		jpElementBearbeitung.addEditorModusHorcher(horcher);
 	}
 	
@@ -115,16 +115,16 @@ public class JtbWerkzeugleiste extends JToolBar implements 	IAuswahlVeraenderung
 	 * Weiterleitung an gleichnamige Methode von {@link #jpSchalten}.
 	 * @param horcher wird an {@link #jpSchalten} weitergeleitet
 	 */
-	public void addTransitionsSchaltungsHorcher(ITransitionsSchaltungsHorcher horcher) {
+	public void addTransitionsSchaltungsHorcher(ITransitionFireListener horcher) {
 		jpSchalten.addTransitionsSchaltungsHorcher(horcher);
 	}
 
 	
 	@Override
-	public void modellStatusAenderung(WfnStatusInfo statusInfo) {
-		jpDateiOperationen.modellStatusAenderung(statusInfo);
-		jpNetzInfo.modellStatusAenderung(statusInfo);
-		jpSchalten.modellStatusAenderung(statusInfo);
+	public void newWfnStatus(WfnStatusInfo statusInfo) {
+		jpDateiOperationen.newWfnStatus(statusInfo);
+		jpNetzInfo.newWfnStatus(statusInfo);
+		jpSchalten.newWfnStatus(statusInfo);
 		if (( !statusInfo.isWfn()) 
 				|| (statusInfo.getStartPlace() == statusInfo.getEndPlace())) 
 			setKomponenteMitKindernEnabled(jpSchalten, false);

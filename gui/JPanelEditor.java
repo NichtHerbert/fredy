@@ -11,11 +11,11 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import horcherschnittstellen.IAuswahlVeraenderungsHorcher;
-import horcherschnittstellen.IElementGroessenHorcher;
-import horcherschnittstellen.IWFNModellStatusHorcher;
-import horcherschnittstellen.IZeichnungBenoetigtHorcher;
-import horcherschnittstellen.IZoomFaktorVeraenderungsHorcher;
+import listeners.ISelectionChangingListener;
+import listeners.IElementSizeListener;
+import listeners.IWfnStatusListener;
+import listeners.IRedrawListener;
+import listeners.IZoomListener;
 import wfnmodel.WfnStatusInfo;
 import wfnmodel.elements.EWfnElement;
 import wfnmodel.interfaces.IWfnArc;
@@ -27,11 +27,11 @@ import wfnmodel.interfaces.IWfnTransitionAndPlace;
  * Panel zur Darstellung des Workflownetzes.
  *
  */
-public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher, 
-													IAuswahlVeraenderungsHorcher,
-													IZeichnungBenoetigtHorcher,
-													IZoomFaktorVeraenderungsHorcher,
-													IElementGroessenHorcher {
+public class JPanelEditor extends JPanel implements IWfnStatusListener, 
+													ISelectionChangingListener,
+													IRedrawListener,
+													IZoomListener,
+													IElementSizeListener {
 
 	private static final long serialVersionUID = -5582213274116886884L;
 	
@@ -56,9 +56,9 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 	public JPanelEditor() {
 		
 		ausgewaehlteElemente = null;
-		auswahlArt = NEUE_AUSWAHL;
+		auswahlArt = NEW_SELECTION;
 		istZeichnungBenoetigt = false;
-		benoetigteForm = NICHTS;
+		benoetigteForm = NOTHING;
 		zoomFaktor = 1d;
 		statusInfo = new WfnStatusInfo(); 
 		elementGroesse = EWfnElement.BASEFACTOR;
@@ -88,7 +88,7 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 		if ((ausgewaehlteElemente != null) 
 				&& (!ausgewaehlteElemente.isEmpty())) {
 			switch (auswahlArt) {
-			case NEUE_AUSWAHL:
+			case NEW_SELECTION:
 				for (IWfnElement elem : ausgewaehlteElemente) {
 						if (elem.getWfnElementType() != EWfnElement.ARC) {
 							elem.getWfnElementType().drawAsSelected(
@@ -107,7 +107,7 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 						}
 				}	
 				break;
-			case KANTEN_AUSWAHL:
+			case ARC_SELECTION:
 				IWfnTransitionAndPlace kantenStart = (IWfnTransitionAndPlace) ausgewaehlteElemente.get(0);
 				kantenStart.getWfnElementType().drawAsSelected(
 						g2, 
@@ -128,7 +128,7 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 	private void zeichneFormBeiMausbewegung(Graphics2D g2) {
 		if (istZeichnungBenoetigt) {
 			switch(benoetigteForm) {
-			case RECHTECK:
+			case RECTANGLE:
 				int x, y, hoehe, breite;
 				if (zeichnungPunkt1.x < zeichnungPunkt2.x) {
 					x = zeichnungPunkt1.x;
@@ -146,7 +146,7 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 				}
 				g2.drawRect(x,y,breite,hoehe);
 				break;
-			case LINIE:
+			case LINE:
 				g2.drawLine(zeichnungPunkt1.x, zeichnungPunkt1.y, 
 							zeichnungPunkt2.x, zeichnungPunkt2.y);
 				break;
@@ -228,25 +228,25 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 	/* 
 	 * Bei Aufruf wird #statusInfo aktualisiert und die Liste #ausgewahlteElemente auf null gesetzt.
 	 * Und repaint() aufgerufen.
-	 * @see horcherschnittstellen.IWFNModellStatusHorcher#modellStatusAenderung(wfnmodel.WFNStatusInfo)
+	 * @see listeners.IWfnStatusListener#modellStatusAenderung(wfnmodel.WFNStatusInfo)
 	 */
 	@Override
-	public void modellStatusAenderung(WfnStatusInfo statusInfo) {
+	public void newWfnStatus(WfnStatusInfo statusInfo) {
 		this.ausgewaehlteElemente = null;
 		this.statusInfo = statusInfo;
 		repaint();
 	}
 
 	@Override
-	public void auswahlAenderungEingetreten(int auswahlArt, ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
+	public void selectionChangeOccurred(int auswahlArt, ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
 		this.auswahlArt = auswahlArt;
 		this.ausgewaehlteElemente = ausgewaehlteElemente;
 		repaint();	
 	}
 	
 	@Override
-	public void zeichnungBenoetigt(int form, Point startMausPosition, Point jetztMausPosition) {
-		if ((form != NICHTS) 
+	public void redraw(int form, Point startMausPosition, Point jetztMausPosition) {
+		if ((form != NOTHING) 
 				&& (startMausPosition != null) 
 				&& (jetztMausPosition != null)) {
 			istZeichnungBenoetigt = true;
@@ -254,14 +254,14 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 			zeichnungPunkt1 = startMausPosition;
 			zeichnungPunkt2 = jetztMausPosition;
 		} else {
-			benoetigteForm = NICHTS;
+			benoetigteForm = NOTHING;
 			istZeichnungBenoetigt = false;
 		}
 		repaint();
 	}
 
 	@Override
-	public void zoomFaktorGeaendert(double neuerZoomFaktor) {
+	public void zoomFactorChanged(double neuerZoomFaktor) {
 		if (zoomFaktor != neuerZoomFaktor) {
 			zoomFaktor = neuerZoomFaktor;
 			repaint();
@@ -269,7 +269,7 @@ public class JPanelEditor extends JPanel implements IWFNModellStatusHorcher,
 	}
 
 	@Override
-	public void elementGroesseGeaendert(int neueGroesse) {
+	public void elementSizeChanged(int neueGroesse) {
 		if (elementGroesse != neueGroesse) {
 			elementGroesse = neueGroesse;
 			repaint();

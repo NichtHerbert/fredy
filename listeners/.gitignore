@@ -7,3 +7,13 @@
 /IWFNVeraenderungsHorcher.class
 /IZeichnungBenoetigtHorcher.class
 /IZoomFaktorVeraenderungsHorcher.class
+/IElementSizeListener.class
+/IEditModusListener.class
+/ITransitionFireListener.class
+/IModelStatusListener.class
+/IWfnStatusListener.class
+/IZoomListener.class
+/IRedrawListener.class
+/IWfnNetListener.class
+/ISelectionChangingListener.class
+/ISelectionEditingListener.class

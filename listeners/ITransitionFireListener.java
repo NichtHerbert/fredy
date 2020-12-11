@@ -1,4 +1,4 @@
-package horcherschnittstellen;
+package listeners;
 
 import wfnmodel.interfaces.IWfnTransition;
 
@@ -6,17 +6,17 @@ import wfnmodel.interfaces.IWfnTransition;
  * Schnittstelle, um das Schalten von Transitionen umzusetzen.
  *
  */
-public interface ITransitionsSchaltungsHorcher {
+public interface ITransitionFireListener {
 	
 	/**
 	 * Löscht alle Marken, aktivierten Transitionen und Kontakt-Transitionen,
 	 * und markiert nur die Startstelle und die durch sie aktivierten Transitionen.
 	 */
-	void allesZurueckAufStart();
+	void everythingBackToStart();
 	
 	/**
 	 * Schaltet die übergebene Transition.
 	 * @param transition die zu schaltende Transition
 	 */
-	void schalteTransition(IWfnTransition transition);
+	void fireTransition(IWfnTransition transition);
 }

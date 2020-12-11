@@ -3,7 +3,7 @@ package verwaltung;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import horcherschnittstellen.IZoomFaktorVeraenderungsHorcher;
+import listeners.IZoomListener;
 import wfnmodel.elements.EWfnElement;
 
 /**
@@ -19,7 +19,7 @@ public class ZoomFaktorVerwaltung {
 	/**
 	 * Liste der Horcher, die über eine Veränderung von {@link #zoomFaktor} informiert werden möchten.
 	 */
-	private ArrayList<IZoomFaktorVeraenderungsHorcher> zoomFaktorHorcherListe;
+	private ArrayList<IZoomListener> zoomFaktorHorcherListe;
 	/**
 	 * Maximaler Wert zum Hineinzoomen. Orientiert sich an der Basiseinheit BASEFACTOR.
 	 */
@@ -62,14 +62,14 @@ public class ZoomFaktorVerwaltung {
 	 * Fügt der {@link #zoomFaktorHorcherListe} den übergebenen Horcher hinzu.
 	 * @param horcher wird der {@link #zoomFaktorHorcherListe} hinzugefügt
 	 */
-	void addZoomFaktorHorcher(IZoomFaktorVeraenderungsHorcher horcher) {
+	void addZoomFaktorHorcher(IZoomListener horcher) {
 		zoomFaktorHorcherListe.add(horcher);
 	}
 	
 	/**Entfernt den übergebenen Horcher von der {@link #zoomFaktorHorcherListe}.
 	 * @param horcher wird von der {@link #zoomFaktorHorcherListe} entfernt
 	 */
-	void removeZoomFaktorHorcher(IZoomFaktorVeraenderungsHorcher horcher) {
+	void removeZoomFaktorHorcher(IZoomListener horcher) {
 		if (zoomFaktorHorcherListe.contains(horcher)) 
 			zoomFaktorHorcherListe.remove(horcher);
 	}
@@ -78,8 +78,8 @@ public class ZoomFaktorVerwaltung {
 	 * Informiert alle Horcher der {@link #zoomFaktorHorcherListe} über eine Zoomfaktor-Änderung.
 	 */
 	private void fireZoomFaktorGeaendert() {
-		for (IZoomFaktorVeraenderungsHorcher horcher : zoomFaktorHorcherListe) 
-			horcher.zoomFaktorGeaendert(zoomFaktor);
+		for (IZoomListener horcher : zoomFaktorHorcherListe) 
+			horcher.zoomFactorChanged(zoomFaktor);
 	}
 	
 }

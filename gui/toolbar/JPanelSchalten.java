@@ -13,8 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 import gui.EIcons;
-import horcherschnittstellen.ITransitionsSchaltungsHorcher;
-import horcherschnittstellen.IWFNModellStatusHorcher;
+import listeners.ITransitionFireListener;
+import listeners.IWfnStatusListener;
 import wfnmodel.WfnStatusInfo;
 import wfnmodel.elements.EWfnElement;
 import wfnmodel.elements.WfnElementTransition;
@@ -24,14 +24,14 @@ import wfnmodel.interfaces.IWfnTransition;
  * Panel zuständig zur Anzeige der Steuerung des Schaltens von Transitionen und des Zurücksetzens
  * aller Marken auf die Ausgangsposition. 
  */
-class JPanelSchalten extends JPanel implements IWFNModellStatusHorcher {
+class JPanelSchalten extends JPanel implements IWfnStatusListener {
 
 	private static final long serialVersionUID = 424304809500193863L;
 	
 	/**
 	 * Liste der Horcher, die über das Schalten oder Zurücksetzen informiert werden möchten.
 	 */
-	private ArrayList<ITransitionsSchaltungsHorcher> transSchaltHorcherListe;
+	private ArrayList<ITransitionFireListener> transSchaltHorcherListe;
 	
 	/**
 	 * Der letztübermittelte Zustand/Status des Workflownetzes.
@@ -116,8 +116,8 @@ class JPanelSchalten extends JPanel implements IWFNModellStatusHorcher {
 	 * Marken zum Schalten auf die Anfangsposition zurückgesetzt werden sollen. 
 	 */
 	private void fireZurueckAufStart() {
-		for (ITransitionsSchaltungsHorcher horcher : transSchaltHorcherListe)
-			horcher.allesZurueckAufStart();
+		for (ITransitionFireListener horcher : transSchaltHorcherListe)
+			horcher.everythingBackToStart();
 	}
 	
 	/**
@@ -125,20 +125,20 @@ class JPanelSchalten extends JPanel implements IWFNModellStatusHorcher {
 	 * momentan in {@link #jcbModell} ausgewählte Transition geschaltet werden soll. 
 	 */
 	private void fireSchalteTransition() {
-		for (ITransitionsSchaltungsHorcher horcher : transSchaltHorcherListe)
-			horcher.schalteTransition((IWfnTransition) jcbModell.getSelectedItem());
+		for (ITransitionFireListener horcher : transSchaltHorcherListe)
+			horcher.fireTransition((IWfnTransition) jcbModell.getSelectedItem());
 	}
 
 	/**
 	 * Fügt der {@link #transSchaltHorcherListe} einen Horcher hinzu.
 	 * @param horcher Wird der {@link #transSchaltHorcherListe} hinzugefügt.
 	 */
-	void addTransitionsSchaltungsHorcher(ITransitionsSchaltungsHorcher horcher) {
+	void addTransitionsSchaltungsHorcher(ITransitionFireListener horcher) {
 		transSchaltHorcherListe.add(horcher);
 	}
 
 	@Override
-	public void modellStatusAenderung(WfnStatusInfo statusInfo) {
+	public void newWfnStatus(WfnStatusInfo statusInfo) {
 		if (statusInfo.getEnabledTransitions() != null) {
 			this.statusInfo = statusInfo;
 			aktualisiereComboBoxModell();

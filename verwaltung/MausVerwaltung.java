@@ -9,8 +9,8 @@ import javax.swing.event.MouseInputAdapter;
 
 import gui.EWfnEditModus;
 import gui.IZentraleKonstanten;
-import horcherschnittstellen.IEditorModusHorcher;
-import horcherschnittstellen.IZeichnungBenoetigtHorcher;
+import listeners.IEditModusListener;
+import listeners.IRedrawListener;
 import wfnmodel.elements.EWfnElement;
 import wfnmodel.interfaces.IWfnElement;
 import wfnmodel.interfaces.IWfnModelChanging;
@@ -20,7 +20,7 @@ import wfnmodel.interfaces.IWfnTransitionAndPlace;
  * Klasse zur Verwaltung der möglichen Mausaktionen im {@link gui.JPanelEditor}.
  *
  */
-class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
+class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 														  IZentraleKonstanten {
 
 	/**Schnittstelle um Veränderungen am Datenmodell vorzunehmen*/
@@ -55,7 +55,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 	/**Der aktuelle Editormodus */
 	private EWfnEditModus editorModus;
 	/**Liste der Horcher, die informiert werden möchten, wenn die Zeichnung einer Linie oder eines Rechtecks benötigt wird*/
-	private ArrayList<IZeichnungBenoetigtHorcher> zeichnungBenoetigtHorcherListe;
+	private ArrayList<IRedrawListener> zeichnungBenoetigtHorcherListe;
 
 	/**
 	 * Instanziert eine MausVerwaltung und stellt den Editormodus auf SELECT. 
@@ -88,7 +88,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 	 * Fügt den übergebenen Horcher der {@link #zeichnungBenoetigtHorcherListe} hinzu.
 	 * @param horcher wird der {@link #zeichnungBenoetigtHorcherListe} hinzugefügt
 	 */
-	void addZeichnungBenoetigtHorcher(IZeichnungBenoetigtHorcher horcher) {
+	void addZeichnungBenoetigtHorcher(IRedrawListener horcher) {
 		zeichnungBenoetigtHorcherListe.add(horcher);
 	}
 	
@@ -96,29 +96,29 @@ class MausVerwaltung extends MouseInputAdapter implements IEditorModusHorcher,
 	 * Entfernt den übergebenen Horcher von der {@link #zeichnungBenoetigtHorcherListe}.
 	 * @param horcher wird von der {@link #zeichnungBenoetigtHorcherListe} enfernt
 	 */
-	void removeZeichnungBenoetigtHorcher(IZeichnungBenoetigtHorcher horcher) {
+	void removeZeichnungBenoetigtHorcher(IRedrawListener horcher) {
 		if (zeichnungBenoetigtHorcherListe.contains(horcher))
 			zeichnungBenoetigtHorcherListe.remove(horcher);
 	}
 	
 	/**
 	 * Informiert alle Horcher der {@link #zeichnungBenoetigtHorcherListe} über eine benötigte Zeichnung.
-	 * @param form LINIE oder RECHTECK
+	 * @param form LINE oder RECTANGLE
 	 * @param startMausPosition Eckpunkt/Startpunkt der Zeichnung
 	 * @param jetztMausPosition Eckpunkt/Endpunkt der Zeichnung
 	 */
 	private void fireZeichnungBenoetigt(int form, Point startMausPosition, Point jetztMausPosition) {
-		for (IZeichnungBenoetigtHorcher horcher : zeichnungBenoetigtHorcherListe)
-			horcher.zeichnungBenoetigt(form, startMausPosition, jetztMausPosition);
+		for (IRedrawListener horcher : zeichnungBenoetigtHorcherListe)
+			horcher.redraw(form, startMausPosition, jetztMausPosition);
 	}
 
 	/* (non-Javadoc)
-	 * @see horcherschnittstellen.IEditorModusHorcher#editorModusGeaendert(gui.EWfnEditModus)
+	 * @see listeners.IEditModusListener#editorModusGeaendert(gui.EWfnEditModus)
 	 * Falls durch die Modus-Änderung nötig, wird die derzeitige Auswahl geleert oder die Kanten-Auswahl abgebrochen
 	 * und jeweils ein neu-zeichnen ausgelöst.
 	 */
 	@Override
-	public void editorModusGeaendert(EWfnEditModus neuerModus) {
+	public void editModusChanged(EWfnEditModus neuerModus) {
 		if (editorModus != neuerModus) {
 			switch (editorModus) {
 			case SELECT:

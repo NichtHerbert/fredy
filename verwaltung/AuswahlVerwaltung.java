@@ -2,7 +2,7 @@ package verwaltung;
 
 import java.util.ArrayList;
 
-import horcherschnittstellen.IAuswahlVeraenderungsHorcher;
+import listeners.ISelectionChangingListener;
 import wfnmodel.interfaces.IWfnElement;
 
 /**
@@ -17,7 +17,7 @@ class AuswahlVerwaltung<E extends IWfnElement> extends ArrayList<E> {
 	/**
 	 * Liste der Horcher, die über eine Auswahländerung informiert werden möchten.
 	 */
-	private ArrayList<IAuswahlVeraenderungsHorcher> auswahlVeraenderungsHorcherListe;
+	private ArrayList<ISelectionChangingListener> auswahlVeraenderungsHorcherListe;
 	
 	AuswahlVerwaltung() {
 		super();
@@ -28,7 +28,7 @@ class AuswahlVerwaltung<E extends IWfnElement> extends ArrayList<E> {
 	 * Fügt den übergebenen Horcher der {@link #auswahlVeraenderungsHorcherListe} hinzu.
 	 * @param horcher wird {@link #auswahlVeraenderungsHorcherListe} hinzugefügt
 	 */
-	void addAuswahlAenderungsHorcher(IAuswahlVeraenderungsHorcher horcher) {
+	void addAuswahlAenderungsHorcher(ISelectionChangingListener horcher) {
 		auswahlVeraenderungsHorcherListe.add(horcher);
 	}
 
@@ -36,7 +36,7 @@ class AuswahlVerwaltung<E extends IWfnElement> extends ArrayList<E> {
 	 * Entfernt den übergebenen Horcher von der {@link #auswahlVeraenderungsHorcherListe}.
 	 * @param horcher wird von {@link #auswahlVeraenderungsHorcherListe} entfernt
 	 */
-	void removeAuswahlAenderungsHorcher(IAuswahlVeraenderungsHorcher horcher) {
+	void removeAuswahlAenderungsHorcher(ISelectionChangingListener horcher) {
 		if (auswahlVeraenderungsHorcherListe.contains(horcher)) 
 			auswahlVeraenderungsHorcherListe.add(horcher);
 	}
@@ -44,16 +44,16 @@ class AuswahlVerwaltung<E extends IWfnElement> extends ArrayList<E> {
 	/**
 	 * Informiert alle Horcher der Liste {@link #auswahlVeraenderungsHorcherListe} 
 	 * über eine Auswahl-Änderung.
-	 * @param auswahlArt NEUE_AUSWAHL oder KANTEN_AUSWAHL
+	 * @param auswahlArt NEW_SELECTION oder ARC_SELECTION
 	 */
 	void fireAuswahlAenderungEingetreten(int auswahlArt) {
-		for (IAuswahlVeraenderungsHorcher horcher : auswahlVeraenderungsHorcherListe)
-			horcher.auswahlAenderungEingetreten(auswahlArt, this);	
+		for (ISelectionChangingListener horcher : auswahlVeraenderungsHorcherListe)
+			horcher.selectionChangeOccurred(auswahlArt, this);	
 	}
 	
 	/**
 	 * Leert die Liste und informiert alle Horcher.
-	 * @param auswahlArt NEUE_AUSWAHL oder KANTEN_AUSWAHL
+	 * @param auswahlArt NEW_SELECTION oder ARC_SELECTION
 	 */
 	void clearAndFire(int auswahlArt) {
 		clear();
@@ -63,7 +63,7 @@ class AuswahlVerwaltung<E extends IWfnElement> extends ArrayList<E> {
 	/**
 	 * Fügt der Auswahlliste ein Element hinzu und informiert alle Horcher.
 	 * @param element das hinzuzufügende Element
-	 * @param auswahlArt NEUE_AUSWAHL oder KANTEN_AUSWAHL
+	 * @param auswahlArt NEW_SELECTION oder ARC_SELECTION
 	 */
 	void addAndFire(E element, int auswahlArt) {
 		if (element != null) 
@@ -76,7 +76,7 @@ class AuswahlVerwaltung<E extends IWfnElement> extends ArrayList<E> {
 	 * fügt das übergebene Element in die leere Liste ein,
 	 * und informiert alle Horcher.
 	 * @param element das hinzuzufügende Element
-	 * @param auswahlArt NEUE_AUSWAHL oder KANTEN_AUSWAHL
+	 * @param auswahlArt NEW_SELECTION oder ARC_SELECTION
 	 */
 	void clearAndAddAndFire(E element, int auswahlArt) {
 		clear();
@@ -90,7 +90,7 @@ class AuswahlVerwaltung<E extends IWfnElement> extends ArrayList<E> {
 	 * füllt sie mit den übergebenen Elementen,
 	 * und informiert alle Horcher.
 	 * @param elementListe Liste der hinzuzufügenden Elemente
-	 * @param auswahlArt NEUE_AUSWAHL oder KANTEN_AUSWAHL
+	 * @param auswahlArt NEW_SELECTION oder ARC_SELECTION
 	 */
 	void clearAndAddALLAndFire(ArrayList<E> elementListe, int auswahlArt) {
 		clear();

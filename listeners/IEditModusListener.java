@@ -1,4 +1,4 @@
-package horcherschnittstellen;
+package listeners;
 
 import gui.EWfnEditModus;
 
@@ -6,11 +6,11 @@ import gui.EWfnEditModus;
  * Schnittstelle, um über Änderungen des Editormodus informiert zu werden.
  *
  */
-public interface IEditorModusHorcher {
+public interface IEditModusListener {
 	
 	/**
 	 * Wird bei Änderung des Editormodus aufgerufen.
-	 * @param neuerModus der neue Editormodus
+	 * @param newModus der neue Editormodus
 	 */
-	void editorModusGeaendert(EWfnEditModus neuerModus);
+	void editModusChanged(EWfnEditModus newModus);
 }

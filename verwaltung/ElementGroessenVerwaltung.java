@@ -2,7 +2,7 @@ package verwaltung;
 
 import java.util.ArrayList;
 
-import horcherschnittstellen.IElementGroessenHorcher;
+import listeners.IElementSizeListener;
 import wfnmodel.elements.EWfnElement;
 
 /**
@@ -18,7 +18,7 @@ public class ElementGroessenVerwaltung {
 	/**
 	 * Die Liste derjenigen Horcher, die über eine Veränderung der Elementgröße informiert werden wollen.
 	 */
-	private ArrayList<IElementGroessenHorcher> eGHorcherListe;
+	private ArrayList<IElementSizeListener> eGHorcherListe;
 	
 	public ElementGroessenVerwaltung() {
 		elementGroesse = EWfnElement.BASEFACTOR;
@@ -47,14 +47,14 @@ public class ElementGroessenVerwaltung {
 	 * Fügt der {@link #eGHorcherListe} den übergebenen Horcher hinzu.
 	 * @param horcher wird der {@link #eGHorcherListe} hinzugefügt
 	 */
-	void addElementGroessenHorcher(IElementGroessenHorcher horcher) {
+	void addElementGroessenHorcher(IElementSizeListener horcher) {
 		eGHorcherListe.add(horcher);
 	}
 	
 	/**Entfernt den übergebenen Horcher von der {@link #eGHorcherListe}.
 	 * @param horcher wird von der {@link #eGHorcherListe} entfernt
 	 */
-	void removeZoomFaktorHorcher(IElementGroessenHorcher horcher) {
+	void removeZoomFaktorHorcher(IElementSizeListener horcher) {
 		if (eGHorcherListe.contains(horcher)) 
 			eGHorcherListe.remove(horcher);
 	}
@@ -63,8 +63,8 @@ public class ElementGroessenVerwaltung {
 	 * Informiert alle Horcher der {@link #eGHorcherListe} über eine Zoomfaktor-Änderung.
 	 */
 	private void fireElementGroesseGeaendert() {
-		for (IElementGroessenHorcher horcher : eGHorcherListe) 
-			horcher.elementGroesseGeaendert(elementGroesse);
+		for (IElementSizeListener horcher : eGHorcherListe) 
+			horcher.elementSizeChanged(elementGroesse);
 	}
 
 }

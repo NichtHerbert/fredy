@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
-import horcherschnittstellen.IWFNModellStatusHorcher;
+import listeners.IWfnStatusListener;
 import verwaltung.KreisTestVerwaltung;
 import wfnmodel.WfnStatusInfo;
 
@@ -19,7 +19,7 @@ import wfnmodel.WfnStatusInfo;
  * ein Workflownetz ergeben. Und wenn nicht, eine Begründung dafür anzeigen. 
  *
  */
-class JPanelNetzInfo extends JPanel implements IWFNModellStatusHorcher {
+class JPanelNetzInfo extends JPanel implements IWfnStatusListener {
 
 	private static final long serialVersionUID = 4974014779936004767L;
 
@@ -81,7 +81,7 @@ class JPanelNetzInfo extends JPanel implements IWFNModellStatusHorcher {
 	}
 
 	@Override
-	public void modellStatusAenderung(WfnStatusInfo statusInfo) {
+	public void newWfnStatus(WfnStatusInfo statusInfo) {
 		this.statusInfo = statusInfo;
 		getGruendeZuLabel();
 	}

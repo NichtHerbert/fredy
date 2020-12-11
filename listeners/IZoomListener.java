@@ -1,14 +1,14 @@
-package horcherschnittstellen;
+package listeners;
 
 /**
  * Schnittstelle, um bei einer Veränderung des Zoomfaktors informiert werden zu können.
  *
  */
-public interface IZoomFaktorVeraenderungsHorcher {
+public interface IZoomListener {
 	
 	/**
 	 * Wird bei einer Änderung des Zoomfaktors aufgerufen.
 	 * @param neuerZoomFaktor der neue Zoomfaktor
 	 */
-	void zoomFaktorGeaendert(double neuerZoomFaktor);
+	void zoomFactorChanged(double newFactor);
 }

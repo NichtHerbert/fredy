@@ -12,9 +12,9 @@ import javax.swing.border.TitledBorder;
 
 import gui.EIcons;
 import gui.EWfnEditModus;
-import horcherschnittstellen.IAuswahlBearbeitetHorcher;
-import horcherschnittstellen.IAuswahlVeraenderungsHorcher;
-import horcherschnittstellen.IEditorModusHorcher;
+import listeners.ISelectionEditingListener;
+import listeners.ISelectionChangingListener;
+import listeners.IEditModusListener;
 import wfnmodel.interfaces.IWfnElement;
 
 /**
@@ -23,7 +23,7 @@ import wfnmodel.interfaces.IWfnElement;
  * Hinzufügen wird realisiert duch das Setzen des @see {@link gui.EWfnEditModus}.
  * Löschen und Namensänderung durch ein @see {@link JPanelAuswahl}.
  */
-class JPanelElementBearbeitung extends JPanel implements IAuswahlVeraenderungsHorcher{
+class JPanelElementBearbeitung extends JPanel implements ISelectionChangingListener{
 	
 	private static final long serialVersionUID = 3117004156020700423L;
 	
@@ -38,7 +38,7 @@ class JPanelElementBearbeitung extends JPanel implements IAuswahlVeraenderungsHo
 	/**
 	 * Liste der Horcher, die über eine Änderung des Editormodus informiert werden wollen.
 	 */
-	private ArrayList<IEditorModusHorcher> editorModusHorcherListe;
+	private ArrayList<IEditModusListener> editorModusHorcherListe;
 
 	/**
 	 * Initialisiert das JPanel mit einem {@link JPanelAuswahl} und 4 {@link JToggleButton}
@@ -109,15 +109,15 @@ class JPanelElementBearbeitung extends JPanel implements IAuswahlVeraenderungsHo
 	 * @param modus Neuer Editormodus, der an alle Horcher weitergeleitet wird.
 	 */
 	private void fireEditorModusGeaendert(EWfnEditModus modus) {
-		for (IEditorModusHorcher horcher : editorModusHorcherListe)
-			horcher.editorModusGeaendert(modus);
+		for (IEditModusListener horcher : editorModusHorcherListe)
+			horcher.editModusChanged(modus);
 	}
 	
 	/**
 	 * Fügt der {@link #editorModusHorcherListe} einen Horcher hinzu.
 	 * @param horcher Wird der @see {@link #editorModusHorcherListe} hinzugefügt.
 	 */
-	void addEditorModusHorcher(IEditorModusHorcher horcher) {
+	void addEditorModusHorcher(IEditModusListener horcher) {
 		editorModusHorcherListe.add(horcher);
 	}
 
@@ -125,21 +125,21 @@ class JPanelElementBearbeitung extends JPanel implements IAuswahlVeraenderungsHo
 	 * Löscht einen Horcher aus der {@link #editorModusHorcherListe}.
 	 * @param horcher Wird von der {@link #editorModusHorcherListe} entfernt.
 	 */
-	void removeEditorModusHorcher(IEditorModusHorcher horcher) {
+	void removeEditorModusHorcher(IEditModusListener horcher) {
 		if (editorModusHorcherListe.contains(horcher)) 
 			editorModusHorcherListe.remove(horcher);
 	}
 
 	@Override
-	public void auswahlAenderungEingetreten(int auswahlArt, ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
-		jpAuswahlInfo.auswahlAenderungEingetreten(auswahlArt, ausgewaehlteElemente);	
+	public void selectionChangeOccurred(int auswahlArt, ArrayList<? extends IWfnElement> ausgewaehlteElemente) {
+		jpAuswahlInfo.selectionChangeOccurred(auswahlArt, ausgewaehlteElemente);	
 	}
 
 	/**
 	 * @param horcher Wird an das {@link JPanelAuswahl} 
 	 * {@link JPanelElementBearbeitung#jpAuswahlInfo} weitergeleitet. 
 	 */
-	void addAuswahlBearbeitetHorcher(IAuswahlBearbeitetHorcher horcher) {
+	void addAuswahlBearbeitetHorcher(ISelectionEditingListener horcher) {
 		jpAuswahlInfo.addAuswahlBearbeitetHorcher(horcher);
 	}
 
