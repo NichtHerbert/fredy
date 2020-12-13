@@ -47,26 +47,28 @@ class MarkingManagement implements IWfnNetListener,
 	 * @param element die zu schaltende Transition
 	 */
 	void fire(IWfnElement element) {
-		if ((element != null)
-				&& (statusInfo.isWfn())
-				&& (element.getWfnElementType() == EWfnElement.TRANSITION)
-				&& (enabledTransitions.contains(element))) {
-			removeMarkingOfInputPlaces(element);
-			for (IWfnTransitionAndPlace placeForwards : ((IWfnTransitionAndPlace) element).getOutputElements()) {
-				((IWfnPlace) placeForwards).setMarking(true);
-				placesWithMarking.add((IWfnPlace) placeForwards);
-				for (IWfnTransitionAndPlace transitionForwards : ((IWfnTransitionAndPlace) placeForwards).getOutputElements()) 
-					setNewMarkingInput(transitionForwards);
-				for (IWfnTransitionAndPlace transitionSidewards : ((IWfnTransitionAndPlace) placeForwards).getInputElements())
-					if ((enabledTransitions.contains(transitionSidewards))
-							&& (!placeForwards.getOutputElements().contains(transitionSidewards))){
-						enabledTransitions.remove(transitionSidewards);
-						contactTransitions.add((IWfnTransition) transitionSidewards);
-					}
-			}
-			updateStatusInfo();
-			fireNewWfnStatus();
+		if ((element == null)
+				|| (!statusInfo.isWfn())
+				|| (element.getWfnElementType() != EWfnElement.TRANSITION)
+				|| (!enabledTransitions.contains(element))) 
+			return;
+		IWfnTransition transition = (IWfnTransition) element;
+		removeMarkingOfInputPlaces(transition);
+		for (IWfnTransitionAndPlace placeForwards : transition.getOutputElements()) {
+			((IWfnPlace) placeForwards).setMarking(true);
+			placesWithMarking.add((IWfnPlace) placeForwards);
+			for (IWfnTransitionAndPlace transitionForwards : placeForwards.getOutputElements()) 
+				setNewMarkingInput(transitionForwards);
+			for (IWfnTransitionAndPlace transitionSidewards : placeForwards.getInputElements())
+				if ((enabledTransitions.contains(transitionSidewards))
+						&& (!placeForwards.getOutputElements().contains(transitionSidewards))){
+					enabledTransitions.remove(transitionSidewards);
+					contactTransitions.add((IWfnTransition) transitionSidewards);
+				}
 		}
+		updateStatusInfo();
+		fireNewWfnStatus();
+		
 	}
 
 	/**
@@ -75,40 +77,36 @@ class MarkingManagement implements IWfnNetListener,
 	 * @param transition zu überprüfende Transition
 	 */
 	private void setNewMarkingInput(IWfnTransitionAndPlace transition) {
-		boolean isEnabled = true;
-		for (IWfnTransitionAndPlace placeBackwards : transition.getInputElements())
-			if (! ((IWfnPlace) placeBackwards).hasMarking())
-				isEnabled = false;
-		if (isEnabled) {
-			boolean hasContact = false;
-			for (IWfnTransitionAndPlace placeForwards : transition.getOutputElements())
-				if ((((IWfnPlace) placeForwards).hasMarking())
-						&& ((placeForwards.getOutputElements()).contains(transition))==false)
-					hasContact = true;
-			if (hasContact) 
-				contactTransitions.add((IWfnTransition) transition);
-			else
-				enabledTransitions.add((IWfnTransition) transition);
-		}
+		boolean isEnabled = transition.getInputElements().stream()
+								.allMatch(place -> ((IWfnPlace) place).hasMarking());
+		if (!isEnabled) return;
+		
+		boolean hasContact = transition.getOutputElements().stream()
+								.anyMatch(place -> ((IWfnPlace) place).hasMarking() 
+													&& !place.getOutputElements().contains(transition));
+		if (hasContact) 
+			contactTransitions.add((IWfnTransition) transition);
+		else
+			enabledTransitions.add((IWfnTransition) transition);
 	}
 
 	/**
 	 * Entfernt die Marken der Eingangsstellen einer Transition und überprüft die Auswirkungen
 	 * für benachbarte Elemente.
-	 * @param element Transition, deren Eingansstellen unmarkiert werden sollen
+	 * @param transition Transition, deren Eingansstellen unmarkiert werden sollen
 	 */
-	private void removeMarkingOfInputPlaces(IWfnElement element) {
-		for (IWfnTransitionAndPlace placeBackwards : ((IWfnTransitionAndPlace) element).getInputElements()) {
+	private void removeMarkingOfInputPlaces(IWfnTransition transition) {
+		for (IWfnTransitionAndPlace placeBackwards : transition.getInputElements()) {
 			((IWfnPlace) placeBackwards).setMarking(false);
 			placesWithMarking.remove(placeBackwards);
-			for (IWfnTransitionAndPlace placeBackwardOutTransitions : ((IWfnTransitionAndPlace) placeBackwards).getOutputElements()) {
+			for (IWfnTransitionAndPlace placeBackwardOutTransitions : placeBackwards.getOutputElements()) {
 				if (enabledTransitions.contains(placeBackwardOutTransitions))
 					enabledTransitions.remove(placeBackwardOutTransitions);
 				else
 					if (contactTransitions.contains(placeBackwardOutTransitions))
 						contactTransitions.remove(placeBackwardOutTransitions);
 			}
-			for (IWfnTransitionAndPlace placeBackwardInTransitions : ((IWfnTransitionAndPlace) placeBackwards).getInputElements())
+			for (IWfnTransitionAndPlace placeBackwardInTransitions : placeBackwards.getInputElements())
 				if (contactTransitions.contains(placeBackwardInTransitions)) {
 					boolean hasContact = false;
 					for (IWfnTransitionAndPlace placeBackwardInTransitionOutPlace : placeBackwardInTransitions.getOutputElements())
@@ -170,8 +168,8 @@ class MarkingManagement implements IWfnNetListener,
 				((IWfnPlace)elem).setMarking(false);
 		statusInfo.getStartPlace().setMarking(true);
 		placesWithMarking.add(statusInfo.getStartPlace());
-		for (IWfnTransitionAndPlace folgeTransition : statusInfo.getStartPlace().getOutputElements())
-			setNewMarkingInput(folgeTransition);
+		for (IWfnTransitionAndPlace startPlaceOutTransition : statusInfo.getStartPlace().getOutputElements())
+			setNewMarkingInput(startPlaceOutTransition);
 		while (statusInfo.getNotWfnExplanatoryStatements().contains(reachedEnd))
 			statusInfo.removeNotWfnExplanatoryStatements(reachedEnd);
 		while (statusInfo.getNotWfnExplanatoryStatements().contains(deadlock))
