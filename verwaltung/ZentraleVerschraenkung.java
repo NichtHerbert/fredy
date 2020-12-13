@@ -34,8 +34,8 @@ public class ZentraleVerschraenkung implements 	ICentralConstants,
 	private PositionsVerwaltung koordinatenVerwaltung;
 	/** Die {@link SelectionManagement}*/
 	private SelectionManagement<IWfnElement> auswahlVerwaltung;
-	/** Die {@link MarkierungsVerwaltung}*/
-	private MarkierungsVerwaltung markierungsVerwaltung;
+	/** Die {@link MarkingManagement}*/
+	private MarkingManagement markierungsVerwaltung;
 	/** Die {@link MausVerwaltung}*/
 	private MausVerwaltung mausVerwaltung;
 	/** Die {@link FileManagement}*/
@@ -73,11 +73,11 @@ public class ZentraleVerschraenkung implements 	ICentralConstants,
 		dateiVerwaltung = new FileManagement(wfnModell, wfnModell, auswahlVerwaltung);
 		jtbVerwaltung.setDateiVerwaltung(dateiVerwaltung);
 		
-		markierungsVerwaltung = new MarkierungsVerwaltung();
+		markierungsVerwaltung = new MarkingManagement();
 		wfnModell.addChangingListener(markierungsVerwaltung);
 		jtbVerwaltung.addTransitionsSchaltungsHorcher(markierungsVerwaltung);
-		markierungsVerwaltung.addModellStatusHorcher(jpEditor);
-		markierungsVerwaltung.addModellStatusHorcher(jtbVerwaltung);
+		markierungsVerwaltung.addWfnStatusListener(jpEditor);
+		markierungsVerwaltung.addWfnStatusListener(jtbVerwaltung);
 		
 		mausVerwaltung = new MausVerwaltung(wfnModell, 
 											koordinatenVerwaltung, 

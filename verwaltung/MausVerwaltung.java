@@ -31,8 +31,8 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 	private SelectionManagement<IWfnElement> auswahl;
 	/**Die aktuelle {@link PositionsVerwaltung} */
 	private PositionsVerwaltung koordinaten;
-	/**Die aktuelle {@link MarkierungsVerwaltung} */
-	private MarkierungsVerwaltung markierungsVerwaltung;
+	/**Die aktuelle {@link MarkingManagement} */
+	private MarkingManagement markierungsVerwaltung;
 	
 	/**(Für den Editormodus SELECT) Gibt an ob es ein {@link #startElement} gibt.*/
 	private boolean gibtEsEinStartElement;
@@ -62,13 +62,13 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 	 * @param wfnModell Schnittstelle um Veränderungen am Datenmodell vorzunehmen
 	 * @param koordinaten Die aktuelle {@link PositionsVerwaltung} 
 	 * @param auswahl Die aktuelle {@link SelectionManagement}
-	 * @param markierungsVerwaltung Die aktuelle {@link MarkierungsVerwaltung}
+	 * @param markierungsVerwaltung Die aktuelle {@link MarkingManagement}
 	 * @param zoom Die aktuelle {@link ZoomManagement}
 	 */
 	MausVerwaltung(IWfnModelChanging wfnModell,
 						PositionsVerwaltung koordinaten,
 						SelectionManagement<IWfnElement> auswahl,
-						MarkierungsVerwaltung markierungsVerwaltung,
+						MarkingManagement markierungsVerwaltung,
 						ZoomManagement zoom) {
 		this.wfnModell = wfnModell;
 		this.koordinaten = koordinaten;
@@ -332,7 +332,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 			}
 		else 
 			if (e.getButton()== MouseEvent.BUTTON3) {
-				markierungsVerwaltung.schalteWennElementTransition(
+				markierungsVerwaltung.fire(
 						koordinaten.getWasDaIst(e.getPoint()));
 			}
 		super.mouseReleased(e);

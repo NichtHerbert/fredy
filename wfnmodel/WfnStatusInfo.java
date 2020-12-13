@@ -226,7 +226,7 @@ public class WfnStatusInfo {
 	/**
 	 * Statische Methode, die aus den übergebenen Parametern alle nötigen Informationen über den
 	 * Zustand des WFN zieht, und diese Informationen einem neu instanzierten Objekt dieser Klasse übergibt.
-	 * Anmerkung: mit Ausnahme derjenigen Informationen, die nur die {@link verwaltung.MarkierungsVerwaltung} stellen
+	 * Anmerkung: mit Ausnahme derjenigen Informationen, die nur die {@link verwaltung.MarkingManagement} stellen
 	 * kann (also: Stellen mit Marken, aktivierte Transitionen, Transitionen mit Kontakt).
 	 * @param transitionsAndPlaces Liste aller Stellen und Transitionen des aktuellen Datenmodells.
 	 * @param arcs Liste aller Kanten des aktuellen Datenmodells 

@@ -10,7 +10,7 @@ import wfnmodel.WfnStatusInfo;
 public interface IWfnStatusListener {
 	
 	/**Wird aufgerufen, wenn es zu einer Änderung am Modell und oder den Markierungen der Stellen kam. 
-	 * @param statusInfo der aktuelle Zustand des WFN inklusive aller Infos der {@link verwaltung.MarkierungsVerwaltung}.
+	 * @param statusInfo der aktuelle Zustand des WFN inklusive aller Infos der {@link verwaltung.MarkingManagement}.
 	 */
 	void newWfnStatus(WfnStatusInfo statusInfo);
 }
