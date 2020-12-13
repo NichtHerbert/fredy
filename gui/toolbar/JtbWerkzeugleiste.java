@@ -13,7 +13,7 @@ import listeners.ITransitionFireListener;
 import listeners.IWfnStatusListener;
 import verwaltung.FileManagement;
 import verwaltung.ElementSizeManagement;
-import verwaltung.KreisTestVerwaltung;
+import verwaltung.CircleTest;
 import verwaltung.ZoomManagement;
 import wfnmodel.WfnStatusInfo;
 import wfnmodel.interfaces.IWfnElement;
@@ -160,7 +160,7 @@ public class JtbWerkzeugleiste extends JToolBar implements 	ISelectionChangingLi
 	 * Weiterleitung an gleichnamige Methode von {@link #jpNetzInfo}.
 	 * @param eGVerwaltung wird an {@link #jpNetzInfo} weitergeleitet
 	 */
-	public void setKreisTestVerwaltung(KreisTestVerwaltung kTVerwaltung) {
+	public void setKreisTestVerwaltung(CircleTest kTVerwaltung) {
 		jpNetzInfo.setKreisTestVerwaltung(kTVerwaltung);
 	}
 	

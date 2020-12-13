@@ -42,8 +42,8 @@ public class ZentraleVerschraenkung implements 	ICentralConstants,
 	private FileManagement dateiVerwaltung;
 	/** Die {@link ElementSizeManagement} */
 	private ElementSizeManagement eGVerwaltung;
-	/** Die {@link KreisTestVerwaltung}*/
-	private KreisTestVerwaltung kTVerwaltung;
+	/** Die {@link CircleTest}*/
+	private CircleTest kTVerwaltung;
 
 	
 	/**
@@ -94,7 +94,7 @@ public class ZentraleVerschraenkung implements 	ICentralConstants,
 		eGVerwaltung.addElementSizeListener(jpEditor);
 		eGVerwaltung.addElementSizeListener(koordinatenVerwaltung);
 		
-		kTVerwaltung = new KreisTestVerwaltung(auswahlVerwaltung);
+		kTVerwaltung = new CircleTest(auswahlVerwaltung);
 		jtbVerwaltung.setKreisTestVerwaltung(kTVerwaltung);
 		wfnModell.addChangingListener(kTVerwaltung);
 		

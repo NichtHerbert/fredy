@@ -11,7 +11,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
 import listeners.IWfnStatusListener;
-import verwaltung.KreisTestVerwaltung;
+import verwaltung.CircleTest;
 import wfnmodel.WfnStatusInfo;
 
 /**
@@ -31,7 +31,7 @@ class JPanelNetzInfo extends JPanel implements IWfnStatusListener {
 	 * Der letztübermittelte Zustand/Status des Workflownetzes.
 	 */
 	private WfnStatusInfo statusInfo;
-	private KreisTestVerwaltung kTVerwaltung;
+	private CircleTest kTVerwaltung;
 
 	/**
 	 * Initialisiert das Panel mit {@link #jlInfo} als Array der Größe/Länge 4,
@@ -47,7 +47,7 @@ class JPanelNetzInfo extends JPanel implements IWfnStatusListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (kTVerwaltung != null) 
-					jlInfo[3].setText(kTVerwaltung.kreisTest());
+					jlInfo[3].setText(kTVerwaltung.execute());
 			}
 		});
 		add(jbKreisCheck);
@@ -86,7 +86,7 @@ class JPanelNetzInfo extends JPanel implements IWfnStatusListener {
 		getGruendeZuLabel();
 	}
 	
-	void setKreisTestVerwaltung(KreisTestVerwaltung kTVerwaltung) {
+	void setKreisTestVerwaltung(CircleTest kTVerwaltung) {
 		this.kTVerwaltung = kTVerwaltung;
 	}
 
