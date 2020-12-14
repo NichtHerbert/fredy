@@ -29,8 +29,8 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 	private ZoomManagement zoom;
 	/** Liste der ausgewählten Elemente */
 	private SelectionManagement<IWfnElement> auswahl;
-	/**Die aktuelle {@link PositionsVerwaltung} */
-	private PositionsVerwaltung koordinaten;
+	/**Die aktuelle {@link CoordinateManagement} */
+	private CoordinateManagement koordinaten;
 	/**Die aktuelle {@link MarkingManagement} */
 	private MarkingManagement markierungsVerwaltung;
 	
@@ -60,13 +60,13 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 	/**
 	 * Instanziert eine MausVerwaltung und stellt den Editormodus auf SELECT. 
 	 * @param wfnModell Schnittstelle um Veränderungen am Datenmodell vorzunehmen
-	 * @param koordinaten Die aktuelle {@link PositionsVerwaltung} 
+	 * @param koordinaten Die aktuelle {@link CoordinateManagement} 
 	 * @param auswahl Die aktuelle {@link SelectionManagement}
 	 * @param markierungsVerwaltung Die aktuelle {@link MarkingManagement}
 	 * @param zoom Die aktuelle {@link ZoomManagement}
 	 */
 	MausVerwaltung(IWfnModelChanging wfnModell,
-						PositionsVerwaltung koordinaten,
+						CoordinateManagement koordinaten,
 						SelectionManagement<IWfnElement> auswahl,
 						MarkingManagement markierungsVerwaltung,
 						ZoomManagement zoom) {
@@ -151,7 +151,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (editorModus == EWfnEditModus.SELECT) {
-			IWfnElement elem = koordinaten.getWasDaIst(e.getPoint());
+			IWfnElement elem = koordinaten.getElementAt(e.getPoint());
 			if (elem != null) {
 				gibtEsEinStartElement = true;
 				startElement = elem;
@@ -285,7 +285,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 			switch (editorModus) {
 			case SELECT:
 				if (gibtEsEinStartElement) {
-					IWfnElement neueAuswahl = koordinaten.getWasDaIst(e.getPoint());
+					IWfnElement neueAuswahl = koordinaten.getElementAt(e.getPoint());
 					if (neueAuswahl != null) {
 						if (!auswahl.contains(neueAuswahl)) {
 							if (!e.isControlDown()) auswahl.clear();
@@ -296,7 +296,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 							auswahl.clearAndAddAndFire(null, NEW_SELECTION);
 						}
 				} else {
-					auswahl.clearAndAddALLAndFire(koordinaten.getWasDaIst(startMausPosition, zoom.calculateOut(e.getPoint())),NEW_SELECTION);
+					auswahl.clearAndAddALLAndFire(koordinaten.getElementsIn(startMausPosition, zoom.calculateOut(e.getPoint())),NEW_SELECTION);
 				}
 				gibtEsEinStartElement = false;
 				break;
@@ -307,7 +307,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 				wfnModell.createTransition(zoom.calculateOut(e.getPoint()));
 				break;
 			case ADD_ARC:
-				IWfnElement element = koordinaten.getWasDaIst(e.getPoint());
+				IWfnElement element = koordinaten.getElementAt(e.getPoint());
 				if ((element != null)
 					&& (element.getWfnElementType() != EWfnElement.ARC)) {
 						if (!kanteAusgangsElementAusgewaehlt) {
@@ -333,7 +333,7 @@ class MausVerwaltung extends MouseInputAdapter implements IEditModusListener,
 		else 
 			if (e.getButton()== MouseEvent.BUTTON3) {
 				markierungsVerwaltung.fire(
-						koordinaten.getWasDaIst(e.getPoint()));
+						koordinaten.getElementAt(e.getPoint()));
 			}
 		super.mouseReleased(e);
 	}

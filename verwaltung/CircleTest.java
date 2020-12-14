@@ -7,8 +7,7 @@ import wfnmodel.WfnStatusInfo;
 import wfnmodel.interfaces.IWfnElement;
 import wfnmodel.interfaces.IWfnTransitionAndPlace;
 
-public class CircleTest implements IWfnNetListener,
-											ICentralConstants {
+public class CircleTest implements IWfnNetListener, ICentralConstants {
 	
 	/*Die aktuelle StatusInfo, ohne die Informationen der Markierungsverwaltung.*/
 	private WfnStatusInfo statusInfo;
