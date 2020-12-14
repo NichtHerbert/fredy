@@ -1,7 +1,6 @@
 package verwaltung;
 
 import java.util.ArrayList;
-
 import gui.ICentralConstants;
 import listeners.IWfnNetListener;
 import wfnmodel.WfnStatusInfo;
@@ -36,13 +35,10 @@ public class CircleTest implements IWfnNetListener,
 		inProcessElements.clear();
 		if (!isCircle(statusInfo.getStartPlace())) return thereIsNoCircle;
 		
-		int idxEnd = inProcessElements.size()-1;
-		IWfnTransitionAndPlace circleStartEndElement = inProcessElements.get(idxEnd);
-		int idxStart = inProcessElements.indexOf(circleStartEndElement);
-		ArrayList<IWfnElement> circleElements = new ArrayList<>();
-		for (int i = idxStart; i<= idxEnd; i++) {
-			circleElements.add(inProcessElements.get(i));
-		}
+		final int idxEnd = inProcessElements.size()-1;
+		final IWfnTransitionAndPlace circleStartEndElement = inProcessElements.get(idxEnd);
+		final int idxStart = inProcessElements.indexOf(circleStartEndElement);
+		final ArrayList<IWfnElement> circleElements = new ArrayList<>(inProcessElements.subList(idxStart, idxEnd));
 		selectionManagement.clearAndAddALLAndFire(circleElements, NEW_SELECTION);
 		return thereIsACircle;
 	}
