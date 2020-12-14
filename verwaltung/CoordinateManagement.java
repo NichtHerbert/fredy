@@ -2,7 +2,9 @@ package verwaltung;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import listeners.IElementSizeListener;
 import listeners.IWfnNetListener;
@@ -55,34 +57,23 @@ class CoordinateManagement implements IWfnNetListener, IElementSizeListener {
 	 * @param coord die zu überprüfende Position
 	 * @return das Element, welches sich an der überprüften Position befindet, oder null, wenn dort kein Element ist
 	 */
-	IWfnElement getElementAt(Point coord) {
-		IWfnElement result = null;
-		coord = zoom.calculateOut(coord);
-		if ((lastCoordinate == null)
-				|| (! coord.equals(lastCoordinate))) {
-			Iterator<IWfnTransitionAndPlace> itTransitionAndPlaces = transitionsAndPlaces.iterator();
-			while ((result == null)
-					&& (itTransitionAndPlaces.hasNext())){ 
-				IWfnTransitionAndPlace elem = itTransitionAndPlaces.next();
-				if ((elem.getPosition().x >= coord.x - elementSize) 
-						&& (elem.getPosition().x <= coord.x + elementSize)
-						&& (elem.getPosition().y >= coord.y - elementSize) 
-						&& (elem.getPosition().y <= coord.y + elementSize))
-					result = elem;
-			}
-			if (result == null) {
-				Iterator<IWfnArc> itArc = arcs.iterator();
-				while ((result == null)
-						&& (itArc.hasNext())){ 
-					IWfnArc arc = itArc.next();
-					if (isCoordCloseToArc(coord, arc, EWfnElement.BASEFACTOR / 2))
-						result = arc;
-				}
-			}
-			lastCoordinate = coord;
-			lastResult = result;
-		} else
-			result = lastResult;
+	IWfnElement getElementAt(Point coordWithZoomFactor) {
+		final Point coord = zoom.calculateOut(coordWithZoomFactor);
+		if (lastCoordinate != null && coord.equals(lastCoordinate)) 
+			return lastResult;
+		
+		IWfnElement result = transitionsAndPlaces.parallelStream()
+			.filter(elem -> ((elem.getPosition().x >= coord.x - elementSize) 
+					&& (elem.getPosition().x <= coord.x + elementSize)
+					&& (elem.getPosition().y >= coord.y - elementSize) 
+					&& (elem.getPosition().y <= coord.y + elementSize)))
+			.findFirst().orElse(null);
+		result = (result != null) ? result : arcs.parallelStream()
+			.filter(arc -> isCoordCloseToArc(coord, arc, EWfnElement.BASEFACTOR / 2))
+			.findFirst().orElse(null);
+
+		lastCoordinate = coord;
+		lastResult = result;
 		return result;
 	}
 	
@@ -95,32 +86,15 @@ class CoordinateManagement implements IWfnNetListener, IElementSizeListener {
 	 * @return Liste der Elemente, welche sich innerhalb des Rechtecks befinden
 	 */
 	ArrayList<IWfnElement> getElementsIn(Point angle1, Point angle2) {
-		if (angle1.x > angle2.x) {
-			int temp = angle1.x;
-			angle1.x = angle2.x;
-			angle2.x = temp;
-		}
-		if (angle1.y > angle2.y) {
-			int temp = angle1.y;
-			angle1.y = angle2.y;
-			angle2.y = temp;
-		}
-		ArrayList<IWfnElement> result = new ArrayList<>();
-		for (IWfnTransitionAndPlace elem : transitionsAndPlaces)
-			if ((elem.getPosition().x >= angle1.x) 
-					&& (elem.getPosition().x <= angle2.x)
-					&& (elem.getPosition().y >= angle1.y) 
-					&& (elem.getPosition().y <= angle2.y))
-				result.add(elem);
-		for (IWfnArc arc : arcs) {
-			Point arcCenter = arc.getCenter();
-			if ((arcCenter.x >= angle1.x) 
-					&& (arcCenter.x <= angle2.x)
-					&& (arcCenter.y >= angle1.y) 
-					&& (arcCenter.y <= angle2.y))
-				result.add(arc);
-		}	
-		return result;
+		return Stream.concat(transitionsAndPlaces.parallelStream(), arcs.parallelStream())
+				.filter(elem -> {
+					final Point coord = (elem.getWfnElementType() == EWfnElement.ARC)
+							? ((IWfnArc) elem).getCenter()
+							: ((IWfnTransitionAndPlace) elem).getPosition();
+					return ((Math.abs(angle1.x - angle2.x) >= Math.abs(angle1.x - coord.x) + Math.abs(angle2.x - coord.x))
+						&& (Math.abs(angle1.y - angle2.y) >= Math.abs(angle1.y - coord.y) + Math.abs(angle2.y - coord.y)));
+				})
+				.collect(Collectors.toCollection(ArrayList::new));
 	}
 	
 	
@@ -132,14 +106,14 @@ class CoordinateManagement implements IWfnNetListener, IElementSizeListener {
 	 * @return true, falls der Abstand von p zur Kante kante kleinergleich maxabstand ist
 	 */
 	private static boolean isCoordCloseToArc(Point coord, IWfnArc arc, int maxDistance) {
-		Point sourceCoord, targetCoord;
+		final Point sourceCoord, targetCoord;
 		sourceCoord = arc.getSource().getPosition();
 		targetCoord = arc.getTarget().getPosition();
 		if ((coord.distance(sourceCoord) + coord.distance(targetCoord)) 
-				<= (sourceCoord.distance(targetCoord) * ( 1.005))) {
+				<= (sourceCoord.distance(targetCoord) * ( 1.005))) 
 			return true;
-		} else 
-			return false;
+		
+		return false;
 	}
 	
 }
