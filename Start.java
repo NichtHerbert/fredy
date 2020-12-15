@@ -2,7 +2,7 @@ import javax.swing.JScrollPane;
 
 import control.ControlCentral;
 import gui.MainWindow;
-import gui.JPanelEditor;
+import gui.EditorPanel;
 import gui.toolbar.JtbWerkzeugleiste;
 import wfnmodel.WfnModel;
 
@@ -20,7 +20,7 @@ public class Start {
 	 */
 	public static void main(String[] args) {
 		WfnModel modell = new WfnModel();
-		JPanelEditor editor = new JPanelEditor();
+		EditorPanel editor = new EditorPanel();
 		JScrollPane sp = new JScrollPane(editor);
 		JtbWerkzeugleiste toolbar = new JtbWerkzeugleiste();
 		ControlCentral zV = new ControlCentral(modell, editor, toolbar);

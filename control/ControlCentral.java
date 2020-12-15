@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 
 import gui.EWfnEditModus;
 import gui.ICentralConstants;
-import gui.JPanelEditor;
+import gui.EditorPanel;
 import gui.toolbar.JtbWerkzeugleiste;
 import listeners.ISelectionEditingListener;
 import listeners.IEditModusListener;
@@ -24,7 +24,7 @@ public class ControlCentral implements 	ICentralConstants,
 	/**Das Datenmodell des WFN*/										
 	private WfnModel wfnModel;
 	/**Die Darstellung des WFN */
-	private JPanelEditor jpEditor;
+	private EditorPanel jpEditor;
 	/**Die Werkzeuge zum Bearbeiten des WFN*/
 	private JtbWerkzeugleiste jtbToolbar;
 	
@@ -54,7 +54,7 @@ public class ControlCentral implements 	ICentralConstants,
 	 * @param jpEditor die Darstellung
 	 * @param jtbToolbar die Werkzeugleiste
 	 */
-	public ControlCentral(WfnModel wfnModel, JPanelEditor jpEditor, JtbWerkzeugleiste jtbToolbar) {
+	public ControlCentral(WfnModel wfnModel, EditorPanel jpEditor, JtbWerkzeugleiste jtbToolbar) {
 		this.wfnModel = wfnModel;
 		this.jpEditor = jpEditor;
 		this.jtbToolbar = jtbToolbar;

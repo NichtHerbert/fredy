@@ -10,7 +10,7 @@ import wfnmodel.elements.EWfnElement;
 
 /**
  * Zur Unterscheidung 4 möglicher Modi, deren momentan ausgewählter Modus im Falle einer Mausaktion
- * im {@link JPanelEditor} zur Bestimmung, was denn getan werden soll, behilflich sein kann.
+ * im {@link EditorPanel} zur Bestimmung, was denn getan werden soll, behilflich sein kann.
  * Desweiteren wird für jeden Modus ein eigener Cursor zur Verfügung gestellt. 
  */
 public enum EWfnEditModus {

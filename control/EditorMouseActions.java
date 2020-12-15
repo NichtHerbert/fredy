@@ -17,7 +17,7 @@ import wfnmodel.interfaces.IWfnModelChanging;
 import wfnmodel.interfaces.IWfnTransitionAndPlace;
 
 /**
- * Klasse zur Verwaltung der möglichen Mausaktionen im {@link gui.JPanelEditor}.
+ * Klasse zur Verwaltung der möglichen Mausaktionen im {@link gui.EditorPanel}.
  *
  */
 class EditorMouseActions extends MouseInputAdapter implements IEditModusListener,
