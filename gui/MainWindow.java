@@ -10,31 +10,33 @@ import javax.swing.JFrame;
 import control.ControlCentral;
 
 /**
- * Das Hauptfenster des Workflownetz-Editors.
+ * Das MainWindow des Workflownetz-Editors.
  * Es besteht aus einem Panel, in dem das Workflownetz dargestellt wird,
  * und einer Toolbar. 
  */
-public class Hauptfenster extends JFrame {
+public class MainWindow extends JFrame {
 
 	private static final long serialVersionUID = -7063560430530422635L;
+	
+	private final String windowTitle = "fredy - the Workflow-Net-Editor";
 
 	/**
 	 * Initialisiert das Fenster und setzt die Toolbar an die rechte Seite.
-	 * @param editorBereich Komponente mit der das WFN dargestellt werden soll
-	 * @param toolbarBereich Komponente mit Werkzeugen zur Veränderung des WFN und/oder seiner Darstellung
-	 * @param zV die Mutter aller Steuerungsklassen
+	 * @param editorArea Komponente mit der das WFN dargestellt werden soll
+	 * @param toolbarArea Komponente mit Werkzeugen zur Veränderung des WFN und/oder seiner Darstellung
+	 * @param control die Mutter aller Steuerungsklassen
 	 */
-	public Hauptfenster(JComponent editorBereich, JComponent toolbarBereich, ControlCentral zV) {
+	public MainWindow(JComponent editorArea, JComponent toolbarArea, ControlCentral control) {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				zV.programmBeenden();
+				control.exitProgram();
 			}
 		});
-		add(editorBereich, BorderLayout.CENTER);
-		add(toolbarBereich, BorderLayout.EAST);
+		add(editorArea, BorderLayout.CENTER);
+		add(toolbarArea, BorderLayout.EAST);
 		setPreferredSize(new Dimension(800, 600));
-		setTitle("***REMOVED***");
+		setTitle(windowTitle);
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);

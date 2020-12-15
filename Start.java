@@ -1,7 +1,7 @@
 import javax.swing.JScrollPane;
 
 import control.ControlCentral;
-import gui.Hauptfenster;
+import gui.MainWindow;
 import gui.JPanelEditor;
 import gui.toolbar.JtbWerkzeugleiste;
 import wfnmodel.WfnModel;
@@ -14,7 +14,7 @@ public class Start {
 
 	/**
 	 * Erzeugt Modell, Toolbar, EditorPanel (in einem Scrollpane) 
-	 * und übergibt sie einem neu erzeugtem Hauptfenster 
+	 * und übergibt sie einem neu erzeugtem MainWindow 
 	 * und der neue erzeugten Zentralen-Verschränkung.
 	 * @param args wird nicht verwendet
 	 */
@@ -24,7 +24,7 @@ public class Start {
 		JScrollPane sp = new JScrollPane(editor);
 		JtbWerkzeugleiste toolbar = new JtbWerkzeugleiste();
 		ControlCentral zV = new ControlCentral(modell, editor, toolbar);
-		new Hauptfenster(sp, toolbar, zV);
+		new MainWindow(sp, toolbar, zV);
 
 	}
 

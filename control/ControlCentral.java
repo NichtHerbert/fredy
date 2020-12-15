@@ -124,7 +124,7 @@ public class ControlCentral implements 	ICentralConstants,
 	/**
 	 * Methode zum Beenden des gesamten Programms.
 	 */
-	public void programmBeenden() {
+	public void exitProgram() {
 		if (!wfnModel.isCurrentWfnSaved()) {
 			Object[] buttons = { "Cancel",
 								"Without Saving",
