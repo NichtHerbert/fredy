@@ -7,8 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
+import control.ZoomManagement;
 import gui.EIcons;
-import verwaltung.ZoomManagement;
 
 /**
  * Panel zur Anzeige der Zoom-Steuer-Instrumente.

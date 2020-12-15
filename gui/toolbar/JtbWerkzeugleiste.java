@@ -6,15 +6,15 @@ import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
 
+import control.CircleTest;
+import control.ElementSizeManagement;
+import control.FileManagement;
+import control.ZoomManagement;
 import listeners.ISelectionEditingListener;
 import listeners.ISelectionChangingListener;
 import listeners.IEditModusListener;
 import listeners.ITransitionFireListener;
 import listeners.IWfnStatusListener;
-import verwaltung.FileManagement;
-import verwaltung.ElementSizeManagement;
-import verwaltung.CircleTest;
-import verwaltung.ZoomManagement;
 import wfnmodel.WfnStatusInfo;
 import wfnmodel.interfaces.IWfnElement;
 

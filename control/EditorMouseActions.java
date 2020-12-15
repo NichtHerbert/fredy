@@ -1,4 +1,4 @@
-package verwaltung;
+package control;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;

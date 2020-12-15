@@ -1,9 +1,9 @@
 import javax.swing.JScrollPane;
 
+import control.ControlCentral;
 import gui.Hauptfenster;
 import gui.JPanelEditor;
 import gui.toolbar.JtbWerkzeugleiste;
-import verwaltung.ZentraleVerschraenkung;
 import wfnmodel.WfnModel;
 
 /**
@@ -23,7 +23,7 @@ public class Start {
 		JPanelEditor editor = new JPanelEditor();
 		JScrollPane sp = new JScrollPane(editor);
 		JtbWerkzeugleiste toolbar = new JtbWerkzeugleiste();
-		ZentraleVerschraenkung zV = new ZentraleVerschraenkung(modell, editor, toolbar);
+		ControlCentral zV = new ControlCentral(modell, editor, toolbar);
 		new Hauptfenster(sp, toolbar, zV);
 
 	}

@@ -10,10 +10,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
+import control.FileManagement;
+import control.IFileManagement;
 import gui.EIcons;
 import listeners.IWfnStatusListener;
-import verwaltung.FileManagement;
-import verwaltung.IFileManagement;
 import wfnmodel.WfnStatusInfo;
 
 /**

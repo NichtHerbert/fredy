@@ -1,4 +1,4 @@
-package verwaltung;
+package control;
 
 import javax.swing.JComponent;
 

@@ -1,4 +1,4 @@
-package verwaltung;
+package control;
 
 import java.util.ArrayList;
 import gui.ICentralConstants;

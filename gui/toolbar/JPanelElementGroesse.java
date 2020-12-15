@@ -7,8 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
+import control.ElementSizeManagement;
 import gui.EIcons;
-import verwaltung.ElementSizeManagement;
 
 /**
  * Panel zur Anzeige der Buttons zur Steuerung der Elementgröße.

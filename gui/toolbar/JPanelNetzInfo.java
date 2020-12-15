@@ -10,8 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
+import control.CircleTest;
 import listeners.IWfnStatusListener;
-import verwaltung.CircleTest;
 import wfnmodel.WfnStatusInfo;
 
 /**
