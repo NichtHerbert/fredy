@@ -20,6 +20,7 @@ import wfnmodel.WfnStatusInfo;
 import wfnmodel.elements.EWfnElement;
 import wfnmodel.interfaces.IWfnArc;
 import wfnmodel.interfaces.IWfnElement;
+import wfnmodel.interfaces.IWfnPlace;
 import wfnmodel.interfaces.IWfnTransition;
 import wfnmodel.interfaces.IWfnTransitionAndPlace;
 
@@ -39,7 +40,6 @@ public class EditorPanel extends JPanel implements IWfnStatusListener,
 	private WfnStatusInfo statusInfo;
 	/** Liste der momentan ausgewählten WFN-Elemente. */
 	private ArrayList<? extends IWfnElement> selectedElements;
-	private boolean isDrawingRequired;
 	private int requiredShape;
 	private Point shapePoint1, shapePoint2;
 	private double zoomFactor;
@@ -52,7 +52,6 @@ public class EditorPanel extends JPanel implements IWfnStatusListener,
 		
 		selectedElements = null;
 		selectionType = NEW_SELECTION;
-		isDrawingRequired = false;
 		requiredShape = NOTHING;
 		zoomFactor = 1d;
 		statusInfo = new WfnStatusInfo(); 
@@ -80,38 +79,34 @@ public class EditorPanel extends JPanel implements IWfnStatusListener,
 	 * @param g2 Objekt auf dem die Zeichnung ausgeführt wird
 	 */
 	private void drawSelection(Graphics2D g2) {
-		if ((selectedElements != null) 
-				&& (!selectedElements.isEmpty())) {
-			switch (selectionType) {
-			case NEW_SELECTION:
-				for (IWfnElement elem : selectedElements) {
-						if (elem.getWfnElementType() != EWfnElement.ARC) {
-							elem.getWfnElementType().drawAsSelected(
-									g2, 
-									((IWfnTransitionAndPlace) elem).getPosition(), 
-									EEditorFarben.AUSWAHL, 
-									elementSize);
-						} else {
-							elem.getWfnElementType().drawAsSelected(
-									g2, 
-									((IWfnArc) elem).getSource().getWfnElementType(),
-									((IWfnArc) elem).getSource().getPosition(),
-									((IWfnArc) elem).getTarget().getPosition(),
-									EEditorFarben.AUSWAHL, 
-									elementSize);
-						}
-				}	
-				break;
-			case ARC_SELECTION:
-				IWfnTransitionAndPlace arcSource = (IWfnTransitionAndPlace) selectedElements.get(0);
-				arcSource.getWfnElementType().drawAsSelected(
-						g2, 
-						arcSource.getPosition(), 
-						EEditorFarben.KANTEN_ANFANG_AUSGEWAEHLT, 
-						elementSize);
-				break;
-			default: break;
-			}
+		if (selectedElements == null || selectedElements.isEmpty()) return;
+		switch (selectionType) {
+		case NEW_SELECTION:
+			for (IWfnElement elem : selectedElements) 
+				if (elem.getWfnElementType() != EWfnElement.ARC) 
+					elem.getWfnElementType().drawAsSelected(
+							g2, 
+							((IWfnTransitionAndPlace) elem).getPosition(), 
+							EEditorFarben.AUSWAHL, 
+							elementSize);
+				else 
+					elem.getWfnElementType().drawAsSelected(
+							g2, 
+							((IWfnArc) elem).getSource().getWfnElementType(),
+							((IWfnArc) elem).getSource().getPosition(),
+							((IWfnArc) elem).getTarget().getPosition(),
+							EEditorFarben.AUSWAHL, 
+							elementSize);
+			break;
+		case ARC_SELECTION:
+			IWfnTransitionAndPlace arcSource = (IWfnTransitionAndPlace) selectedElements.get(0);
+			arcSource.getWfnElementType().drawAsSelected(
+					g2, 
+					arcSource.getPosition(), 
+					EEditorFarben.KANTEN_ANFANG_AUSGEWAEHLT, 
+					elementSize);
+			break;
+		default: break;
 		}
 	}
 
@@ -121,34 +116,32 @@ public class EditorPanel extends JPanel implements IWfnStatusListener,
 	 * @param g2 Objekt auf dem die Zeichnung ausgeführt wird
 	 */
 	private void drawShapeWhenMouseMovement(Graphics2D g2) {
-		if (isDrawingRequired) {
-			switch(requiredShape) {
-			case RECTANGLE:
-				int x, y, height, width;
-				if (shapePoint1.x < shapePoint2.x) {
-					x = shapePoint1.x;
-					width = shapePoint2.x - shapePoint1.x;
-				} else {
-					x = shapePoint2.x;
-					width = shapePoint1.x - shapePoint2.x;
-				}
-				if (shapePoint1.y < shapePoint2.y) {
-					y = shapePoint1.y;
-					height = shapePoint2.y - shapePoint1.y;
-				} else {
-					y = shapePoint2.y;
-					height = shapePoint1.y - shapePoint2.y;
-				}
-				g2.drawRect(x,y,width,height);
-				break;
-			case LINE:
-				g2.drawLine(shapePoint1.x, shapePoint1.y, 
-							shapePoint2.x, shapePoint2.y);
-				break;
-			default: break;	
+		switch(requiredShape) {
+		case RECTANGLE:
+			int x, y, height, width;
+			if (shapePoint1.x < shapePoint2.x) {
+				x = shapePoint1.x;
+				width = shapePoint2.x - shapePoint1.x;
+			} else {
+				x = shapePoint2.x;
+				width = shapePoint1.x - shapePoint2.x;
 			}
-			isDrawingRequired = false;
+			if (shapePoint1.y < shapePoint2.y) {
+				y = shapePoint1.y;
+				height = shapePoint2.y - shapePoint1.y;
+			} else {
+				y = shapePoint2.y;
+				height = shapePoint1.y - shapePoint2.y;
+			}
+			g2.drawRect(x,y,width,height);
+			break;
+		case LINE:
+			g2.drawLine(shapePoint1.x, shapePoint1.y, 
+						shapePoint2.x, shapePoint2.y);
+			break;
+		default: break;	
 		}
+		requiredShape = NOTHING;
 	}
 
 	/**
@@ -190,22 +183,22 @@ public class EditorPanel extends JPanel implements IWfnStatusListener,
 	 * @param g2 Objekt, auf dem die Zeichnung ausgeführt wird
 	 */
 	private void drawMarkingsAndEnabledTransitions(Graphics2D g2) {
-		if ((statusInfo.isWfn())
-				&& (statusInfo.getStartPlace() != statusInfo.getEndPlace())
-				) {
-			EWfnElement.PLACE.drawAsSelected(g2, statusInfo.getStartPlace().getPosition(), EEditorFarben.START, elementSize);
-			EWfnElement.PLACE.drawAsSelected(g2, statusInfo.getEndPlace().getPosition(), EEditorFarben.ENDE, elementSize);
-			for (IWfnTransitionAndPlace place: statusInfo.getMarkings())
-				g2.fillOval(place.getPosition().x - (elementSize/2), 
-							place.getPosition().y - (elementSize/2), 
-							elementSize, elementSize);
-			if (statusInfo.getEnabledTransitions() != null)
-				for (IWfnTransition transition : statusInfo.getEnabledTransitions())
-					EWfnElement.TRANSITION.drawAsSelected(g2, transition.getPosition(), EEditorFarben.AKTIVIERT, elementSize); 
-			if (statusInfo.getContactTransitions() != null)
-				for (IWfnTransition transition : statusInfo.getContactTransitions())
-					EWfnElement.TRANSITION.drawAsSelected(g2, transition.getPosition(), EEditorFarben.KONTAKT, elementSize);
-		}
+		if (!statusInfo.isWfn() 
+				|| statusInfo.getStartPlace() == statusInfo.getEndPlace()) 
+			return;
+				 
+		EWfnElement.PLACE.drawAsSelected(g2, statusInfo.getStartPlace().getPosition(), EEditorFarben.START, elementSize);
+		EWfnElement.PLACE.drawAsSelected(g2, statusInfo.getEndPlace().getPosition(), EEditorFarben.ENDE, elementSize);
+		for (IWfnPlace place: statusInfo.getMarkings())
+			g2.fillOval(place.getPosition().x - (elementSize/2), 
+						place.getPosition().y - (elementSize/2), 
+						elementSize, elementSize);
+		if (statusInfo.getEnabledTransitions() != null)
+			for (IWfnTransition transition : statusInfo.getEnabledTransitions())
+				EWfnElement.TRANSITION.drawAsSelected(g2, transition.getPosition(), EEditorFarben.AKTIVIERT, elementSize); 
+		if (statusInfo.getContactTransitions() != null)
+			for (IWfnTransition transition : statusInfo.getContactTransitions())
+				EWfnElement.TRANSITION.drawAsSelected(g2, transition.getPosition(), EEditorFarben.KONTAKT, elementSize);
 	}
 
 	/**
@@ -241,17 +234,11 @@ public class EditorPanel extends JPanel implements IWfnStatusListener,
 	
 	@Override
 	public void redraw(int form, Point startMousePosition, Point nowMousePosition) {
-		if ((form != NOTHING) 
-				&& (startMousePosition != null) 
-				&& (nowMousePosition != null)) {
-			isDrawingRequired = true;
-			requiredShape = form;
-			shapePoint1 = startMousePosition;
-			shapePoint2 = nowMousePosition;
-		} else {
-			requiredShape = NOTHING;
-			isDrawingRequired = false;
-		}
+		requiredShape = (startMousePosition == null || nowMousePosition == null)
+				? NOTHING
+				: form;
+		shapePoint1 = startMousePosition;
+		shapePoint2 = nowMousePosition;
 		repaint();
 	}
 
