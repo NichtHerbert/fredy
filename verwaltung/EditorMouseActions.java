@@ -119,22 +119,20 @@ class EditorMouseActions extends MouseInputAdapter implements IEditModusListener
 	 */
 	@Override
 	public void editModusChanged(EWfnEditModus newModus) {
-		if (editModus != newModus) {
-			switch (editModus) {
+		if (editModus == newModus) return;
+		switch (editModus) {
 			case SELECT:
 				selection.clearAndAddAndFire(null, NEW_SELECTION);
 				break;
 			case ADD_ARC:
-				if (newArcSourceExists) {
-					fireRedraw(NOTHING, null, null);
-					newArcSourceExists = false;
-					newArcSource = null;
-				}
+				if (!newArcSourceExists) break;
+				fireRedraw(NOTHING, null, null);
+				newArcSourceExists = false;
+				newArcSource = null;
 				break;
 			default:break;
-			}
-			editModus = newModus;
 		}
+		editModus = newModus;
 	}
 	
 	/* (non-Javadoc)
@@ -150,52 +148,51 @@ class EditorMouseActions extends MouseInputAdapter implements IEditModusListener
 	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (editModus == EWfnEditModus.SELECT) {
-			IWfnElement elem = coordinates.getElementAt(e.getPoint());
-			if (elem != null) {
-				startElementExists = true;
-				startElement = elem;
-				xLowerThenStartElemX = 0;
-				yLowerThenStartElemY = 0;
-				if (!selection.contains(startElement)) {
-					if (!e.isControlDown()) 
-						selection.clear();
-					selection.addAndFire(startElement, NEW_SELECTION);
-				}
-				if (selection.size() > 1) {
-					int x, y;
-					if (startElement.getWfnElementType() != EWfnElement.ARC ) {
-						x = ((IWfnTransitionAndPlace)startElement).getPosition().x;
-						y = ((IWfnTransitionAndPlace)startElement).getPosition().y;
-					} else {
-						Point p = zoom.calculateOut(e.getPoint());
-						x = p.x;
-						y = p.y;
-					}
-					selectionDistances.clear();
-					for (IWfnElement selected : selection) {
-						if ((selected.getWfnElementType() != EWfnElement.ARC)
-								&& (selected != startElement)) {
-							Point distanceToStartElem = new Point(
-									((IWfnTransitionAndPlace)selected).getPosition().x - x,
-									((IWfnTransitionAndPlace)selected).getPosition().y - y);
-							if (distanceToStartElem.x < xLowerThenStartElemX) 
-								xLowerThenStartElemX = distanceToStartElem.x;
-							if (distanceToStartElem.y < yLowerThenStartElemY)
-								yLowerThenStartElemY = distanceToStartElem.y;
-							selectionDistances.put(selected, distanceToStartElem);
-						}
-					}
-					xLowerThenStartElemX *= -1;
-					yLowerThenStartElemY *= -1;
-				}
-			} else {
-				startMousePosition = zoom.calculateOut(e.getPoint());
-			}
-			
+		if (editModus != EWfnEditModus.SELECT) return; 
+		IWfnElement elem = coordinates.getElementAt(e.getPoint());
+		if (elem == null) {
+			startMousePosition = zoom.calculateOut(e.getPoint());
+			return;
 		}
-		super.mousePressed(e);
+		
+		startElementExists = true;
+		startElement = elem;
+		xLowerThenStartElemX = 0;
+		yLowerThenStartElemY = 0;
+		if (!selection.contains(startElement)) {
+			if (!e.isControlDown()) 
+				selection.clear();
+			selection.addAndFire(startElement, NEW_SELECTION);
+		}
+		if (selection.size() <= 1) return;
+		
+		int x, y;
+		if (startElement.getWfnElementType() != EWfnElement.ARC ) {
+			x = ((IWfnTransitionAndPlace)startElement).getPosition().x;
+			y = ((IWfnTransitionAndPlace)startElement).getPosition().y;
+		} else {
+			Point p = zoom.calculateOut(e.getPoint());
+			x = p.x;
+			y = p.y;
+		}
+		selectionDistances.clear();
+		for (IWfnElement selected : selection) {
+			if ((selected.getWfnElementType() != EWfnElement.ARC)
+					&& (selected != startElement)) {
+				Point distanceToStartElem = new Point(
+						((IWfnTransitionAndPlace)selected).getPosition().x - x,
+						((IWfnTransitionAndPlace)selected).getPosition().y - y);
+				if (distanceToStartElem.x < xLowerThenStartElemX) 
+					xLowerThenStartElemX = distanceToStartElem.x;
+				if (distanceToStartElem.y < yLowerThenStartElemY)
+					yLowerThenStartElemY = distanceToStartElem.y;
+				selectionDistances.put(selected, distanceToStartElem);
+			}
+		}
+		xLowerThenStartElemX *= -1;
+		yLowerThenStartElemY *= -1;
 	}
+	
 
 	/* (non-Javadoc)
 	 * 
@@ -214,31 +211,26 @@ class EditorMouseActions extends MouseInputAdapter implements IEditModusListener
 	 */
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if (editModus == EWfnEditModus.SELECT) {
-			if (startElementExists) {
-				Point mousePosWithoutZoom = zoom.calculateOut(e.getPoint());
-				if  ((startElement.getWfnElementType() != EWfnElement.ARC)
-						&& (mousePosWithoutZoom.x > (xLowerThenStartElemX + EWfnElement.BASEFACTOR))
-						&& (mousePosWithoutZoom.y > (yLowerThenStartElemY + EWfnElement.BASEFACTOR))) {
-					((IWfnTransitionAndPlace)startElement).setPosition(mousePosWithoutZoom);
-					if (selection.size() > 1) {
-						for (IWfnElement selectedElem : selection) {
-							if ((selectedElem.getWfnElementType() != EWfnElement.ARC)
-									&& (selectedElem != startElement)) {
-								Point position = ((IWfnTransitionAndPlace)selectedElem).getPosition();
-								position.setLocation(mousePosWithoutZoom.getX() + selectionDistances.get(selectedElem).x,
-										mousePosWithoutZoom.getY() + selectionDistances.get(selectedElem).y);
-								//TODO: was macht position?
-							}
-						}
-					}
-					selection.fireSelectionChangeOccurred(NEW_SELECTION);
-				}
-			} else {
-				fireRedraw(RECTANGLE, startMousePosition, zoom.calculateOut(e.getPoint()));
-			}
+		if (editModus != EWfnEditModus.SELECT) return;
+		if (!startElementExists) {
+			fireRedraw(RECTANGLE, startMousePosition, zoom.calculateOut(e.getPoint()));
+			return;
 		}
-		super.mouseDragged(e);
+		final Point mousePosWithoutZoom = zoom.calculateOut(e.getPoint());
+		if  ((startElement.getWfnElementType() == EWfnElement.ARC)
+				|| (mousePosWithoutZoom.x < (xLowerThenStartElemX + EWfnElement.BASEFACTOR))
+				|| (mousePosWithoutZoom.y < (yLowerThenStartElemY + EWfnElement.BASEFACTOR))) 
+			return;
+		((IWfnTransitionAndPlace)startElement).setPosition(mousePosWithoutZoom);
+		if (selection.size() > 1) 
+			for (IWfnElement selectedElem : selection) 
+				if ((selectedElem.getWfnElementType() != EWfnElement.ARC)
+						&& (selectedElem != startElement)) {
+					Point position = ((IWfnTransitionAndPlace)selectedElem).getPosition();
+					position.setLocation(mousePosWithoutZoom.getX() + selectionDistances.get(selectedElem).x,
+							mousePosWithoutZoom.getY() + selectionDistances.get(selectedElem).y);
+				}
+		selection.fireSelectionChangeOccurred(NEW_SELECTION);
 	}
 
 	/* (non-Javadoc)
@@ -256,7 +248,6 @@ class EditorMouseActions extends MouseInputAdapter implements IEditModusListener
 					newArcSource.getPosition(),
 					zoom.calculateOut(e.getPoint()));
 		}
-		super.mouseMoved(e);
 	}
 
 	/* (non-Javadoc)
@@ -282,61 +273,64 @@ class EditorMouseActions extends MouseInputAdapter implements IEditModusListener
 	 */
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (e.getButton()== MouseEvent.BUTTON1)
-			switch (editModus) {
-			case SELECT:
-				if (startElementExists) {
-					IWfnElement newlySelected = coordinates.getElementAt(e.getPoint());
-					if (newlySelected != null) {
-						if (!selection.contains(newlySelected)) {
-							if (!e.isControlDown()) selection.clear();
-							selection.addAndFire(newlySelected, NEW_SELECTION);
-						}
-					} else 
-						if (selection.size() != 0) {
-							selection.clearAndAddAndFire(null, NEW_SELECTION);
-						}
-				} else {
-					selection.clearAndAddALLAndFire(coordinates.getElementsIn(startMousePosition, zoom.calculateOut(e.getPoint())),NEW_SELECTION);
+		if (e.getButton() != MouseEvent.BUTTON1
+				&& e.getButton() != MouseEvent.BUTTON3)
+			return;
+		if (e.getButton() == MouseEvent.BUTTON3) {
+			markingManagement.fire(coordinates.getElementAt( e.getPoint() ));
+			return;
+		}
+		switch (editModus) {
+		case SELECT:
+			if (!startElementExists) {
+				selection.clearAndAddALLAndFire(
+						coordinates.getElementsIn(
+								startMousePosition, 
+								zoom.calculateOut(e.getPoint())),
+						NEW_SELECTION);
+				return;
+			}
+			IWfnElement newlySelected = coordinates.getElementAt(e.getPoint());
+			if (newlySelected != null) {
+				if (!selection.contains(newlySelected)) {
+					if (!e.isControlDown()) selection.clear();
+					selection.addAndFire(newlySelected, NEW_SELECTION);
 				}
-				startElementExists = false;
-				break;
-			case ADD_PLACE:
-				wfnModel.createPlace(zoom.calculateOut(e.getPoint()));
-				break;
-			case ADD_TRANSITION:
-				wfnModel.createTransition(zoom.calculateOut(e.getPoint()));
-				break;
-			case ADD_ARC:
-				IWfnElement element = coordinates.getElementAt(e.getPoint());
-				if ((element != null)
-					&& (element.getWfnElementType() != EWfnElement.ARC)) {
-						if (!newArcSourceExists) {
-							newArcSource = (IWfnTransitionAndPlace) element;
-							newArcSourceExists = true;
-							selection.clearAndAddAndFire(element, ARC_SELECTION);
-						} else {
-							if (element == newArcSource) {
-								newArcSource = null;
-								newArcSourceExists = false;
-								selection.clearAndFire(ARC_SELECTION);
-							} else {
-								if (element.getWfnElementType() != newArcSource.getWfnElementType()) {
-									wfnModel.createArc(newArcSource, (IWfnTransitionAndPlace) element);
-									newArcSourceExists = false;
-									newArcSource = null;
-								}
-							}
-					}
-				} 
-				default:break;
+			} else 
+				if (selection.size() != 0) 
+					selection.clearAndAddAndFire(null, NEW_SELECTION);
+			startElementExists = false;
+			break;
+		case ADD_PLACE:
+			wfnModel.createPlace(zoom.calculateOut(e.getPoint()));
+			break;
+		case ADD_TRANSITION:
+			wfnModel.createTransition(zoom.calculateOut(e.getPoint()));
+			break;
+		case ADD_ARC:
+			IWfnElement element = coordinates.getElementAt(e.getPoint());
+			if ((element == null)
+					|| (element.getWfnElementType() == EWfnElement.ARC)) 
+				return;
+			if (!newArcSourceExists) {
+				newArcSource = (IWfnTransitionAndPlace) element;
+				newArcSourceExists = true;
+				selection.clearAndAddAndFire(element, ARC_SELECTION);
+				return;
+			} 
+			if (element == newArcSource) {
+				newArcSource = null;
+				newArcSourceExists = false;
+				selection.clearAndFire(ARC_SELECTION);
+				return;
+			} 
+			if (element.getWfnElementType() != newArcSource.getWfnElementType()) {
+				wfnModel.createArc(newArcSource, (IWfnTransitionAndPlace) element);
+				newArcSourceExists = false;
+				newArcSource = null;
 			}
-		else 
-			if (e.getButton()== MouseEvent.BUTTON3) {
-				markingManagement.fire(
-						coordinates.getElementAt(e.getPoint()));
-			}
-		super.mouseReleased(e);
+			break;	 
+		}
 	}
 
 
