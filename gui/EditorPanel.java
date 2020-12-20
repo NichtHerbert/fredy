@@ -87,7 +87,7 @@ public class EditorPanel extends JPanel implements IWfnStatusListener,
 					elem.getWfnElementType().drawAsSelected(
 							g2, 
 							((IWfnTransitionAndPlace) elem).getPosition(), 
-							EEditorFarben.AUSWAHL, 
+							EEditorColors.SELECTION, 
 							elementSize);
 				else 
 					elem.getWfnElementType().drawAsSelected(
@@ -95,7 +95,7 @@ public class EditorPanel extends JPanel implements IWfnStatusListener,
 							((IWfnArc) elem).getSource().getWfnElementType(),
 							((IWfnArc) elem).getSource().getPosition(),
 							((IWfnArc) elem).getTarget().getPosition(),
-							EEditorFarben.AUSWAHL, 
+							EEditorColors.SELECTION, 
 							elementSize);
 			break;
 		case ARC_SELECTION:
@@ -103,7 +103,7 @@ public class EditorPanel extends JPanel implements IWfnStatusListener,
 			arcSource.getWfnElementType().drawAsSelected(
 					g2, 
 					arcSource.getPosition(), 
-					EEditorFarben.KANTEN_ANFANG_AUSGEWAEHLT, 
+					EEditorColors.ARC_SOURCE_SELECTED, 
 					elementSize);
 			break;
 		default: break;
@@ -187,18 +187,18 @@ public class EditorPanel extends JPanel implements IWfnStatusListener,
 				|| statusInfo.getStartPlace() == statusInfo.getEndPlace()) 
 			return;
 				 
-		EWfnElement.PLACE.drawAsSelected(g2, statusInfo.getStartPlace().getPosition(), EEditorFarben.START, elementSize);
-		EWfnElement.PLACE.drawAsSelected(g2, statusInfo.getEndPlace().getPosition(), EEditorFarben.ENDE, elementSize);
+		EWfnElement.PLACE.drawAsSelected(g2, statusInfo.getStartPlace().getPosition(), EEditorColors.STARTPLACE, elementSize);
+		EWfnElement.PLACE.drawAsSelected(g2, statusInfo.getEndPlace().getPosition(), EEditorColors.ENDPLACE, elementSize);
 		for (IWfnPlace place: statusInfo.getMarkings())
 			g2.fillOval(place.getPosition().x - (elementSize/2), 
 						place.getPosition().y - (elementSize/2), 
 						elementSize, elementSize);
 		if (statusInfo.getEnabledTransitions() != null)
 			for (IWfnTransition transition : statusInfo.getEnabledTransitions())
-				EWfnElement.TRANSITION.drawAsSelected(g2, transition.getPosition(), EEditorFarben.AKTIVIERT, elementSize); 
+				EWfnElement.TRANSITION.drawAsSelected(g2, transition.getPosition(), EEditorColors.ENABLED, elementSize); 
 		if (statusInfo.getContactTransitions() != null)
 			for (IWfnTransition transition : statusInfo.getContactTransitions())
-				EWfnElement.TRANSITION.drawAsSelected(g2, transition.getPosition(), EEditorFarben.KONTAKT, elementSize);
+				EWfnElement.TRANSITION.drawAsSelected(g2, transition.getPosition(), EEditorColors.CONTACT, elementSize);
 	}
 
 	/**
