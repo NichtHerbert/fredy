@@ -125,26 +125,24 @@ public class ControlCentral implements 	ICentralConstants,
 	 * Methode zum Beenden des gesamten Programms.
 	 */
 	public void exitProgram() {
-		if (!wfnModel.isCurrentWfnSaved()) {
-			Object[] buttons = { "Cancel",
-								"Without Saving",
-								"Save"};
-			int n = JOptionPane.showOptionDialog(jpEditor, 
-					"The file has not yet been saved! Do you really want to exit the program without saving?", 
-					"Exit Program", 
-					JOptionPane.YES_NO_CANCEL_OPTION, 
-					JOptionPane.WARNING_MESSAGE, 
-					null, 
-					buttons, 
-					buttons[2]);
-			if (n == 1) System.exit(0);
-			if (n == 2) {
-				fileManagement.fileSaved(jtbToolbar);
-				System.exit(0);
-			}
-		} else 
-			System.exit(0);
+		if (wfnModel.isCurrentWfnSaved()) System.exit(0);
 		
+		Object[] buttons = { "Cancel",
+							"Without Saving",
+							"Save"};
+		int n = JOptionPane.showOptionDialog(jpEditor, 
+				"The file has not yet been saved! Do you really want to exit the program without saving?", 
+				"Exit Program", 
+				JOptionPane.YES_NO_CANCEL_OPTION, 
+				JOptionPane.WARNING_MESSAGE, 
+				null, 
+				buttons, 
+				buttons[2]);
+		if (n == 1) System.exit(0);
+		if (n == 2) {
+			fileManagement.fileSaved(jtbToolbar);
+			System.exit(0);
+		}
 	}
 	
 	
