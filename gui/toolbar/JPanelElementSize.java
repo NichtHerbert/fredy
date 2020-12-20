@@ -14,52 +14,50 @@ import gui.EIcons;
  * Panel zur Anzeige der Buttons zur Steuerung der Elementgröße.
  *
  */
-public class JPanelElementGroesse extends JPanel {
+public class JPanelElementSize extends JPanel {
 
 	private static final long serialVersionUID = 9106561939176271978L;
 	
-	/**
-	 * Referenz auf die für den Zoom zuständige Verwaltung. 
-	 */
-	private ElementSizeManagement eGVerwaltung;
+	/** Referenz auf die für den Zoom zuständige Verwaltung. */
+	private ElementSizeManagement elementSizeManagement;
 	
 	/**
 	 * Initialisiert das Panel mit zwei nebeneinanderliegenden Buttons für ZoomIn und ZoomOut.
 	 */
-	public JPanelElementGroesse() {
+	public JPanelElementSize() {
 	 
 		super();
-		JButton btnEGroesser = new JButton(EIcons.PLUS.getIcon());
-		JButton btnEKleiner = new JButton(EIcons.MINUS.getIcon());
+		JButton btnElemBigger = new JButton(EIcons.PLUS.getIcon());
+		JButton btnElemSmaller = new JButton(EIcons.MINUS.getIcon());
 		
-		btnEGroesser.addActionListener(new ActionListener() {
+		btnElemBigger.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (eGVerwaltung != null) 
-					eGVerwaltung.bigger();
+				if (elementSizeManagement != null) 
+					elementSizeManagement.bigger();
 			}
 		});
-		btnEKleiner.addActionListener(new ActionListener() {
+		btnElemSmaller.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (eGVerwaltung != null) 
-					eGVerwaltung.smaller();
+				if (elementSizeManagement != null) 
+					elementSizeManagement.smaller();
 			}
 		});
 		
-		add(btnEGroesser);
-		add(btnEKleiner);
-		setBorder(new TitledBorder("Element-Größe"));
+		add(btnElemBigger);
+		add(btnElemSmaller);
+		setBorder(new TitledBorder("Element Size"));
 	}
 	
 	/**
 	 * Setzt das Attribut {@link #ElementSizeManagement}.
 	 * @param zoomVerwaltung die neue {@link #ElementSizeManagement}
 	 */
-	void setElementGroessenVerwaltung(ElementSizeManagement eGVerwaltung) {
-		this.eGVerwaltung = eGVerwaltung;
+	void setElementSizeManagement(ElementSizeManagement elementSizeManagement) {
+		this.elementSizeManagement = elementSizeManagement;
 	}
 	
 }

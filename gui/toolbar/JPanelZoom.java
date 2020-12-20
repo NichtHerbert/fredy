@@ -12,20 +12,16 @@ import gui.EIcons;
 
 /**
  * Panel zur Anzeige der Zoom-Steuer-Instrumente.
- *
  */
 class JPanelZoom extends JPanel {
 	
 	private static final long serialVersionUID = 4118112168211344115L;
 	
-	/**
-	 * Referenz auf die für den Zoom zuständige Verwaltung. 
-	 */
-	private ZoomManagement zoomVerwaltung;
+	/** Referenz auf die für den Zoom zuständige Verwaltung. */
+	private ZoomManagement zoomManagement;
 	
-	/**
-	 * Initialisiert das Panel mit zwei nebeneinanderliegenden Buttons für ZoomIn und ZoomOut.
-	 */
+	
+	/** Initialisiert das Panel mit zwei nebeneinanderliegenden Buttons für ZoomIn und ZoomOut. */
 	JPanelZoom() {
 		super();
 		JButton btnZoomIn = new JButton(EIcons.ZOOM_IN.getIcon());
@@ -35,16 +31,16 @@ class JPanelZoom extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (zoomVerwaltung != null) 
-					zoomVerwaltung.zoomIn();
+				if (zoomManagement != null) 
+					zoomManagement.zoomIn();
 			}
 		});
 		btnZoomOut.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (zoomVerwaltung != null) 
-					zoomVerwaltung.zoomOut();
+				if (zoomManagement != null) 
+					zoomManagement.zoomOut();
 			}
 		});
 		
@@ -54,11 +50,11 @@ class JPanelZoom extends JPanel {
 	}
 	
 	/**
-	 * Setzt das Attribut {@link #zoomVerwaltung}.
-	 * @param zoomVerwaltung die neue {@link #zoomVerwaltung}
+	 * Setzt das Attribut {@link #zoomManagement}.
+	 * @param zoomManagement die neue {@link #zoomManagement}
 	 */
-	void setZoomFaktorVerwaltung(ZoomManagement zoomVerwaltung) {
-		this.zoomVerwaltung = zoomVerwaltung;
+	void setZoomManagement(ZoomManagement zoomVerwaltung) {
+		this.zoomManagement = zoomVerwaltung;
 	}
 	
 }

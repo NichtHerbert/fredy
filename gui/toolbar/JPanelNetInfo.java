@@ -19,38 +19,34 @@ import wfnmodel.WfnStatusInfo;
  * ein Workflownetz ergeben. Und wenn nicht, eine Begründung dafür anzeigen. 
  *
  */
-class JPanelNetzInfo extends JPanel implements IWfnStatusListener {
+class JPanelNetInfo extends JPanel implements IWfnStatusListener {
 
 	private static final long serialVersionUID = 4974014779936004767L;
 
-	/**
-	 * Label-Array , über welches der WFN-Zustand ausgegeben wird.
-	 */
+	/** Label-Array , über welches der WFN-Zustand ausgegeben wird. */
 	private JLabel[] jlInfo;
-	/**
-	 * Der letztübermittelte Zustand/Status des Workflownetzes.
-	 */
+	/** Der letztübermittelte Zustand/Status des Workflownetzes. */
 	private WfnStatusInfo statusInfo;
-	private CircleTest kTVerwaltung;
+	private CircleTest circleTest;
 
 	/**
 	 * Initialisiert das Panel mit {@link #jlInfo} als Array der Größe/Länge 4,
 	 * mit den einzelnen Labels zeilenartig übereinander angeordnet.
 	 */
-	JPanelNetzInfo() {
+	JPanelNetInfo() {
 		setLayout(new GridLayout(0,1));
 		setAlignmentY(LEFT_ALIGNMENT);
 		statusInfo = new WfnStatusInfo();
-		JButton jbKreisCheck = new JButton("Kreis-Check");
-		jbKreisCheck.addActionListener(new ActionListener() {
+		JButton jbCircleTest = new JButton("Circle-Test");
+		jbCircleTest.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (kTVerwaltung != null) 
-					jlInfo[3].setText(kTVerwaltung.execute());
+				if (circleTest != null) 
+					jlInfo[3].setText(circleTest.execute());
 			}
 		});
-		add(jbKreisCheck);
+		add(jbCircleTest);
 		jlInfo = new JLabel[4];
 		for (int i = 0; i < jlInfo.length; i++) {
 			jlInfo[i] = new JLabel(" ", SwingConstants.LEFT);
@@ -60,7 +56,7 @@ class JPanelNetzInfo extends JPanel implements IWfnStatusListener {
 		add(jlInfo[1]);
 		add(jlInfo[2]);
 		add(jlInfo[3]);
-		setBorder(new TitledBorder("Netz - Information"));
+		setBorder(new TitledBorder("Workflow-Net Information"));
 	}
 
 	/**
@@ -86,8 +82,8 @@ class JPanelNetzInfo extends JPanel implements IWfnStatusListener {
 		getGruendeZuLabel();
 	}
 	
-	void setKreisTestVerwaltung(CircleTest kTVerwaltung) {
-		this.kTVerwaltung = kTVerwaltung;
+	void setCircleTest(CircleTest circleTest) {
+		this.circleTest = circleTest;
 	}
 
 }

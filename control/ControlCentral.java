@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 import gui.EWfnEditModus;
 import gui.ICentralConstants;
 import gui.EditorPanel;
-import gui.toolbar.JtbWerkzeugleiste;
+import gui.toolbar.JtbToolBar;
 import listeners.ISelectionEditingListener;
 import listeners.IEditModusListener;
 import wfnmodel.WfnModel;
@@ -26,7 +26,7 @@ public class ControlCentral implements 	ICentralConstants,
 	/**Die Darstellung des WFN */
 	private EditorPanel jpEditor;
 	/**Die Werkzeuge zum Bearbeiten des WFN*/
-	private JtbWerkzeugleiste jtbToolbar;
+	private JtbToolBar jtbToolbar;
 	
 	/** Die {@link ZoomManagement}*/
 	private ZoomManagement zoom;
@@ -54,13 +54,13 @@ public class ControlCentral implements 	ICentralConstants,
 	 * @param jpEditor die Darstellung
 	 * @param jtbToolbar die Werkzeugleiste
 	 */
-	public ControlCentral(WfnModel wfnModel, EditorPanel jpEditor, JtbWerkzeugleiste jtbToolbar) {
+	public ControlCentral(WfnModel wfnModel, EditorPanel jpEditor, JtbToolBar jtbToolbar) {
 		this.wfnModel = wfnModel;
 		this.jpEditor = jpEditor;
 		this.jtbToolbar = jtbToolbar;
 		
 		zoom = new ZoomManagement();
-		this.jtbToolbar.setZoomFaktorVerwaltung(zoom);
+		this.jtbToolbar.setZoomManagement(zoom);
 		zoom.addZoomListener(jpEditor);
 		
 		coordinateManagement = new CoordinateManagement(zoom);
@@ -71,11 +71,11 @@ public class ControlCentral implements 	ICentralConstants,
 		selectionManagement.addSelectionChangingListener(jpEditor);
 		
 		fileManagement = new FileManagement(wfnModel, wfnModel, selectionManagement);
-		jtbToolbar.setDateiVerwaltung(fileManagement);
+		jtbToolbar.setFileManagement(fileManagement);
 		
 		markingManagement = new MarkingManagement();
 		wfnModel.addChangingListener(markingManagement);
-		jtbToolbar.addTransitionsSchaltungsHorcher(markingManagement);
+		jtbToolbar.addTransitionFireListener(markingManagement);
 		markingManagement.addWfnStatusListener(jpEditor);
 		markingManagement.addWfnStatusListener(jtbToolbar);
 		
@@ -87,19 +87,19 @@ public class ControlCentral implements 	ICentralConstants,
 		mouseActionsManagement.addRedrawListener(jpEditor);
 		this.jpEditor.addMouseListener(mouseActionsManagement);
 		this.jpEditor.addMouseMotionListener(mouseActionsManagement);
-		this.jtbToolbar.addEditorModusHorcher(mouseActionsManagement);
+		this.jtbToolbar.addEditorModusListener(mouseActionsManagement);
 		
 		elementSizeManagement = new ElementSizeManagement();
-		jtbToolbar.setElementGroessenVerwaltung(elementSizeManagement);
+		jtbToolbar.setElementSizeManagement(elementSizeManagement);
 		elementSizeManagement.addElementSizeListener(jpEditor);
 		elementSizeManagement.addElementSizeListener(coordinateManagement);
 		
 		circleTest = new CircleTest(selectionManagement);
-		jtbToolbar.setKreisTestVerwaltung(circleTest);
+		jtbToolbar.setCircleTest(circleTest);
 		wfnModel.addChangingListener(circleTest);
 		
-		jtbToolbar.addAuswahlBearbeitetHorcher(this);
-		jtbToolbar.addEditorModusHorcher(this);
+		jtbToolbar.addSelectionEditingListener(this);
+		jtbToolbar.addEditorModusListener(this);
 		
 		wfnModel.clear();
 				
