@@ -12,25 +12,25 @@ import wfnmodel.elements.EWfnElement;
  *
  */
 public enum EIcons {
-	NEU("/icons/neu.png"),
-	OEFFNEN("/icons/oeffnen.png"),
-	SPEICHERN("/icons/speichern.png"),
-	SPEICHERN_UNTER("/icons/speichern_unter.png"),
-	ZOOM_IN("/icons/zoom_in.png"),
-	ZOOM_OUT("/icons/zoom_out.png"),
-	STELLE("/icons/stelle.png"),
-	TRANSITION("/icons/transition.png"),
-	KANTE("/icons/kante.png"),
-	MINUS("/icons/minus.png"),
-	PLUS("/icons/plus.png"),
-	PLAY("/icons/play.png"),
-	AUF_START("/icons/auf_start.png"),
-	FRAGEZEICHEN("/icons/fragezeichen.png"),
-	MUELLEIMER("/icons/muelleimer.png"),
-	CURSOR("/icons/cursor.png"),
-	CURSOR_STELLE("/icons/cursor_stelle.png"),
-	CURSOR_TRANSITION("/icons/cursor_transition.png"),
-	CURSOR_KANTE("/icons/cursor_fadenkreuz.png")
+	NEU					("/icons/neu.png"),
+	OEFFNEN				("/icons/oeffnen.png"),
+	SPEICHERN			("/icons/speichern.png"),
+	SPEICHERN_UNTER		("/icons/speichern_unter.png"),
+	ZOOM_IN				("/icons/zoom_in.png"),
+	ZOOM_OUT			("/icons/zoom_out.png"),
+	STELLE				("/icons/stelle.png"),
+	TRANSITION			("/icons/transition.png"),
+	KANTE				("/icons/kante.png"),
+	MINUS				("/icons/minus.png"),
+	PLUS				("/icons/plus.png"),
+	PLAY				("/icons/play.png"),
+	AUF_START			("/icons/auf_start.png"),
+	FRAGEZEICHEN		("/icons/fragezeichen.png"),
+	MUELLEIMER			("/icons/muelleimer.png"),
+	CURSOR				("/icons/cursor.png"),
+	CURSOR_STELLE		("/icons/cursor_stelle.png"),
+	CURSOR_TRANSITION	("/icons/cursor_transition.png"),
+	CURSOR_KANTE		("/icons/cursor_fadenkreuz.png")
 	;
 	
 	/**
