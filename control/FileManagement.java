@@ -43,14 +43,14 @@ public class FileManagement implements IFileManagement,
 	}
 
 	@Override
-	public void fileNew() {
+	public void clear() {
 		impModel.clear();
 		isFileNew = true;
 		selectionManagement.clearAndFire(NEW_SELECTION);
 	}
 
 	@Override
-	public void fileOpen(JComponent trigger) {
+	public void open(JComponent trigger) {
 		JFileChooser chooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Petri-Nets: *.pnml", "pnml");
 		chooser.setFileFilter(filter);
@@ -64,10 +64,10 @@ public class FileManagement implements IFileManagement,
 	}
 
 	@Override
-	public boolean fileSaved(JComponent trigger) {
+	public boolean save(JComponent trigger) {
 		if (!impModel.isCurrentWfnSaved()) {
 			if (impModel.getWfnFile() == null)
-				return fileSaveAs(trigger);
+				return saveAs(trigger);
 			else {
 				Export.execute(impModel.getWfnFile(), expModel);
 				impModel.setIsCurrentWfnSaved(true);
@@ -78,7 +78,7 @@ public class FileManagement implements IFileManagement,
 	}
 
 	@Override
-	public boolean fileSaveAs(JComponent trigger) {
+	public boolean saveAs(JComponent trigger) {
 		JFileChooser chooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Petri-Nets: *.pnml", "pnml");
 		chooser.setFileFilter(filter);

@@ -61,7 +61,7 @@ class JPanelFileOperations extends JPanel implements IWfnStatusListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					fileManagement.fileNew();
+					fileManagement.clear();
 					jlFileName.setText("Filename:   " + fileManagement.getFileName());
 				} catch (NullPointerException e1) {}
 			}
@@ -71,7 +71,7 @@ class JPanelFileOperations extends JPanel implements IWfnStatusListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					fileManagement.fileOpen(JPanelFileOperations.this);
+					fileManagement.open(JPanelFileOperations.this);
 					jlFileName.setText("Filename:   " + fileManagement.getFileName());
 				} catch (NullPointerException e1) {}
 			}
@@ -81,7 +81,7 @@ class JPanelFileOperations extends JPanel implements IWfnStatusListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (fileManagement.fileSaved(JPanelFileOperations.this))
+					if (fileManagement.save(JPanelFileOperations.this))
 						jlFileName.setText("Filename:   " + fileManagement.getFileName());
 				} catch (NullPointerException e1) {}
 			}
@@ -91,7 +91,7 @@ class JPanelFileOperations extends JPanel implements IWfnStatusListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (fileManagement.fileSaveAs(JPanelFileOperations.this))
+					if (fileManagement.saveAs(JPanelFileOperations.this))
 						jlFileName.setText("Filename:   " + fileManagement.getFileName());
 				} catch (NullPointerException e1) {}
 			}

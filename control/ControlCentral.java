@@ -140,7 +140,7 @@ public class ControlCentral implements 	ICentralConstants,
 				buttons[2]);
 		if (n == 1) System.exit(0);
 		if (n == 2) {
-			fileManagement.fileSaved(jtbToolbar);
+			fileManagement.save(jtbToolbar);
 			System.exit(0);
 		}
 	}
