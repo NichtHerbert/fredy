@@ -43,9 +43,9 @@ class JPanelElementHandling extends JPanel implements ISelectionChangingListener
 		editorModusListeners = new ArrayList<>(2);
 		
 		JToggleButton jtbSelect = new JToggleButton(EIcons.CURSOR.getIcon(), true);
-		JToggleButton jtbAddPlace = new JToggleButton(EIcons.STELLE.getIcon());
+		JToggleButton jtbAddPlace = new JToggleButton(EIcons.PLACE.getIcon());
 		JToggleButton jtbAddTransition = new JToggleButton(EIcons.TRANSITION.getIcon());
-		JToggleButton jtbAddArc = new JToggleButton(EIcons.KANTE.getIcon());
+		JToggleButton jtbAddArc = new JToggleButton(EIcons.ARC.getIcon());
 		
 		jtbSelect.setToolTipText("Select Elements");
 		jtbAddPlace.setToolTipText("Add Places");

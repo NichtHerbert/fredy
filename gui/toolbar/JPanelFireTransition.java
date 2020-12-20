@@ -51,7 +51,7 @@ class JPanelFireTransition extends JPanel implements IWfnStatusListener {
 		emptyElem = new WfnElementTransition("", 0, new Point(0, 0));
 		emptyElem.setName(" ");
 		
-		JButton jbBackToStart = new JButton(EIcons.AUF_START.getIcon());
+		JButton jbBackToStart = new JButton(EIcons.BACK_TO_START.getIcon());
 		jbBackToStart.setToolTipText("Back To Start");
 		jbBackToStart.addActionListener(new ActionListener() {
 			

@@ -120,7 +120,7 @@ class JPanelSelection extends JPanel implements ISelectionChangingListener {
 		jtSelectedElements.setFillsViewportHeight(true);
 		scrollPane.setPreferredSize(new Dimension(16*EWfnElement.BASEFACTOR, 4*EWfnElement.BASEFACTOR));
 		
-		JButton jbSelectionDelete = new JButton(EIcons.MUELLEIMER.getIcon());
+		JButton jbSelectionDelete = new JButton(EIcons.TRASH.getIcon());
 		jbSelectionDelete.setToolTipText("Delete Selection");
 		jbSelectionDelete.addActionListener(new ActionListener() {
 			

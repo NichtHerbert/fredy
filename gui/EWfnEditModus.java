@@ -15,9 +15,9 @@ import wfnmodel.elements.EWfnElement;
  */
 public enum EWfnEditModus {
 	SELECT(EIcons.CURSOR.getIcon()),
-	ADD_PLACE(EIcons.CURSOR_STELLE.getIcon()),
-	ADD_TRANSITION(EIcons.CURSOR_TRANSITION.getIcon()),
-	ADD_ARC(EIcons.CURSOR_KANTE.getIcon())
+	ADD_PLACE(EIcons.CURSOR_ADD_PLACE.getIcon()),
+	ADD_TRANSITION(EIcons.CURSOR_ADD_TRANSITION.getIcon()),
+	ADD_ARC(EIcons.CURSOR_ADD_ARC.getIcon())
 	;
 	
 	/**

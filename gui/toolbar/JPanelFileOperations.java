@@ -46,10 +46,10 @@ class JPanelFileOperations extends JPanel implements IWfnStatusListener {
 		jlFileName = new JLabel("Filename:   unknown1.pnml");
 		jpFileName.add(jlFileName);
 		
-		JButton jbNew = new JButton(EIcons.NEU.getIcon());
-		JButton jbOpen = new JButton(EIcons.OEFFNEN.getIcon());
-		JButton jbSave = new JButton(EIcons.SPEICHERN.getIcon());
-		JButton jbSaveAs = new JButton(EIcons.SPEICHERN_UNTER.getIcon());
+		JButton jbNew = new JButton(EIcons.NEW.getIcon());
+		JButton jbOpen = new JButton(EIcons.OPEN.getIcon());
+		JButton jbSave = new JButton(EIcons.SAVE.getIcon());
+		JButton jbSaveAs = new JButton(EIcons.SAVE_AS.getIcon());
 		
 		jbNew.setToolTipText("File new");
 		jbOpen.setToolTipText("File open");
