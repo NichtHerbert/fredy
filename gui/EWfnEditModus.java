@@ -17,7 +17,7 @@ public enum EWfnEditModus {
 	SELECT(EIcons.CURSOR.getIcon()),
 	ADD_PLACE(EIcons.CURSOR_ADD_PLACE.getIcon()),
 	ADD_TRANSITION(EIcons.CURSOR_ADD_TRANSITION.getIcon()),
-	ADD_ARC(EIcons.CURSOR_ADD_ARC.getIcon())
+	ADD_ARC(EIcons.CROSSHAIR.getIcon())
 	;
 	
 	/**
