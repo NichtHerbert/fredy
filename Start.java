@@ -19,12 +19,12 @@ public class Start {
 	 * @param args wird nicht verwendet
 	 */
 	public static void main(String[] args) {
-		WfnModel modell = new WfnModel();
+		WfnModel model = new WfnModel();
 		EditorPanel editor = new EditorPanel();
-		JScrollPane sp = new JScrollPane(editor);
+		JScrollPane scrollPane = new JScrollPane(editor);
 		JtbToolBar toolbar = new JtbToolBar();
-		ControlCentral zV = new ControlCentral(modell, editor, toolbar);
-		new MainWindow(sp, toolbar, zV);
+		ControlCentral control = new ControlCentral(model, editor, toolbar);
+		new MainWindow(scrollPane, toolbar, control);
 
 	}
 
