@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Image;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
@@ -96,6 +97,15 @@ public enum EIcons {
 			System.err.println("Couldn't find file: " + path);
 			return null;
 		}
+	}
+	
+	public static String getAllAuthorHtmlLinks() {
+		ArrayList<String> links = new ArrayList<>(5);
+		for (EIcons icon: EIcons.values())
+			if (!links.contains(icon.getAuthorHtmlLink()))
+				links.add(icon.getAuthorHtmlLink());
+		return String.join("\n", links);
+		
 	}
 }
 // Original links:

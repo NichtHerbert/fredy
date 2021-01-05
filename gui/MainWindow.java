@@ -33,6 +33,7 @@ public class MainWindow extends JFrame {
 				control.exitProgram();
 			}
 		});
+		setJMenuBar(new MenuBar());
 		add(editorArea, BorderLayout.CENTER);
 		add(toolbarArea, BorderLayout.EAST);
 		setPreferredSize(new Dimension(800, 600));
